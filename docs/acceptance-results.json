@@ -1,0 +1,18 @@
+{
+  "completed_at": "2026-09-28T10:10:35.799304+00:00",
+  "generation_model": "llama3.2:3b",
+  "embedding_model": "nomic-embed-text",
+  "checks": [
+    "All dependencies and worker ready",
+    "PDF upload, worker indexing, duplicate prevention, and download",
+    "Real local answer: 18 days, PDF page 12 citation, persisted conversation",
+    "Follow-up answer and ordered conversation history",
+    "Chatbot and tenant isolation, unsupported question abstention",
+    "Re-index replaces SQL chunks and vectors without duplication; citation snapshots survive",
+    "Unreadable PDF failure and durable retry history",
+    "Document deletion removes vectors and excludes historical knowledge from new answers",
+    "Conversation/chatbot deletion, logout, and frontend HTTP availability"
+  ],
+  "status": "passed",
+  "browser_interaction": "Not tested: no connected browser"
+}

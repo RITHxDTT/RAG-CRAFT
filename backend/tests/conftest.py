@@ -39,6 +39,8 @@ def db():
 
 @pytest.fixture
 def client(db, tmp_path, monkeypatch):
+    from app.core.rate_limit import login_limiter
+    login_limiter.attempts.clear()
     monkeypatch.setattr(get_settings(), "storage_dir", tmp_path / "uploads")
     def override_db():
         try:

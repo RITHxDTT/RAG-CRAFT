@@ -5,13 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.middleware.body_limit import RequestBodyLimitMiddleware
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from app.api import auth, health, chatbots, knowledge
+from app.api import auth, health, chatbots, knowledge, playground
 from app.core.config import get_settings
 from app.core.exceptions import AppError
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
-app = FastAPI(title="RAG Craft API", version="0.5.0")
+app = FastAPI(title="RAG Craft API", version="1.0.0")
 app.add_middleware(RequestBodyLimitMiddleware, max_body_size=get_settings().max_upload_size_mb * 1024 * 1024 + 65536)
 app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins,
                    allow_credentials=True, allow_methods=["GET", "POST", "PATCH", "DELETE"],
@@ -54,3 +55,5 @@ app.include_router(auth.router)
 app.include_router(chatbots.router)
 
 app.include_router(knowledge.router)
+
+app.include_router(playground.router)

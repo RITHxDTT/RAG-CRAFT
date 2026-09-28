@@ -1,3 +1,4 @@
+from app.services.vector_cleanup_service import schedule_cleanup
 import logging
 from uuid import uuid4
 from sqlalchemy.orm import Session
@@ -15,8 +16,9 @@ from app.services.file_validation import MIME_TYPES, validate_file
 logger = logging.getLogger(__name__)
 
 
-def upload_policy() -> UploadPolicy:
-    return UploadPolicy(max_upload_size_mb=get_settings().max_upload_size_mb, extensions=list(MIME_TYPES))
+def upload_policy(db=None) -> UploadPolicy:
+    from app.core.worker_lock import worker_is_running
+    return UploadPolicy(max_upload_size_mb=get_settings().max_upload_size_mb, extensions=list(MIME_TYPES), processing_enabled=True, worker_running=worker_is_running(db) if db is not None else False)
 
 
 def audit(db, ctx, action, document_id):
@@ -87,6 +89,7 @@ def delete_document(db, ctx, chatbot_id, document_id):
     source = db.get(KnowledgeSource, doc.knowledge_source_id)
     with staged_deletion([doc.storage_key]):
         audit(db, ctx, "document.deleted", doc.id)
+        schedule_cleanup(db, ctx.organization_id, chatbot_id, doc.id)
         db.delete(source)
         db.commit()
 

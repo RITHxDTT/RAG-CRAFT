@@ -3,6 +3,7 @@ from pathlib import Path
 import os
 import secrets
 import sys
+import time
 from uuid import uuid4
 import httpx
 from sqlalchemy import delete, select
@@ -21,6 +22,15 @@ def expect(response, status):
     if response.status_code != status:
         raise AssertionError(f"{response.request.method} {response.request.url.path}: expected {status}, got {response.status_code}")
     return response
+
+
+def wait_until_idle(client, path):
+    deadline = time.monotonic() + 300
+    while time.monotonic() < deadline:
+        if expect(client.get(path), 200).json()["status"] in {"READY", "FAILED"}:
+            return
+        time.sleep(0.5)
+    raise AssertionError("Start the worker and retry: document processing did not finish.")
 
 
 def main():
@@ -49,6 +59,7 @@ def main():
                 expect(client.post(root + "/documents", files={"file": ("duplicate.txt", content, "text/plain")}), 409)
                 expect(client.get(f'/api/chatbots/{other["id"]}/documents/{doc["id"]}/download'), 404)
                 assert expect(client.get("/api/dashboard"), 200).json()["total_documents"] == 1
+                wait_until_idle(client, doc_path)
                 expect(client.delete(doc_path), 204)
                 expect(client.delete(root), 204)
                 expect(client.delete(f'/api/chatbots/{other["id"]}'), 204)

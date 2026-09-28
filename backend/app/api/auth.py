@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, Request
 from app.api.dependencies import Admin, DB, require_csrf
 from app.core.config import get_settings
 from app.core.security import COOKIE_NAME
+from app.core.rate_limit import login_limiter
 from app.schemas.auth import CurrentUser, LoginInput
 from app.services import auth_service
 
@@ -9,7 +10,8 @@ router = APIRouter(prefix="/api/auth", tags=["auth"], dependencies=[Depends(requ
 
 
 @router.post("/login", response_model=CurrentUser)
-def login(data: LoginInput, response: Response, db: DB):
+def login(data: LoginInput, response: Response, request: Request, db: DB):
+    login_limiter.check(request.client.host if request.client else "unknown")
     user, token = auth_service.login(db, data)
     config = get_settings()
     response.set_cookie(COOKIE_NAME, token, httponly=True, secure=config.cookie_secure,

@@ -34,6 +34,7 @@ class UploadPolicy(BaseModel):
     max_upload_size_mb: int
     extensions: list[str]
     processing_enabled: bool = False
+    worker_running: bool = False
 
 
 class DocumentActivity(DocumentView):

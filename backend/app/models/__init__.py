@@ -6,4 +6,6 @@ from app.models.administration import ApiKey, AuditLog
 
 __all__ = ["User", "Organization", "OrganizationMember", "Chatbot", "ChatbotSetting",
            "KnowledgeSource", "Document", "DocumentChunk", "IngestionJob", "Conversation",
-           "Message", "MessageSource", "ApiKey", "AuditLog"]
+           "Message", "MessageSource", "ApiKey", "AuditLog", "VectorCleanup"]
+
+from app.models.vector_cleanup import VectorCleanup

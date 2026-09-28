@@ -12,8 +12,8 @@ router = APIRouter(prefix="/api", tags=["knowledge"], dependencies=[Depends(requ
 
 
 @router.get("/knowledge/config", response_model=UploadPolicy)
-def policy(admin: Admin):
-    return document_service.upload_policy()
+def policy(admin: Admin, db: DB):
+    return document_service.upload_policy(db)
 
 
 @router.get("/knowledge/recent", response_model=list[DocumentActivity])

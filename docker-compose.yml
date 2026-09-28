@@ -23,7 +23,7 @@ services:
       - qdrant_data:/qdrant/storage
   frontend:
     profiles: ["ui"]
-    image: rag-craft-frontend:phase5
+    image: rag-craft-frontend:v1
     build:
       context: ./frontend
       args:
@@ -31,7 +31,7 @@ services:
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-3000}:3000"
   backend:
-    image: rag-craft-backend:phase5
+    image: rag-craft-backend:v1
     profiles: ["api"]
     build: ./backend
     env_file: .env
@@ -50,6 +50,28 @@ services:
       qdrant:
         condition: service_started
     command: ["sh", "-c", "alembic -c alembic.ini upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 10
+  worker:
+    image: rag-craft-backend:v1
+    profiles: ["api"]
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      QDRANT_URL: http://qdrant:6333
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      STORAGE_DIR: /app/storage
+    volumes:
+      - document_storage:/app/storage
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["python", "-m", "app.worker"]
+    restart: unless-stopped
 volumes:
   document_storage:
   postgres_data:

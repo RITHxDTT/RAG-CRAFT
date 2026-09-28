@@ -1,52 +1,56 @@
 # RAG Craft — Version 1
 
-RAG Craft is an admin workspace for document-grounded assistants. The target workflow is login → create chatbot → upload knowledge → process/index → ask a question → receive an answer with sources.
+An admin workspace for document-grounded assistants: sign in → create a chatbot → upload knowledge → wait for indexing → ask questions → inspect citations and saved conversations.
 
-**Implemented through Phase 5:** the database foundation, admin authentication, chatbot CRUD/settings, dashboard, and document management. Uploads create persisted `QUEUED` documents and ingestion jobs. **Text extraction, embedding, retrieval, answers, and citations are not implemented yet** (phases 6–11). The Playground explains that it is not available yet.
+The implementation covers phases 1–13 of `setting.txt`. The automated acceptance workflow passes against real PostgreSQL, Qdrant, and local Ollama. Interactive browser verification is still pending because no browser was available in this environment.
 
 ## Architecture
 
 ```text
-Next.js / TypeScript / Tailwind
-              ↓ REST API + HttpOnly session cookie
-FastAPI → services → repositories → PostgreSQL
-              ↓ (later phases)
-         Qdrant + local Ollama
+Next.js / TypeScript → FastAPI → PostgreSQL
+                          │          ↑
+                          │     ingestion worker → private files
+                          │          ↓
+                          └──── Qdrant + local Ollama
 ```
 
-Only FastAPI accesses storage and infrastructure. All chatbot/document queries are scoped to the authenticated organization; document routes additionally require the correct chatbot. PostgreSQL owns application data. Qdrant will hold vectors scoped by organization and chatbot. Model defaults are `llama3.2:3b` for generation and `nomic-embed-text` for embeddings.
+PostgreSQL owns accounts, chatbot settings, documents, jobs, chunks, and conversations. A separate worker extracts PDF/DOCX/TXT/MD, creates overlapping chunks, embeds them with `nomic-embed-text`, and indexes Qdrant. Generation uses `llama3.2:3b`. Searches require organization, chatbot, READY document, and embedding-model filters, followed by SQL ownership checks. The browser accesses only FastAPI.
 
-## Requirements
+## Requirements and configuration
 
-- Python 3.13+ (local tests use Python 3.14)
+- Python 3.13+ (local verification used Python 3.14)
 - Docker Desktop / Docker Compose
-- Node 22+ with a trusted npm installation if running Next.js outside Docker
-- Ollama for the later RAG phases; health checks can report an existing local service
+- Ollama with sufficient memory for both local models
+- A trusted Node 22+ installation if running the frontend outside Docker
 
-## Configuration
-
-From the project root:
+From the project root, copy examples **only when the destination does not already exist**:
 
 ```sh
-cp .env.example .env              # only if .env does not already exist
+cp .env.example .env
 cp frontend/.env.example frontend/.env.local
 ```
 
-Set a strong `POSTGRES_PASSWORD`, match it in `DATABASE_URL`, and set a random `JWT_SECRET` of at least 32 characters. Local environment files are ignored. This workspace already has generated local configuration; do not overwrite it.
+Set a strong `POSTGRES_PASSWORD`, match it in `DATABASE_URL`, and set a random `JWT_SECRET` of at least 32 characters. This workspace already has local configuration; preserve it. Never commit local environment files.
 
-PostgreSQL is exposed on **localhost:55432**, avoiding existing databases on ports 5432 and 5433. Set `POSTGRES_PORT` and the `DATABASE_URL` port together. The application can switch to external PostgreSQL by changing `DATABASE_URL`.
+The example uses PostgreSQL on **localhost:55432**. Change `POSTGRES_PORT` and the `DATABASE_URL` port together. Use `localhost` consistently for the browser and API so cookie hostnames match. `COOKIE_SECURE=false` is for local HTTP; HTTPS deployments require `true`. `CORS_ORIGINS` is a JSON array of exact frontend origins.
 
-`MAX_UPLOAD_SIZE_MB` defaults to 20. Files are stored privately in `backend/storage/` unless `STORAGE_DIR` is set. Back up database records and file storage together. `COOKIE_SECURE=false` is for localhost HTTP; use `true` with HTTPS. `CORS_ORIGINS` is a JSON array of exact frontend origins. Use `localhost` consistently for the UI and API so cookie hostnames match.
-
-## Start PostgreSQL and Qdrant
+## Start infrastructure and local models
 
 ```sh
 docker compose up -d postgres qdrant
+ollama serve                    # only if Ollama is not already running
 ```
 
-These services bind only to localhost and retain data in named volumes. `docker compose down` stops them without deleting their volumes.
+In another terminal, install the configured models if needed:
 
-## Install backend dependencies and migrate
+```sh
+ollama pull llama3.2:3b
+ollama pull nomic-embed-text
+```
+
+PostgreSQL and Qdrant bind to localhost and retain data in named volumes. `docker compose down` preserves those volumes. Generation rejects Ollama cloud/remote models.
+
+## Install and migrate the backend
 
 ```sh
 python3 -m venv .venv
@@ -55,7 +59,7 @@ python3 -m venv .venv
 .venv/bin/python -m alembic -c backend/alembic.ini check
 ```
 
-`requirements.txt` documents direct dependency ranges; `requirements.lock.txt` records the tested versions. Alembic creates all 14 required tables. It does not create an admin automatically.
+Migrations create the 14 foundation tables plus one internal durable vector-cleanup table. They do not create an admin automatically. Existing records are preserved by the additive migrations.
 
 ## Create your admin
 
@@ -63,104 +67,93 @@ python3 -m venv .venv
 PYTHONPATH=backend .venv/bin/python -m app.cli create-admin --email admin@example.com
 ```
 
-Enter a password of at least 12 characters at the hidden prompt. The command creates the user, a default organization, and ADMIN membership in one transaction. Passwords are stored as Argon2 hashes. There is no default password or public registration page.
+Enter your chosen password of at least 12 characters at the hidden prompt. **There is no default password, and arbitrary passwords will not log in.** Sign in with the password used when the account was created. Existing accounts and passwords are never overwritten by this command or the acceptance tests.
 
-For unattended setup, pass `ADMIN_PASSWORD` through the process environment; do not put passwords in command arguments or commit them. Existing accounts are never overwritten.
+For unattended setup, supply `ADMIN_PASSWORD` through the process environment. Do not put passwords in command arguments or commit them. Passwords are stored as Argon2 hashes; sessions use HttpOnly cookies.
 
-## Run FastAPI
+## Run the API, worker, and frontend
+
+Run the API in one terminal:
 
 ```sh
 .venv/bin/python -m uvicorn app.main:app --app-dir backend --reload --reload-dir backend/app --port 8000
 ```
 
-- API documentation: http://localhost:8000/docs
-- Liveness: http://localhost:8000/health
-- Dependencies: http://localhost:8000/health/ready (503 when any dependency is unavailable)
+Run the worker in a second terminal:
 
-## Run the frontend
+```sh
+PYTHONPATH=backend .venv/bin/python -m app.worker
+```
 
-A clean Docker build is the verified path on this machine because the global host npm launcher was found to contain unexpected obfuscated code. It has not been repaired or used for these phases. See `docs/phase-1.md` for the original finding.
+Keep both running. Start only one worker per database; a PostgreSQL advisory lock enforces this. Restart the worker after changing its code or configuration. Interrupted jobs return to the queue on worker restart.
+
+Build and start the frontend:
 
 ```sh
 docker compose --profile ui up -d --build frontend
 ```
 
-Open **http://localhost:3000**. Keep the local FastAPI process running. The public API URL is a frontend build argument, so rebuild the frontend after changing `NEXT_PUBLIC_API_URL`.
+Open **http://localhost:3000**. API documentation is at **http://localhost:8000/docs**. `/health` reports API liveness; `/health/ready` checks PostgreSQL, Qdrant, the worker, Ollama, and both configured local models, returning 503 when a dependency is unavailable.
 
-With a trusted local Node/npm installation, development can instead use:
+A clean Docker build is the verified frontend path on this machine. The host npm launcher was previously found to contain unexpected obfuscated code and was not used; see [the original environment record](docs/phase-1.md). With a trusted local Node/npm installation, `cd frontend`, `npm ci`, and `npm run dev` are also supported. Rebuild the frontend after changing `NEXT_PUBLIC_API_URL` because it is embedded at build time.
+
+## Use the workspace
+
+1. Sign in and create **HR Assistant**.
+2. Open **Knowledge Base → Add Knowledge** and upload a readable PDF, DOCX, UTF-8 TXT, or MD file.
+3. Watch `QUEUED → PROCESSING → READY`. If processing fails, inspect the error, address its cause, and click **Retry**.
+4. Open **Playground** and ask a question answered in that document.
+5. Expand the source cards to see excerpts, PDF page numbers, and authenticated original downloads.
+6. Ask follow-up questions, start a new chat, or select an existing conversation. Messages and citation snapshots survive refreshes.
+7. Use **Re-index** to regenerate a ready document's chunks and vectors. Delete documents or chatbots through the confirmation action when no document is processing.
+
+Another chatbot cannot retrieve these documents. Unsupported questions return an insufficient-knowledge answer. Deleted or half-indexed documents are excluded immediately through SQL readiness checks; durable cleanup jobs remove their Qdrant vectors and retry outages automatically. Old conversation excerpts remain as historical snapshots after a document is deleted; its original download then returns 404.
+
+## Configuration and limits
+
+The defaults are recorded in `.env.example`:
+
+- `CHUNK_SIZE=800`, `CHUNK_OVERLAP=100`, `TOP_K=5`
+- `RETRIEVAL_SCORE_THRESHOLD=0.3`, `MAX_CONTEXT_CHARS=16000`
+- `MAX_UPLOAD_SIZE_MB=20`, `MAX_EXTRACTED_CHARS=4000000`, `MAX_DOCUMENT_CHUNKS=10000`
+- `EMBEDDING_BATCH_SIZE=16`, `OLLAMA_TIMEOUT_SECONDS=180`, `QDRANT_TIMEOUT_SECONDS=30`
+- `WORKER_POLL_SECONDS=2`
+
+Local document files live in `backend/storage/` unless `STORAGE_DIR` is set. Back up the database and document storage together. Changing the embedding model requires re-indexing; a different vector dimension requires a new `QDRANT_COLLECTION` as well. Chunk/context limits count characters, not model tokens.
+
+V1 has no OCR: scanned or empty PDFs fail with an explanation. DOCX/TXT/MD citations have excerpts but no invented page numbers. The small local model can still make mistakes; inspect cited excerpts. This prototype uses one ingestion worker and one API process with bounded generation and login throttling; it is not a distributed production deployment. Filesystem deletion staging can restore ordinary transaction failures, but a machine crash may require reconciling `.trash-*` files against PostgreSQL. Telegram, widgets, public links, crawling, billing, and other V2 features are outside this implementation.
+
+## Tests and acceptance
 
 ```sh
-cd frontend
-npm ci
-npm run dev
-```
-
-The existing frontend project and package versions are retained.
-
-## Try phases 3–5
-
-1. Create an admin using the command above and sign in.
-2. Click **Create chatbot**, name it **HR Assistant**, and open it.
-3. Use **Settings** to edit its description and response settings.
-4. Open **Knowledge Base → Add Knowledge** and upload PDF, DOCX, UTF-8 TXT, or MD.
-5. Confirm the document is `QUEUED`. **View** shows metadata/history and an authenticated download of the original.
-6. Upload the same contents again; the API rejects the duplicate for that chatbot. Another chatbot may upload the same content independently.
-7. Delete a document or chatbot using the confirmation action. Records and stored files are removed.
-8. Sign out. All sessions for that admin are invalidated.
-
-Retry is available only for failed documents; re-index is available for ready documents. Both create a new queued job. In this phase, no worker runs these jobs, and the UI says so. PDF/DOCX parsing currently validates readability; full text extraction and OCR handling belong to later work.
-
-## Tests and verification
-
-```sh
-# Fast isolated suite (SQLite with foreign-key enforcement)
+# Fast isolated suite
 .venv/bin/python -m pytest -q
 
-# Real PostgreSQL suite + upgrade/downgrade/upgrade, using a new disposable database
+# Real PostgreSQL suite and migration upgrade/downgrade/reapply
 .venv/bin/python backend/scripts/verify_postgres.py
 
-# Live HTTP workflow, with API and frontend running
-.venv/bin/python backend/scripts/smoke_test.py
+# Complete live workflow: API, worker, frontend, Qdrant, and Ollama must be running
+.venv/bin/python backend/scripts/acceptance_test.py
 
-# Frontend lint, TypeScript, and production build using trusted Node in Docker
-docker build -t rag-craft-frontend:phase5 frontend
+# Lint, TypeScript, and production build in trusted Docker images
+docker build -t rag-craft-frontend:v1 frontend
+docker build -t rag-craft-backend:v1 backend
 ```
 
-The PostgreSQL verification script requires permission to create/drop a database. It creates a unique `ragcraft_test_*` database and deletes only that database. The live smoke script creates a temporary admin/organization, exercises the workflow, and cleans up its records/files. Neither script uses or changes an existing admin account.
+Verified: **69 tests pass on SQLite and PostgreSQL**, migration round trips pass, and **9 live acceptance groups pass**. The real model answers “18 days” from a synthetic handbook with a citation to page 12. Acceptance also checks follow-up history, tenant/chatbot isolation, unsupported questions, retry failures, duplicate-free re-indexing, document/vector deletion, and logout. Tests create disposable accounts and synthetic documents; existing accounts and documents are not changed. Vector cleanup remains durable if Qdrant is temporarily unavailable.
 
-Verified: 41 tests pass against PostgreSQL, migration upgrade/rollback/reapply succeeds, the live HTTP workflow passes, and both Docker images build. Frontend lint and TypeScript checks pass.
+The PostgreSQL script requires create/drop database privileges and deletes only its uniquely named test database. The acceptance script writes [its latest result](docs/acceptance-results.json). Implementation notes are in [phases 2–5](docs/phases-2-5.md) and [phases 6–13](docs/phases-6-13.md). HTTP and build checks passed; interactive browser testing remains unverified.
 
-Tests cover authentication/session invalidation, tenant-scoped CRUD and documents, file types/corruption/size limits, duplicates, queued jobs, retry/re-index transitions, download authorization, and storage cleanup on database failures. Detailed phase records are in `docs/phases-2-5.md`. Interactive browser verification was unavailable because no browser was connected.
+## Optional container backend and worker
 
-## Optional backend container
-
-The backend Dockerfile includes locked dependencies and migrations. The optional Compose `api` profile runs migrations before starting FastAPI:
+Stop the local API and worker before using this alternative:
 
 ```sh
-# Stop the local FastAPI process first to free port 8000.
-docker compose --profile api up -d --build backend
-# Create an admin interactively inside that backend:
+docker compose --profile api --profile ui up -d --build
+# For a new installation only:
 docker compose --profile api exec backend python -m app.cli create-admin --email admin@example.com
 ```
 
-The backend container uses the `document_storage` volume, separate from local `backend/storage`. Use one backend mode consistently; switching modes requires moving document files too. Docker Desktop's `host.docker.internal` points to host Ollama. The application itself has no Docker-specific database logic.
+The API migrates before startup; its liveness healthcheck gates worker startup. API and worker share the `document_storage` volume, which is **separate from local `backend/storage/`**. Use one mode consistently; switching an existing installation requires moving document files too. Docker Desktop's `host.docker.internal` points to host Ollama. Ollama must be reachable from containers. The currently verified local setup runs the API and worker on the host with the frontend and databases in Docker.
 
-## Later phases
-
-When working on embeddings/generation:
-
-```sh
-ollama serve
-ollama pull llama3.2:3b
-ollama pull nomic-embed-text
-```
-
-These model operations are not part of phases 2–5. Queue consumption, restart recovery, cross-store indexing/deletion, retrieval isolation, generation, citations, and conversation APIs remain pending. Filesystem staging can restore a deletion after an ordinary database failure, but is not a crash-safe distributed transaction; reconcile private `.trash-*` files with PostgreSQL after a process/machine crash.
-
-The original Git repository is still inside `frontend/`. Its history was preserved; root repository consolidation remains separate pending setup work.
-
-## References
-
-- [FastAPI JWT and password hashing](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
-- [Alembic migrations](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
-- [Starlette multipart request limits](https://www.starlette.io/requests/)
+The root repository currently tracks `frontend/` as a separate Git repository (gitlink). That existing layout and both repositories' history have been preserved.

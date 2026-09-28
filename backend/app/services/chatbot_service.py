@@ -1,3 +1,4 @@
+from app.services.vector_cleanup_service import schedule_cleanup
 import logging
 from sqlalchemy.orm import Session
 from app.core.exceptions import AppError
@@ -73,6 +74,7 @@ def delete_chatbot(db: Session, ctx: AdminContext, chatbot_id):
         raise AppError(409, "Wait for document processing to finish before deleting this chatbot.")
     with staged_deletion([doc.storage_key for doc in docs]):
         audit(db, ctx, "chatbot.deleted", bot.id)
+        schedule_cleanup(db, ctx.organization_id, chatbot_id)
         db.delete(bot)
         db.commit()
 
