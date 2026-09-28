@@ -1,0 +1,1564 @@
+# RAG Craft — Version 1 Development Prompt
+
+Build **Version 1 of RAG Craft**, a Retrieval-Augmented Generation (RAG) platform.
+
+Version 1 is a working prototype used to validate the core architecture before the full production system is developed by a team.
+
+The main goal is to prove this workflow:
+
+Admin Login  
+→ Create Chatbot  
+→ Upload Knowledge  
+→ Process Document  
+→ Generate Embeddings  
+→ Store Vectors  
+→ Ask Question  
+→ Retrieve Relevant Knowledge  
+→ Generate Answer  
+→ Display Source Citation
+
+Do NOT implement every planned RAG Craft feature yet.
+
+Focus on making this core workflow reliable, understandable, modular, and easy to extend in Version 2 and Version 3.
+
+---
+
+# 1. Technology Stack
+
+Use the following technologies.
+
+## Frontend
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- App Router
+
+## Backend
+
+- Python
+- FastAPI
+- Pydantic
+- SQLAlchemy
+- Alembic
+
+## Application Database
+
+Use PostgreSQL.
+
+For Version 1:
+
+PostgreSQL runs using Docker.
+
+The application must connect using environment variables such as:
+
+DATABASE_URL
+
+Do not hard-code database host, username, password, database name, or port.
+
+The architecture must allow PostgreSQL Docker to later be replaced with a real PostgreSQL server without changing application business logic.
+
+## Vector Database
+
+Use Qdrant.
+
+For Version 1:
+
+Qdrant runs using Docker.
+
+Qdrant is responsible for:
+
+- Embedding vectors
+- Vector similarity search
+- RAG retrieval
+
+PostgreSQL remains the source of truth for application/business data.
+
+## LLM
+
+Use Ollama.
+
+Generation model:
+
+llama3.2:3b
+
+The generation model must be configurable through environment variables.
+
+Example:
+
+OLLAMA_MODEL=llama3.2:3b
+
+## Embedding Model
+
+Use a dedicated embedding model.
+
+Recommended for V1:
+
+nomic-embed-text
+
+Do NOT use llama3.2:3b as the embedding model.
+
+The embedding model should also be configurable.
+
+Example:
+
+EMBEDDING_MODEL=nomic-embed-text
+
+---
+
+# 2. Project Structure
+
+Use ONE Git repository with separate frontend and backend applications.
+
+Create the project using approximately this structure:
+
+rag-craft/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   ├── components/
+│   │   ├── features/
+│   │   ├── lib/
+│   │   ├── services/
+│   │   └── types/
+│   │
+│   ├── public/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── .env.local
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   │
+│   │   ├── api/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── repositories/
+│   │   ├── services/
+│   │   ├── rag/
+│   │   ├── core/
+│   │   └── db/
+│   │
+│   ├── migrations/
+│   ├── tests/
+│   ├── requirements.txt
+│   └── .env
+│
+├── docker/
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+└── README.md
+
+Frontend and backend must remain separate applications even though they exist in the same repository.
+
+---
+
+# 3. Basic Architecture
+
+Use this communication flow:
+
+Next.js
+    ↓
+REST API
+    ↓
+FastAPI
+    │
+    ├── PostgreSQL
+    ├── Qdrant
+    └── Ollama
+
+Next.js must NOT directly communicate with PostgreSQL or Qdrant.
+
+All application operations must go through FastAPI.
+
+---
+
+# 4. Backend Architecture
+
+Keep the backend modular.
+
+Suggested structure:
+
+backend/app/
+
+api/
+    auth.py
+    chatbots.py
+    knowledge.py
+    playground.py
+
+models/
+    user.py
+    organization.py
+    organization_member.py
+    chatbot.py
+    chatbot_setting.py
+    knowledge_source.py
+    document.py
+    document_chunk.py
+    conversation.py
+    message.py
+    message_source.py
+    ingestion_job.py
+
+schemas/
+    auth.py
+    chatbot.py
+    document.py
+    conversation.py
+    rag.py
+
+repositories/
+    user_repository.py
+    chatbot_repository.py
+    document_repository.py
+    conversation_repository.py
+
+services/
+    auth_service.py
+    chatbot_service.py
+    document_service.py
+    ingestion_service.py
+    conversation_service.py
+
+rag/
+    loaders/
+    cleaner.py
+    chunker.py
+    embedding_service.py
+    vector_store.py
+    retriever.py
+    prompt_builder.py
+    generator.py
+    pipeline.py
+
+core/
+    config.py
+    security.py
+    logging.py
+    exceptions.py
+
+db/
+    session.py
+    base.py
+
+Do not put business logic directly inside FastAPI routes.
+
+Use:
+
+API
+→ Service
+→ Repository
+
+For RAG operations use:
+
+API
+→ RAG Service/Pipeline
+→ Retriever
+→ Qdrant
+→ Prompt Builder
+→ Ollama
+
+---
+
+# 5. Database Design
+
+Prepare PostgreSQL so that Version 1 remains simple but can later support the production multi-tenant architecture.
+
+Create these tables:
+
+1. users
+2. organizations
+3. organization_members
+4. chatbots
+5. chatbot_settings
+6. knowledge_sources
+7. documents
+8. document_chunks
+9. conversations
+10. messages
+11. message_sources
+12. ingestion_jobs
+13. api_keys
+14. audit_logs
+
+Not every table needs a full UI in Version 1.
+
+The purpose is to establish a clean normalized foundation.
+
+Use:
+
+- UUID primary keys where appropriate
+- created_at
+- updated_at
+- foreign keys
+- indexes
+- unique constraints where necessary
+
+Do not use unnecessary duplicated fields.
+
+Use database migrations through Alembic.
+
+---
+
+# 6. Authentication
+
+Implement simple authentication.
+
+For Version 1, only an ADMIN user is required.
+
+Admin can:
+
+- Login
+- Logout
+- Access dashboard
+- Create chatbot
+- Edit chatbot
+- Delete chatbot
+- Upload documents
+- Manage knowledge
+- Use Playground
+
+Passwords must be securely hashed.
+
+Never store plain-text passwords.
+
+Prepare the authentication structure so role-based access can be expanded later.
+
+Do NOT build complicated RBAC yet.
+
+---
+
+# 7. Organization Foundation
+
+Although Version 1 is primarily for one admin, include a basic organization structure.
+
+Relationship:
+
+User
+→ Organization Member
+→ Organization
+→ Chatbots
+
+This is preparation for production multi-tenancy.
+
+Every chatbot should belong to an organization.
+
+Do not build full organization management screens yet.
+
+A default organization may be created automatically for the Version 1 admin.
+
+---
+
+# 8. Chatbot Management
+
+Admin can:
+
+- Create chatbot
+- View chatbot
+- Edit chatbot
+- Delete chatbot
+
+A chatbot should contain information such as:
+
+- id
+- organization_id
+- name
+- description
+- status
+- created_at
+- updated_at
+
+Chatbot settings should be separated into chatbot_settings.
+
+Settings can contain:
+
+- chatbot_id
+- system_instruction
+- model_name
+- temperature
+- answer_length
+- top_k
+
+Default model:
+
+llama3.2:3b
+
+Example chatbot:
+
+Name:
+HR Assistant
+
+Description:
+Answers questions about company HR policies.
+
+System Instruction:
+Answer questions using the provided knowledge. If the answer cannot be found, clearly tell the user that the available knowledge does not contain enough information.
+
+---
+
+# 9. Chatbot Isolation
+
+This requirement is extremely important.
+
+Every chatbot must have its own isolated knowledge.
+
+Example:
+
+Organization A
+
+HR Assistant
+→ HR Handbook
+→ Leave Policy
+
+IT Assistant
+→ Network Guide
+→ Troubleshooting Guide
+
+When HR Assistant retrieves information, it must NEVER retrieve IT Assistant documents.
+
+Every retrieval must be scoped by at least:
+
+organization_id
+chatbot_id
+
+Do not perform a global vector search and filter the result afterward.
+
+Filtering must happen during retrieval.
+
+---
+
+# 10. Knowledge Base
+
+Each chatbot should have a Knowledge Base page.
+
+Navigation:
+
+Dashboard
+→ Chatbots
+→ Select Chatbot
+→ Knowledge Base
+
+Admin can:
+
+- Upload document
+- View documents
+- Check processing status
+- View processing error
+- Retry failed document
+- Re-index document
+- Delete document
+
+Version 1 supports:
+
+- PDF
+- DOCX
+- TXT
+- MD
+
+Do NOT implement website ingestion yet.
+
+---
+
+# 11. Knowledge Source
+
+Use knowledge_sources as the parent concept for knowledge.
+
+This is important because future versions may support:
+
+DOCUMENT
+WEBSITE
+API
+DATABASE
+OTHER
+
+Version 1 only needs:
+
+DOCUMENT
+
+This prevents the database architecture from assuming that every knowledge source will always be a file.
+
+---
+
+# 12. File Upload Validation
+
+Before accepting a document, validate:
+
+- File extension
+- MIME type where practical
+- Maximum file size
+- Empty file
+- Duplicate document
+- Corrupted/unreadable file
+
+Make file-size limits configurable.
+
+Example:
+
+MAX_UPLOAD_SIZE_MB=20
+
+Return understandable errors.
+
+Do not expose Python stack traces to the frontend.
+
+---
+
+# 13. Document Ingestion Pipeline
+
+When a document is uploaded, run:
+
+Upload
+↓
+Validate
+↓
+Create database record
+↓
+QUEUED
+↓
+Extract Text
+↓
+Clean Text
+↓
+Chunk Text
+↓
+Generate Embeddings
+↓
+Store Vectors in Qdrant
+↓
+Store Chunk Metadata
+↓
+READY
+
+If something fails:
+
+PROCESSING
+↓
+FAILED
+
+Keep ingestion logic separated from API routes.
+
+---
+
+# 14. Document Status
+
+Use these statuses:
+
+QUEUED
+PROCESSING
+READY
+FAILED
+
+Prepare the enum so NEEDS_REVIEW can be introduced later.
+
+The Knowledge Base interface should clearly display the status.
+
+Example:
+
+Employee-Handbook.pdf
+PDF
+READY
+
+Company-Policy.docx
+DOCX
+PROCESSING
+
+Broken.pdf
+PDF
+FAILED
+
+For failed documents, save:
+
+error_message
+
+and provide:
+
+Retry
+Delete
+
+---
+
+# 15. Text Extraction
+
+Create document loaders based on file type.
+
+Example:
+
+rag/loaders/
+
+pdf_loader.py
+docx_loader.py
+text_loader.py
+markdown_loader.py
+
+Each loader should return normalized extracted content and useful metadata.
+
+For PDF, preserve page numbers whenever possible.
+
+Page information is important for citations.
+
+---
+
+# 16. Text Cleaning
+
+Create a separate cleaner.
+
+Clean unnecessary content such as:
+
+- Excessive whitespace
+- Repeated blank lines
+- Invalid characters where appropriate
+
+Do not aggressively modify content in ways that change its meaning.
+
+---
+
+# 17. Chunking
+
+Create a dedicated chunking service.
+
+Use recursive text splitting.
+
+Make these configurable:
+
+CHUNK_SIZE
+CHUNK_OVERLAP
+
+Example only:
+
+CHUNK_SIZE=800
+CHUNK_OVERLAP=100
+
+Do not scatter these values throughout the code.
+
+Every chunk should have metadata such as:
+
+chunk_id
+organization_id
+chatbot_id
+document_id
+document_name
+page_number
+chunk_index
+source_type
+
+---
+
+# 18. Embedding
+
+Use:
+
+nomic-embed-text
+
+through the local embedding integration.
+
+Create:
+
+embedding_service.py
+
+Responsibilities:
+
+- Accept text
+- Generate embedding
+- Return vector
+- Handle embedding errors
+
+Do not mix embedding generation directly into API routes.
+
+---
+
+# 19. Qdrant
+
+Run Qdrant through Docker.
+
+Use Qdrant for vector storage and similarity search.
+
+Each vector payload should contain enough metadata to enforce isolation.
+
+Example conceptual payload:
+
+{
+    "organization_id": "...",
+    "chatbot_id": "...",
+    "document_id": "...",
+    "chunk_id": "...",
+    "document_name": "...",
+    "page_number": 5,
+    "chunk_index": 12
+}
+
+Use Qdrant payload filtering during search.
+
+Search must include:
+
+organization_id
+AND
+chatbot_id
+
+Do not rely only on client-side filtering.
+
+---
+
+# 20. PostgreSQL vs Qdrant Responsibility
+
+Keep responsibilities clear.
+
+PostgreSQL stores application data:
+
+- Users
+- Organizations
+- Membership
+- Chatbots
+- Settings
+- Knowledge sources
+- Documents
+- Chunk metadata
+- Conversations
+- Messages
+- Citations
+- Jobs
+- Audit information
+
+Qdrant stores data required for vector retrieval:
+
+- Vector
+- chunk_id
+- chatbot_id
+- organization_id
+- document_id
+- retrieval metadata
+
+PostgreSQL remains the main application source of truth.
+
+---
+
+# 21. RAG Retrieval Pipeline
+
+When a question is submitted:
+
+User Question
+↓
+Validate Chatbot Access
+↓
+Generate Query Embedding
+↓
+Search Qdrant
+↓
+Filter by organization_id + chatbot_id
+↓
+Retrieve Top-K Chunks
+↓
+Build Context
+↓
+Build Prompt
+↓
+Send to Ollama
+↓
+llama3.2:3b
+↓
+Generate Answer
+↓
+Return Answer + Sources
+
+Top-K should be configurable.
+
+Example:
+
+TOP_K=5
+
+---
+
+# 22. Prompt Builder
+
+Create:
+
+prompt_builder.py
+
+The prompt should contain:
+
+1. Chatbot system instruction
+2. Retrieved knowledge
+3. User question
+
+Use clear instructions such as:
+
+Answer using the supplied knowledge context.
+
+Do not invent information that is unsupported by the supplied context.
+
+If the supplied context does not contain enough information to answer the question, clearly state that there is not enough information in the available knowledge base.
+
+Keep source mapping outside the generated natural-language answer where possible.
+
+---
+
+# 23. Ollama Integration
+
+Use Ollama locally.
+
+Model:
+
+llama3.2:3b
+
+Configure using environment variables:
+
+OLLAMA_BASE_URL
+OLLAMA_MODEL
+
+Create a dedicated generation service.
+
+Example:
+
+generator.py
+
+Responsibilities:
+
+- Build Ollama request
+- Send prompt
+- Receive response
+- Handle timeout
+- Handle Ollama unavailable
+- Return generated text
+
+Do not directly call Ollama from frontend code.
+
+---
+
+# 24. Source Citations
+
+Every answer should return structured source information.
+
+Example API response:
+
+{
+    "answer": "Employees receive 18 days of annual leave.",
+    "sources": [
+        {
+            "document_id": "...",
+            "document_name": "Employee-Handbook.pdf",
+            "page_number": 12
+        }
+    ]
+}
+
+Do not require the frontend to extract citation information from the LLM-generated text.
+
+Citation information should come from retrieved chunks.
+
+---
+
+# 25. Playground
+
+Create an Admin Playground.
+
+Navigation:
+
+Chatbots
+→ HR Assistant
+→ Playground
+
+Interface:
+
+Chat history area
+
+Assistant messages
+
+User messages
+
+Question input
+
+Send button
+
+Loading indicator
+
+Sources underneath answers
+
+Example:
+
+User:
+How many annual leave days do employees receive?
+
+Assistant:
+Employees receive 18 days of annual leave.
+
+Sources
+Employee-Handbook.pdf — Page 12
+
+The Playground is for testing the chatbot.
+
+---
+
+# 26. Conversations
+
+Create basic conversation support.
+
+A conversation belongs to:
+
+organization
+chatbot
+
+Conversation contains many messages.
+
+Message roles:
+
+USER
+ASSISTANT
+
+Store:
+
+- message content
+- role
+- timestamp
+
+Assistant messages may have message_sources records.
+
+This prepares the system for future Web Widget, Telegram, and Public Share Link sessions.
+
+Do not build those channels yet.
+
+---
+
+# 27. Frontend
+
+Build a clean desktop-first admin dashboard.
+
+Do not over-design Version 1.
+
+Prioritize:
+
+- usability
+- readability
+- responsiveness
+- loading states
+- empty states
+- error states
+
+Main navigation:
+
+Dashboard
+
+Chatbots
+
+Settings
+
+Inside chatbot:
+
+Overview
+
+Knowledge Base
+
+Playground
+
+Settings
+
+---
+
+# 28. Dashboard
+
+Create a basic dashboard showing:
+
+Total Chatbots
+
+Total Documents
+
+Ready Documents
+
+Failed Documents
+
+Recent Chatbots
+
+Recent Document Activity
+
+Do not build advanced analytics yet.
+
+---
+
+# 29. Chatbot Page
+
+Example:
+
+HR Assistant
+
+Overview | Knowledge Base | Playground | Settings
+
+Overview should show:
+
+Chatbot name
+
+Description
+
+Model
+
+Number of documents
+
+Knowledge status
+
+Created date
+
+---
+
+# 30. Knowledge Base UI
+
+Create a table similar to:
+
+Document
+Type
+Status
+Uploaded
+Actions
+
+Example:
+
+Employee-Handbook.pdf
+PDF
+READY
+Today
+View | Re-index | Delete
+
+Leave-Policy.docx
+DOCX
+PROCESSING
+Today
+View
+
+Broken.pdf
+PDF
+FAILED
+Today
+Retry | Delete
+
+Provide an:
+
+Add Knowledge
+
+button.
+
+---
+
+# 31. Frontend API Layer
+
+Do not call FastAPI directly throughout random React components.
+
+Create a centralized API layer.
+
+Example:
+
+frontend/src/services/
+
+api.ts
+auth.service.ts
+chatbot.service.ts
+knowledge.service.ts
+playground.service.ts
+
+Keep API URLs configurable.
+
+Example:
+
+NEXT_PUBLIC_API_URL=http://localhost:8000
+
+---
+
+# 32. Docker Compose
+
+Use Docker Compose for the Version 1 development environment.
+
+At minimum include:
+
+postgres
+qdrant
+
+Frontend and backend may initially run locally during active development.
+
+Prepare Dockerfiles so they can later also run through Docker Compose.
+
+Conceptual services:
+
+frontend
+backend
+postgres
+qdrant
+
+Ollama may run directly on the development machine if that is easier for local model performance.
+
+Do not force Ollama into Docker if it unnecessarily complicates local development.
+
+---
+
+# 33. PostgreSQL Docker
+
+For Version 1 run PostgreSQL in Docker.
+
+Example configuration through environment variables:
+
+POSTGRES_DB
+POSTGRES_USER
+POSTGRES_PASSWORD
+DATABASE_URL
+
+Do not make the application dependent on Docker-specific database logic.
+
+Later production migration should only require changing something similar to:
+
+DATABASE_URL
+
+from:
+
+PostgreSQL Docker
+
+to:
+
+External PostgreSQL Server
+
+Business logic should not change.
+
+---
+
+# 34. Environment Configuration
+
+Create:
+
+.env.example
+
+Include examples for:
+
+DATABASE_URL
+
+QDRANT_URL
+
+QDRANT_COLLECTION
+
+OLLAMA_BASE_URL
+
+OLLAMA_MODEL
+
+EMBEDDING_MODEL
+
+JWT_SECRET
+
+CHUNK_SIZE
+
+CHUNK_OVERLAP
+
+TOP_K
+
+MAX_UPLOAD_SIZE_MB
+
+Never commit real secrets.
+
+---
+
+# 35. Error Handling
+
+Handle at least:
+
+Invalid login
+
+Unauthorized access
+
+Chatbot not found
+
+Invalid document
+
+Unsupported file type
+
+File too large
+
+Corrupted file
+
+Text extraction failure
+
+Embedding failure
+
+Qdrant unavailable
+
+PostgreSQL unavailable
+
+Ollama unavailable
+
+Retrieval failure
+
+Generation timeout
+
+Return clean API errors.
+
+---
+
+# 36. Logging
+
+Implement backend logging for important events.
+
+Examples:
+
+User login
+
+Chatbot created
+
+Document uploaded
+
+Ingestion started
+
+Text extraction completed
+
+Chunk count generated
+
+Embedding started
+
+Indexing completed
+
+Ingestion failed
+
+Retrieval performed
+
+Ollama generation failed
+
+Do not log:
+
+Passwords
+
+JWT secrets
+
+Database passwords
+
+Sensitive tokens
+
+---
+
+# 37. Basic Audit Foundation
+
+Prepare audit_logs.
+
+Important administrative actions may eventually record:
+
+user_id
+organization_id
+action
+resource_type
+resource_id
+timestamp
+
+Do not build a complex audit dashboard in Version 1.
+
+Just keep the architecture ready.
+
+---
+
+# 38. Testing
+
+Create backend tests for important functionality.
+
+At minimum test:
+
+Authentication
+
+Chatbot CRUD
+
+Document validation
+
+Text extraction
+
+Chunking
+
+Ingestion status
+
+Qdrant insertion
+
+Retrieval
+
+Chatbot knowledge isolation
+
+RAG answer endpoint
+
+Citation response
+
+Failed ingestion
+
+The most important security/isolation test:
+
+Create:
+
+Chatbot A
+Document A
+
+Chatbot B
+Document B
+
+Put unique information only inside Document B.
+
+Ask Chatbot A about that information.
+
+Chatbot A must NOT retrieve Document B.
+
+---
+
+# 39. Health Checks
+
+Create simple health endpoints.
+
+Example:
+
+GET /health
+
+Optionally report:
+
+API
+PostgreSQL
+Qdrant
+Ollama
+
+This will also help later when DevOps infrastructure and monitoring are introduced.
+
+---
+
+# 40. README
+
+Create a useful README explaining:
+
+Project purpose
+
+Architecture
+
+Requirements
+
+How to install Node.js dependencies
+
+How to create Python virtual environment
+
+How to install Python dependencies
+
+How to start PostgreSQL
+
+How to start Qdrant
+
+How to start Ollama
+
+How to pull:
+
+llama3.2:3b
+
+How to pull/configure the embedding model
+
+How to run FastAPI
+
+How to run Next.js
+
+How to run migrations
+
+How to create the initial admin
+
+How to run tests
+
+---
+
+# 41. Version 1 Acceptance Scenario
+
+Version 1 is successful when this complete scenario works.
+
+1. Start PostgreSQL.
+2. Start Qdrant.
+3. Start Ollama.
+4. Start FastAPI.
+5. Start Next.js.
+6. Login as admin.
+7. Create a chatbot called "HR Assistant".
+8. Open its Knowledge Base.
+9. Upload `employee-handbook.pdf`.
+10. Document status becomes QUEUED.
+11. Processing begins.
+12. Status becomes PROCESSING.
+13. Text is extracted.
+14. Text is chunked.
+15. Embeddings are generated.
+16. Vectors are stored in Qdrant.
+17. Status becomes READY.
+18. Open Playground.
+19. Ask a question whose answer exists in the document.
+20. Query embedding is generated.
+21. Qdrant retrieves relevant chunks belonging only to HR Assistant.
+22. Retrieved context is sent to llama3.2:3b.
+23. The model generates a grounded answer.
+24. Frontend displays the answer.
+25. Frontend displays the source document and page.
+26. Create another chatbot.
+27. Verify that the second chatbot cannot access HR Assistant's knowledge.
+
+Only after this workflow is reliable should Version 2 development begin.
+
+---
+
+# 42. Do NOT Build in Version 1
+
+Do NOT implement:
+
+Telegram Bot
+
+Web Widget
+
+Public Share Link
+
+Website crawling
+
+Mobile application
+
+Voice Query
+
+Complex organization management UI
+
+Complex RBAC
+
+Billing
+
+Advanced analytics
+
+GraphRAG
+
+Agentic RAG
+
+Hybrid Retrieval
+
+Cross-Encoder Reranking
+
+Advanced model selection
+
+Kubernetes
+
+Kubespray
+
+Argo CD
+
+Jenkins production deployment
+
+Production cloud infrastructure
+
+Complex monitoring stack
+
+These belong to later versions.
+
+---
+
+# 43. Code Quality Requirements
+
+Keep the code understandable for a student development team.
+
+Do not over-engineer the prototype.
+
+Use clear naming.
+
+Avoid giant files.
+
+Avoid duplicated logic.
+
+Add comments only where they explain important or non-obvious logic.
+
+Use services and repositories where they provide clear separation.
+
+Do not create unnecessary abstraction layers.
+
+Use async code where it provides a real benefit, not simply everywhere.
+
+Use proper database transactions where necessary.
+
+Validate API input using Pydantic.
+
+Use TypeScript types properly on the frontend.
+
+Do not use `any` unnecessarily.
+
+---
+
+# 44. Development Order
+
+Do NOT attempt to generate the entire application at once.
+
+Build it incrementally in this order:
+
+Phase 1:
+Project structure + Docker PostgreSQL + Qdrant + FastAPI + Next.js connectivity
+
+Phase 2:
+Database schema + Alembic migrations
+
+Phase 3:
+Authentication + default organization
+
+Phase 4:
+Chatbot CRUD
+
+Phase 5:
+Knowledge Base + document upload
+
+Phase 6:
+Text extraction + cleaning + chunking
+
+Phase 7:
+Embedding + Qdrant indexing
+
+Phase 8:
+Retrieval pipeline
+
+Phase 9:
+Ollama llama3.2:3b generation
+
+Phase 10:
+Playground + citations
+
+Phase 11:
+Conversation persistence
+
+Phase 12:
+Error handling + logging + tests
+
+Phase 13:
+Full acceptance testing
+
+At the end of each phase:
+
+1. Explain what was implemented.
+2. Show the important files created or modified.
+3. Explain how to run it.
+4. Provide a small test to verify that phase.
+5. Fix errors before moving to the next phase.
+
+Do not move to the next phase until the current phase works.
+
+---
+
+# Final Goal
+
+RAG Craft Version 1 is NOT intended to be the complete production platform.
+
+It is intended to validate the foundation that the production system will build upon.
+
+The most important architecture is:
+
+Next.js
+↓
+FastAPI
+↓
+PostgreSQL + Qdrant
+↓
+RAG Pipeline
+↓
+Ollama llama3.2:3b
+
+And the most important business flow is:
+
+Create Chatbot
+↓
+Add Knowledge
+↓
+Process Knowledge
+↓
+Index Knowledge
+↓
+Ask Question
+↓
+Retrieve Correct Knowledge
+↓
+Generate Grounded Answer
+↓
+Show Citation
+
+Prioritize correctness, knowledge isolation, modularity, and testability over adding more features.
