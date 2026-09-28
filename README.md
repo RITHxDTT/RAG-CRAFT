@@ -128,6 +128,8 @@ docker build -t rag-craft-frontend:phase5 frontend
 
 The PostgreSQL verification script requires permission to create/drop a database. It creates a unique `ragcraft_test_*` database and deletes only that database. The live smoke script creates a temporary admin/organization, exercises the workflow, and cleans up its records/files. Neither script uses or changes an existing admin account.
 
+Verified: 41 tests pass against PostgreSQL, migration upgrade/rollback/reapply succeeds, the live HTTP workflow passes, and both Docker images build. Frontend lint and TypeScript checks pass.
+
 Tests cover authentication/session invalidation, tenant-scoped CRUD and documents, file types/corruption/size limits, duplicates, queued jobs, retry/re-index transitions, download authorization, and storage cleanup on database failures. Detailed phase records are in `docs/phases-2-5.md`. Interactive browser verification was unavailable because no browser was connected.
 
 ## Optional backend container

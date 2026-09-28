@@ -52,10 +52,12 @@ Document routes enforce both organization and chatbot access. Downloads are atta
 
 **Scope boundary:** no ingestion worker exists in Phase 5. Uploads stay QUEUED; the UI explicitly explains this. Retry/re-index create a new queued job. Tests simulate READY/FAILED/PROCESSING statuses to verify allowed transitions. Playground is a clearly marked future feature, not a simulated answer screen.
 
-Run `python -m pytest backend/tests/test_documents.py -q` for focused tests. All 40 tests pass on SQLite and PostgreSQL. Frontend lint, TypeScript, and production build pass in clean Docker. Interactive browser testing could not run because the Browser runtime reported no connected browsers.
+Run `python -m pytest backend/tests/test_documents.py -q` for focused tests. All 41 tests pass against PostgreSQL, including the storage-collision regression. The focused 25-test document suite also passes on SQLite. Frontend lint, TypeScript, and production build pass in clean Docker. Interactive browser testing could not run because the Browser runtime reported no connected browsers.
 
 The root README includes migration, initial-admin, local/server/container startup, and full verification commands.
 
 ## Live verification
 
 The running FastAPI and Next.js services passed `backend/scripts/smoke_test.py`: unauthenticated rejection, login/profile, chatbot create/edit/delete, document upload/download, duplicate rejection, wrong-chatbot denial, dashboard counts, logout, and frontend HTTP delivery. The script removed its temporary account, organization, audit rows, and uploaded files. No permanent admin password was generated or stored; create your admin with the documented hidden prompt.
+
+Final packaging checks: both frontend and backend Docker images build successfully. The backend container connects to PostgreSQL and `alembic check` reports no schema drift. The final frontend image passes lint, TypeScript, and production build, and is running at localhost:3000. The updated local API is running at localhost:8000.

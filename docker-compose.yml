@@ -31,6 +31,7 @@ services:
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-3000}:3000"
   backend:
+    image: rag-craft-backend:phase5
     profiles: ["api"]
     build: ./backend
     env_file: .env
