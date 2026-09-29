@@ -3,7 +3,7 @@ from sqlalchemy import func, select
 from app.core.exceptions import AppError
 from app.models import Conversation, DocumentChunk, Message
 from app.schemas.rag import RagAnswer, Source
-from app.services import playground_service
+from app.services import chat_service
 from app.schemas.auth import AdminCreate
 from app.services.auth_service import create_admin
 from conftest import PASSWORD
@@ -21,7 +21,7 @@ def test_messages_and_citations_survive_reload_and_document_deletion(logged_in, 
     def respond(db, bot, question, history):
         seen_history.append(history)
         return RagAnswer(answer='18 days.', sources=[source])
-    monkeypatch.setattr(playground_service.pipeline, 'answer', respond)
+    monkeypatch.setattr(chat_service.pipeline, 'answer', respond)
     first = logged_in.post(f'/api/chatbots/{bot}/ask', json={'question':'How much leave?'}).json()
     conversation = first['conversation_id']
     second = logged_in.post(f'/api/chatbots/{bot}/ask', json={'question':'And per year?', 'conversation_id': conversation})
@@ -56,7 +56,7 @@ def test_generation_failure_does_not_save_partial_turn(logged_in, db, monkeypatc
     bot = logged_in.post('/api/chatbots', json={'name':'A'}).json()['id']
     def unavailable(*args):
         raise AppError(504, 'Generation timed out.')
-    monkeypatch.setattr(playground_service.pipeline, 'answer', unavailable)
+    monkeypatch.setattr(chat_service.pipeline, 'answer', unavailable)
     response = logged_in.post(f'/api/chatbots/{bot}/ask', json={'question':'Question'})
     assert response.status_code == 504
     assert db.scalar(select(func.count(Conversation.id))) == 0

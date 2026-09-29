@@ -6,6 +6,10 @@ from app.db.base import Base, Record
 
 class Conversation(Record, Base):
     __tablename__ = "conversations"
+    __table_args__ = (CheckConstraint("channel IN ('PLAYGROUND', 'TELEGRAM', 'WEB_WIDGET', 'PUBLIC_LINK')", name="channel"),)
+    channel: Mapped[str] = mapped_column(String(20), default="PLAYGROUND", index=True)
+    session_hash: Mapped[str | None] = mapped_column(String(64), index=True)
+    integration_id: Mapped[UUID | None] = mapped_column(ForeignKey("channel_integrations.id", ondelete="SET NULL"), index=True)
     # Organization is derived through the chatbot, preventing contradictory ownership.
     chatbot_id: Mapped[UUID] = mapped_column(ForeignKey("chatbots.id", ondelete="CASCADE"), index=True)
     title: Mapped[str] = mapped_column(String(200), default="New conversation")
@@ -30,5 +34,7 @@ class MessageSource(Record, Base):
     chunk_index: Mapped[int | None] = mapped_column(Integer)
     excerpt: Mapped[str | None] = mapped_column(Text)
     document_name: Mapped[str] = mapped_column(String(255))
+    sheet_name: Mapped[str | None] = mapped_column(String(120))
+    row_number: Mapped[int | None] = mapped_column(Integer)
     page_number: Mapped[int | None] = mapped_column(Integer)
     score: Mapped[float | None] = mapped_column(Float)

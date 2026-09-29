@@ -12,7 +12,7 @@ from app.core.exceptions import AppError
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
-app = FastAPI(title="RAG Craft API", version="1.0.0")
+app = FastAPI(title="RAG Craft API", version="2.0.0")
 app.add_middleware(RequestBodyLimitMiddleware, max_body_size=get_settings().max_upload_size_mb * 1024 * 1024 + 65536)
 app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins,
                    allow_credentials=True, allow_methods=["GET", "POST", "PATCH", "DELETE"],
@@ -57,3 +57,16 @@ app.include_router(chatbots.router)
 app.include_router(knowledge.router)
 
 app.include_router(playground.router)
+
+from app.api import catalog
+app.include_router(catalog.router)
+
+from app.api import channels
+app.include_router(channels.router)
+app.include_router(channels.public_router)
+
+from app.api import telegram
+app.include_router(telegram.router)
+
+from app.api import admin
+app.include_router(admin.router)

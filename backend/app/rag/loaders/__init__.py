@@ -1,10 +1,10 @@
 from pathlib import Path
 from app.core.config import get_settings
 from app.core.exceptions import AppError
-from app.rag.loaders import docx_loader, markdown_loader, pdf_loader, text_loader
+from app.rag.loaders import xlsx_loader, docx_loader, markdown_loader, pdf_loader, text_loader
 from app.rag.loaders.base import ExtractedPage
 
-LOADERS = {"PDF": pdf_loader.load, "DOCX": docx_loader.load, "TXT": text_loader.load, "MD": markdown_loader.load}
+LOADERS = {"XLSX": xlsx_loader.load, "PDF": pdf_loader.load, "DOCX": docx_loader.load, "TXT": text_loader.load, "MD": markdown_loader.load}
 
 
 def extract(path: Path, file_type: str) -> list[ExtractedPage]:

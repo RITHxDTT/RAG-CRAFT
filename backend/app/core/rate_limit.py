@@ -6,8 +6,9 @@ from app.core.exceptions import AppError
 
 class LoginLimiter:
     """Bounded, per-process V1 throttle; use a shared limiter for a multi-replica deployment."""
-    def __init__(self, maximum=20, window=60):
+    def __init__(self, maximum=20, window=60, message="Too many attempts. Wait one minute before trying again."):
         self.maximum, self.window = maximum, window
+        self.message = message
         self.attempts = OrderedDict()
         self.lock = Lock()
 
@@ -18,7 +19,7 @@ class LoginLimiter:
             if now - start >= self.window:
                 count, start = 0, now
             if count >= self.maximum:
-                raise AppError(429, 'Too many login attempts. Wait one minute before trying again.')
+                raise AppError(429, self.message)
             self.attempts[key] = (count + 1, start)
             self.attempts.move_to_end(key)
             while len(self.attempts) > 2048:

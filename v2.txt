@@ -1,0 +1,1193 @@
+# RAG Craft — Version 2 Development Prompt
+
+Continue development of the existing RAG Craft Version 1 project.
+
+DO NOT rebuild the project from scratch.
+
+Version 1 already has the core RAG workflow working:
+
+Create Chatbot
+→ Upload Document
+→ Extract Text
+→ Chunk
+→ Generate Embeddings
+→ Store in Qdrant
+→ Ask Question
+→ Retrieve Knowledge
+→ Generate Answer with Ollama
+→ Display Source Citation
+
+Version 2 should extend this foundation into a usable multi-user chatbot platform.
+
+==================================================
+1. IMPORTANT DEVELOPMENT RULES
+==================================================
+
+Before changing code:
+
+1. Inspect the existing frontend and backend.
+2. Understand the existing database models and migrations.
+3. Understand the existing authentication implementation.
+4. Understand the existing RAG pipeline.
+5. Understand how chatbot/document isolation currently works.
+6. Understand the existing conversation/message structure.
+7. Reuse existing services, repositories, components, and utilities.
+8. Do NOT duplicate existing functionality.
+9. Do NOT rewrite working Version 1 features unnecessarily.
+10. Preserve backward compatibility where practical.
+
+Continue using:
+
+Frontend:
+- Next.js
+- TypeScript
+- Tailwind CSS
+- App Router
+
+Backend:
+- Python
+- FastAPI
+- Pydantic
+- SQLAlchemy
+- Alembic
+
+Data:
+- PostgreSQL
+- Qdrant
+
+AI:
+- Ollama
+- llama3.2:3b
+- nomic-embed-text
+
+Architecture:
+
+Next.js
+   ↓
+FastAPI
+   ├── PostgreSQL
+   ├── Qdrant
+   └── Ollama
+
+Frontend must never communicate directly with PostgreSQL or Qdrant.
+
+Backend business logic should continue following:
+
+API
+→ Service
+→ Repository
+
+RAG logic should remain separated from normal application business logic.
+
+==================================================
+2. VERSION 2 MAIN GOAL
+==================================================
+
+Version 2 should allow real users to:
+
+Register/Login
+→ Create their own chatbot
+→ Configure chatbot
+→ Add knowledge
+→ Test chatbot
+→ Publish chatbot
+→ Access chatbot through multiple channels
+→ View conversations
+→ View basic usage information
+
+The platform has TWO authenticated roles:
+
+ADMIN
+USER
+
+ADMIN represents the RAG Craft platform administrator/developer.
+
+USER represents a customer using RAG Craft to create and manage their own AI chatbots.
+
+External visitors using a Public Share Link, Web Widget, or Telegram Bot are NOT authenticated RAG Craft roles.
+
+They are guests/channel users.
+
+==================================================
+3. USER AUTHENTICATION
+==================================================
+
+Extend Version 1 authentication.
+
+USER can:
+
+- Register
+- Login
+- Logout
+- Reset/Forgot password
+- View profile
+- Update profile
+
+Registration fields:
+
+- Full name
+- Email
+- Password
+- Confirm password
+
+Use secure password hashing.
+
+Never store plain-text passwords.
+
+Use the existing authentication approach where possible.
+
+Roles:
+
+ADMIN
+USER
+
+New registrations should receive USER role by default.
+
+Users must never be able to assign themselves ADMIN role.
+
+==================================================
+4. USER OWNERSHIP AND DATA ISOLATION
+==================================================
+
+This is extremely important.
+
+Every user-owned resource must have clear ownership.
+
+A USER must only be able to manage their own:
+
+- Chatbots
+- Documents
+- Knowledge sources
+- Conversations
+- Channel integrations
+- Public links
+- Web Widgets
+- Telegram integrations
+
+Do not trust owner_id/user_id received from frontend requests.
+
+Determine the authenticated user from the authentication token/session.
+
+Example:
+
+Logged-in User A
+→ Request Chatbot B
+→ Backend checks ownership
+→ If Chatbot B belongs to User B
+→ Return 403 Forbidden
+
+Continue enforcing chatbot knowledge isolation in Qdrant.
+
+Retrieval must remain scoped to the correct:
+
+organization_id
+chatbot_id
+
+Do not perform global retrieval.
+
+==================================================
+5. ADMIN MANAGEMENT
+==================================================
+
+ADMIN can:
+
+User Management:
+- View users
+- Search users
+- View user details
+- View number of chatbots owned by each user
+- Enable user
+- Disable user
+
+Chatbot Monitoring:
+- View chatbots created by users
+- View chatbot owner
+- View chatbot status
+
+Do NOT allow Admin monitoring features to expose passwords, private tokens, or unnecessary sensitive information.
+
+==================================================
+6. MODEL MANAGEMENT
+==================================================
+
+Create model management for ADMIN.
+
+ADMIN can:
+
+- Add model
+- View model list
+- Update model
+- Enable/disable model
+- Set default model
+
+Model fields should include approximately:
+
+- id
+- name
+- provider
+- model_identifier
+- enabled
+- is_default
+- created_at
+- updated_at
+
+For Version 2, provider may initially be:
+
+OLLAMA
+
+Example:
+
+Display Name:
+Llama 3.2 3B
+
+Provider:
+OLLAMA
+
+Model Identifier:
+llama3.2:3b
+
+Do not allow normal USER accounts to create platform models.
+
+USER can select an ENABLED model when configuring a chatbot.
+
+Do not hard-code model choices into frontend components.
+
+Load available models from backend.
+
+==================================================
+7. SYSTEM PROMPT MANAGEMENT
+==================================================
+
+ADMIN can create predefined system prompt templates.
+
+Admin can:
+
+- Create prompt template
+- View prompt templates
+- Update prompt template
+- Delete/disable prompt template
+
+Example:
+
+Name:
+HR Assistant
+
+Prompt:
+You are an HR assistant. Answer questions using the provided company knowledge.
+
+USER can:
+
+- Select a predefined system prompt when creating/configuring chatbot
+- Use the selected prompt as starting configuration
+- Customize their chatbot instruction if allowed
+
+Do not duplicate the entire prompt unnecessarily if a clean reference/override design can be used.
+
+==================================================
+8. USER CHATBOT MANAGEMENT
+==================================================
+
+USER can:
+
+- Create chatbot
+- View own chatbots
+- Update chatbot
+- Delete chatbot
+- Enable/disable chatbot
+- Test chatbot in Playground
+
+Chatbot creation/configuration should support:
+
+- Chatbot name
+- Description
+- Model
+- System prompt/template
+- Custom instruction
+- Tone
+- Answer length
+- Starter questions
+
+Suggested tone options:
+
+- Professional
+- Friendly
+- Concise
+- Educational
+
+Do not hard-code behavior deeply into the RAG pipeline.
+
+Chatbot settings should control prompt construction.
+
+==================================================
+9. STARTER QUESTIONS
+==================================================
+
+Allow USER to configure starter questions for each chatbot.
+
+Example:
+
+HR Assistant
+
+Starter Questions:
+
+- How many annual leave days do employees receive?
+- What are the working hours?
+- Can employees work remotely?
+
+Support:
+
+- Add
+- Edit
+- Delete
+- Reorder if easy to implement
+
+Display starter questions in:
+
+- Playground
+- Public Share Page
+- Web Widget
+
+Do not make reordering a blocker if it adds unnecessary complexity.
+
+==================================================
+10. KNOWLEDGE BASE IMPROVEMENTS
+==================================================
+
+Keep existing support:
+
+- PDF
+- DOCX
+- TXT
+- MD
+
+Add:
+
+- XLSX
+
+For XLSX:
+
+Extract useful text while preserving metadata such as:
+
+- workbook/file name
+- sheet name
+- row where practical
+
+Do NOT implement full website crawling in Version 2.
+
+Improve upload UX:
+
+- Drag and drop
+- Multiple file selection
+- Upload progress where practical
+- Clear validation errors
+
+Continue supporting:
+
+QUEUED
+PROCESSING
+READY
+FAILED
+
+Continue:
+
+- Retry
+- Re-index
+- Delete
+
+==================================================
+11. MULTI-CHANNEL ACCESS
+==================================================
+
+Version 2 must implement THREE external access methods:
+
+1. Telegram Bot
+2. Web Widget
+3. Public Share Link
+
+All channels must reuse the SAME chatbot and SAME RAG pipeline.
+
+Do NOT create separate RAG logic for each channel.
+
+Concept:
+
+Telegram ──────┐
+Web Widget ────┼→ Chat Service → RAG Pipeline → Answer
+Public Link ───┘
+
+Create a reusable application-level chat service that channel adapters can call.
+
+==================================================
+12. TELEGRAM BOT INTEGRATION
+==================================================
+
+USER flow:
+
+Select Chatbot
+→ Open Telegram Integration
+→ Enter Telegram Bot Token
+→ Connect
+→ Test Connection
+→ Enable Integration
+
+USER obtains the Bot Token from Telegram BotFather.
+
+Backend should:
+
+1. Validate the Bot Token using Telegram Bot API.
+2. Create Telegram integration record.
+3. Associate integration with:
+   - owner/user
+   - chatbot
+4. Register the Telegram webhook.
+5. Receive Telegram updates through FastAPI webhook endpoint.
+6. Identify integration/chatbot.
+7. Send incoming text to the shared chat/RAG service.
+8. Send generated answer back through Telegram Bot API.
+
+Conceptual endpoint:
+
+POST /api/webhooks/telegram/{integration_identifier}
+
+Do NOT expose internal sequential IDs unnecessarily.
+
+Store Telegram Bot Tokens securely.
+
+Never:
+
+- Log Bot Token
+- Return full Bot Token to frontend after storage
+- Include Bot Token in URLs
+
+USER can:
+
+- View connection status
+- Test connection
+- Enable/disable integration
+- Disconnect integration
+
+Suggested statuses:
+
+CONNECTED
+DISCONNECTED
+FAILED
+
+==================================================
+13. WEB WIDGET
+==================================================
+
+USER flow:
+
+Select Chatbot
+→ Generate Web Widget
+→ System creates Widget ID/Public Key
+→ Generate Embed Code
+→ Copy Embed Code
+→ Paste into Website
+
+Example concept:
+
+<script
+  src="https://YOUR_DOMAIN/widget.js"
+  data-widget-id="PUBLIC_WIDGET_ID">
+</script>
+
+Do NOT expose database IDs or secret API keys in public embed code.
+
+Create a random public widget identifier.
+
+Backend stores mapping:
+
+widget_public_id
+→ chatbot_id
+→ owner_id
+
+When website visitor opens widget:
+
+Widget
+→ Public Widget API
+→ Validate Widget ID
+→ Find Chatbot
+→ Shared Chat Service
+→ RAG
+→ Response
+
+USER can:
+
+- Generate widget
+- Copy embed code
+- Enable widget
+- Disable widget
+- Regenerate public widget identifier if necessary
+
+Use iframe isolation if appropriate so RAG Craft CSS does not conflict with the host website.
+
+Keep Version 2 widget UI simple:
+
+- Floating chat button
+- Chat window
+- Chatbot name
+- Messages
+- Starter questions
+- Input
+- Send button
+- Loading state
+- Error state
+
+Do NOT build a complex visual widget designer yet.
+
+==================================================
+14. PUBLIC SHARE LINK
+==================================================
+
+USER flow:
+
+Select Chatbot
+→ Generate Public Link
+→ System generates secure random public token
+→ Save token mapping
+→ Display shareable URL
+
+Example:
+
+https://YOUR_DOMAIN/share/{public_token}
+
+Do NOT expose:
+
+/share/{chatbot_database_id}
+
+Use a secure random public token.
+
+Backend mapping:
+
+public_token
+→ chatbot_id
+→ owner_id
+
+Public visitor can:
+
+- Open link without RAG Craft login
+- View chatbot name
+- View starter questions
+- Ask question
+- Receive answer
+- View citations where allowed
+
+Public visitor CANNOT:
+
+- Edit chatbot
+- Upload documents
+- Change settings
+- View dashboard
+- View owner's private data
+
+USER can:
+
+- Generate link
+- Copy link
+- Enable/disable link
+- Regenerate link
+
+When regenerated:
+
+Old token must stop working.
+
+==================================================
+15. CHANNEL ARCHITECTURE
+==================================================
+
+Avoid duplicated chat/RAG code.
+
+Create a shared abstraction similar to:
+
+Channel Request
+      ↓
+Chat Service
+      ↓
+Validate Chatbot
+      ↓
+Create/Load Conversation
+      ↓
+RAG Pipeline
+      ↓
+Save Messages
+      ↓
+Return Response
+
+Channel-specific code should mainly handle:
+
+Telegram:
+Telegram request/response conversion
+
+Web Widget:
+Widget request/session handling
+
+Public Link:
+Public token/session handling
+
+The RAG pipeline itself should not care whether the question came from Telegram, Widget, Playground, or Public Link.
+
+==================================================
+16. CONVERSATION MANAGEMENT
+==================================================
+
+Extend Version 1 conversations.
+
+Support channels:
+
+PLAYGROUND
+TELEGRAM
+WEB_WIDGET
+PUBLIC_LINK
+
+Store channel/source on conversation.
+
+USER can:
+
+- View conversation history for owned chatbot
+- Open conversation
+- View messages
+- Delete conversation
+
+Where appropriate show:
+
+- Chatbot
+- Channel
+- Created time
+- Last message time
+
+Do not expose another user's conversations.
+
+External channel users do not receive access to the RAG Craft dashboard.
+
+==================================================
+17. SOURCE VIEWER
+==================================================
+
+Version 1 already returns citations.
+
+Version 2 should make citations more useful.
+
+When user clicks citation:
+
+- Open source information
+- Show document name
+- Show page number where available
+- Show retrieved source text
+
+For PDF:
+
+Attempt to open the relevant page.
+
+Do not make advanced text highlighting mandatory in Version 2.
+
+If source no longer exists:
+
+Show:
+
+"Source unavailable"
+
+Do not crash the conversation page.
+
+==================================================
+18. BASIC ANALYTICS
+==================================================
+
+Keep analytics SIMPLE.
+
+Do not build advanced data warehouse/event architecture.
+
+USER dashboard can show:
+
+- Total chatbots
+- Total documents
+- Total conversations
+- Total messages
+- Messages by channel
+
+ADMIN dashboard can show:
+
+- Total users
+- Active users
+- Total chatbots
+- Total documents
+- Total conversations
+- Total messages
+- Channel usage
+
+Use efficient PostgreSQL aggregate queries.
+
+Add indexes where needed.
+
+Do not introduce Elasticsearch or another analytics database.
+
+==================================================
+19. DATABASE CHANGES
+==================================================
+
+Inspect the existing Version 1 schema FIRST.
+
+Do not recreate existing tables unnecessarily.
+
+Add migrations only for required Version 2 changes.
+
+Potential new tables may include:
+
+- models
+- system_prompt_templates
+- chatbot_starter_questions
+- telegram_integrations
+- web_widget_integrations
+- public_share_links
+
+Existing tables may need additional fields for:
+
+- user role
+- user status
+- chatbot owner
+- chatbot status
+- conversation channel
+
+Use Alembic migrations.
+
+Never manually modify production-like database schema without migration.
+
+Use:
+
+- Foreign keys
+- Unique constraints
+- Indexes
+- Appropriate cascading behavior
+
+Be careful with destructive cascade deletion.
+
+==================================================
+20. PUBLIC IDENTIFIERS
+==================================================
+
+Never expose sensitive internal identifiers when unnecessary.
+
+For external/public resources use secure random identifiers.
+
+Examples:
+
+public_share_token
+widget_public_id
+telegram_integration_identifier
+
+Generate them using cryptographically secure randomness.
+
+Do not generate predictable values such as:
+
+chatbot-1
+chatbot-2
+user-10
+
+==================================================
+21. API SECURITY
+==================================================
+
+Separate authenticated and public endpoints clearly.
+
+Example:
+
+/api/users/...
+/api/chatbots/...
+/api/admin/...
+
+versus:
+
+/api/public/share/...
+/api/public/widget/...
+/api/webhooks/telegram/...
+
+Authenticated routes must verify current user.
+
+Admin routes must verify ADMIN role.
+
+Public endpoints must validate their public token/identifier.
+
+Never rely only on frontend authorization.
+
+==================================================
+22. SECRETS
+==================================================
+
+Never commit:
+
+- Telegram Bot Tokens
+- JWT secret
+- Database password
+- API secrets
+
+Use environment variables for platform secrets.
+
+Sensitive integration credentials stored in database should be encrypted where practical.
+
+Never log secrets.
+
+Mask secrets in Admin/User UI.
+
+Example:
+
+Telegram Token:
+123456************
+
+==================================================
+23. ERROR HANDLING
+==================================================
+
+Handle cleanly:
+
+- Invalid login
+- Duplicate email
+- Unauthorized resource access
+- Disabled account
+- Invalid chatbot
+- Invalid Telegram Bot Token
+- Telegram unavailable
+- Telegram webhook failure
+- Invalid Widget ID
+- Disabled Widget
+- Invalid Public Share Token
+- Disabled Public Link
+- Missing/deleted document
+- RAG retrieval failure
+- Ollama unavailable
+
+Return understandable API responses.
+
+Do not expose stack traces to users.
+
+==================================================
+24. LOGGING
+==================================================
+
+Log important operational events:
+
+- User registered
+- User login
+- Chatbot created
+- Channel created
+- Telegram connected
+- Telegram webhook failure
+- Widget generated
+- Public link generated
+- Public link regenerated
+- Channel disabled
+- RAG request failed
+
+Do NOT log:
+
+- Passwords
+- JWT secrets
+- Telegram Bot Tokens
+- Private credentials
+- Full sensitive user content unnecessarily
+
+==================================================
+25. TESTING
+==================================================
+
+Add tests for Version 2.
+
+At minimum test:
+
+Authentication:
+- User registration
+- Login
+- Role authorization
+- Disabled user
+
+Ownership:
+- User A cannot access User B chatbot
+- User A cannot access User B documents
+- User A cannot access User B conversations
+- User A cannot manage User B integrations
+
+Chatbot:
+- User chatbot CRUD
+- Model selection
+- Prompt selection
+
+Telegram:
+- Integration creation
+- Invalid token handling
+- Webhook routing to correct chatbot
+
+Widget:
+- Generate Widget ID
+- Invalid Widget ID rejected
+- Disabled Widget rejected
+- Correct chatbot receives question
+
+Public Share:
+- Generate token
+- Valid token works
+- Invalid token rejected
+- Disabled token rejected
+- Regenerated old token no longer works
+
+RAG:
+- All channels use correct chatbot knowledge
+- No cross-chatbot retrieval
+- Citations still work
+
+==================================================
+26. FRONTEND PAGES
+==================================================
+
+Extend the existing UI.
+
+USER:
+
+Dashboard
+
+Chatbots
+  → Overview
+  → Knowledge Base
+  → Playground
+  → Conversations
+  → Channels
+       → Telegram
+       → Web Widget
+       → Public Share Link
+  → Settings
+
+Profile
+
+ADMIN:
+
+Dashboard
+Users
+Models
+System Prompts
+Chatbots / Monitoring
+
+Do not rebuild the entire Version 1 frontend.
+
+Reuse existing components/layout where appropriate.
+
+==================================================
+27. UX REQUIREMENTS
+==================================================
+
+Every important action should have:
+
+- Loading state
+- Success feedback
+- Error feedback
+- Empty state where appropriate
+- Confirmation for destructive actions
+
+Examples:
+
+Delete Chatbot
+Disconnect Telegram
+Regenerate Public Link
+Disable Widget
+
+should require confirmation.
+
+Do not display raw backend errors.
+
+==================================================
+28. DO NOT BUILD IN VERSION 2
+==================================================
+
+Do NOT implement yet:
+
+- Full website crawling
+- Dynamic Playwright crawling
+- Advanced RBAC
+- Billing/subscriptions
+- Voice Query
+- Mobile Application
+- GraphRAG
+- Agentic RAG
+- Hybrid BM25 + Vector Retrieval
+- Cross-Encoder Reranking
+- Advanced analytics pipeline
+- Complex event architecture
+- Redis unless genuinely required
+- Celery/distributed workers unless genuinely required
+- Complex widget visual designer
+- Advanced source text highlighting
+- Advanced abuse detection
+- Multi-provider cloud LLM orchestration
+
+These belong to Version 3.
+
+Do not add technologies simply because they are popular.
+
+==================================================
+29. VERSION 2 DEVELOPMENT ORDER
+==================================================
+
+Do NOT implement everything at once.
+
+Phase 1:
+Inspect Version 1 and document existing architecture.
+
+Phase 2:
+Database migrations + USER role + ownership foundation.
+
+Phase 3:
+User registration/login/profile.
+
+Phase 4:
+User chatbot CRUD + ownership authorization.
+
+Phase 5:
+Admin model management.
+
+Phase 6:
+System prompt templates + chatbot configuration.
+
+Phase 7:
+Starter questions.
+
+Phase 8:
+Knowledge Base improvements + XLSX.
+
+Phase 9:
+Conversation management improvements.
+
+Phase 10:
+Public Share Link.
+
+Phase 11:
+Web Widget.
+
+Phase 12:
+Telegram Bot integration.
+
+Phase 13:
+Source Viewer.
+
+Phase 14:
+Basic User/Admin analytics.
+
+Phase 15:
+Security review + error handling + logging.
+
+Phase 16:
+Automated tests + full acceptance testing.
+
+At the end of EVERY phase:
+
+1. Explain what was implemented.
+2. List files created.
+3. List files modified.
+4. Explain database changes.
+5. Explain API changes.
+6. Explain how to run it.
+7. Provide test steps.
+8. Wait until the phase works before proceeding.
+
+DO NOT automatically continue through all phases if the current phase has errors.
+
+==================================================
+30. VERSION 2 ACCEPTANCE SCENARIO
+==================================================
+
+Version 2 is successful when:
+
+1. Admin logs in.
+2. Admin creates/enables an available model.
+3. Admin creates a predefined system prompt.
+4. New User registers.
+5. User logs in.
+6. User creates "HR Assistant".
+7. User selects model.
+8. User selects/customizes system prompt.
+9. User uploads HR document.
+10. Document becomes READY.
+11. User tests chatbot in Playground.
+12. Correct answer + citation is returned.
+13. User generates Public Share Link.
+14. Guest opens link and asks question.
+15. Correct HR answer is returned.
+16. User generates Web Widget.
+17. Widget is embedded/tested.
+18. Widget question reaches the same HR Assistant.
+19. User connects Telegram Bot.
+20. Telegram question reaches the same HR Assistant.
+21. Conversations show correct channel.
+22. User can view basic usage statistics.
+23. Create another user and chatbot.
+24. Verify User A cannot access User B resources.
+25. Verify Chatbot A cannot retrieve Chatbot B knowledge.
+
+==================================================
+31. CODE QUALITY
+==================================================
+
+Follow best practices but keep the project understandable for a student development team.
+
+Prioritize:
+
+- Security
+- Clear ownership
+- Data isolation
+- Modularity
+- Maintainability
+- Testability
+- Reuse
+
+Avoid:
+
+- Giant service files
+- Giant React components
+- Duplicated channel logic
+- Hard-coded URLs
+- Hard-coded model names
+- Hard-coded secrets
+- Business logic inside API routes
+- Database calls scattered through frontend
+- Separate RAG implementations for each channel
+- Premature microservices
+- Premature optimization
+- Unnecessary abstraction
+
+Prefer simple, explicit code over overly clever architecture.
+
+==================================================
+FINAL GOAL
+==================================================
+
+Version 1 proved:
+
+Chatbot
+→ Knowledge
+→ RAG
+→ Answer
+→ Citation
+
+Version 2 must prove:
+
+User
+→ Create Chatbot
+→ Configure Chatbot
+→ Add Knowledge
+→ Test Chatbot
+→ Publish Chatbot
+→ Telegram / Web Widget / Public Link
+→ Same RAG Pipeline
+→ Conversations
+→ Basic Analytics
+
+The most important Version 2 architecture principle is:
+
+ONE CHATBOT
++
+ONE ISOLATED KNOWLEDGE BASE
++
+ONE SHARED RAG PIPELINE
++
+MULTIPLE ACCESS CHANNELS
+
+Do not sacrifice chatbot/user isolation for convenience.
+
+Do not rebuild working Version 1 functionality.
+
+Implement incrementally and verify every phase before moving forward.

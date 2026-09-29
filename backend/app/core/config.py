@@ -13,6 +13,15 @@ class Settings(BaseSettings):
     jwt_secret: SecretStr = Field(min_length=32)
     session_minutes: int = Field(default=480, ge=1, le=10080)
     cookie_secure: bool = False
+    frontend_url: str = "http://localhost:3000"
+    public_api_url: str = "http://localhost:8000"
+    integration_encryption_key: SecretStr | None = None
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_username: str | None = None
+    smtp_password: SecretStr | None = None
+    smtp_from: str = "noreply@example.com"
+    smtp_starttls: bool = True
     qdrant_url: str = "http://localhost:6333"
     qdrant_collection: str = "rag_craft"
     ollama_base_url: str = "http://localhost:11434"

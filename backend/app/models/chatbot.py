@@ -1,5 +1,5 @@
 from uuid import UUID
-from sqlalchemy import CheckConstraint, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import CheckConstraint, JSON, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, Record
 
@@ -8,7 +8,9 @@ class Chatbot(Record, Base):
     __tablename__ = "chatbots"
     __table_args__ = (CheckConstraint("status IN ('ACTIVE', 'INACTIVE')", name="valid_status"),)
     organization_id: Mapped[UUID] = mapped_column(ForeignKey("organizations.id", ondelete="CASCADE"), index=True)
+    owner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"), index=True)
     name: Mapped[str] = mapped_column(String(120))
+    starter_questions: Mapped[list] = mapped_column(JSON, default=list)
     description: Mapped[str] = mapped_column(Text, default="")
     status: Mapped[str] = mapped_column(String(20), default="ACTIVE")
     settings: Mapped["ChatbotSetting"] = relationship(cascade="all, delete-orphan", uselist=False, lazy="selectin")
@@ -22,6 +24,10 @@ class ChatbotSetting(Record, Base):
         CheckConstraint("answer_length IN ('SHORT', 'MEDIUM', 'LONG')", name="valid_answer_length"),
     )
     chatbot_id: Mapped[UUID] = mapped_column(ForeignKey("chatbots.id", ondelete="CASCADE"), unique=True)
+    model_id: Mapped[UUID | None] = mapped_column(ForeignKey("models.id", ondelete="RESTRICT"), index=True)
+    prompt_template_id: Mapped[UUID | None] = mapped_column(ForeignKey("system_prompt_templates.id", ondelete="SET NULL"), index=True)
+    tone: Mapped[str] = mapped_column(String(20), default="PROFESSIONAL")
+    custom_instruction: Mapped[str] = mapped_column(Text, default="")
     system_instruction: Mapped[str] = mapped_column(Text)
     model_name: Mapped[str] = mapped_column(String(120))
     temperature: Mapped[float] = mapped_column(Float, default=0.2)

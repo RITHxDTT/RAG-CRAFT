@@ -10,6 +10,8 @@ class TextChunk:
     content: str
     chunk_index: int
     page_number: int | None
+    sheet_name: str | None = None
+    row_number: int | None = None
 
 
 def split_boundary(window: str, minimum: int, separators=("\n\n", "\n", ". ", " ")) -> int:
@@ -30,7 +32,7 @@ def chunk_pages(pages: list[ExtractedPage], size: int | None = None, overlap: in
     if not 0 <= overlap < size:
         raise ValueError("Chunk overlap must be smaller than chunk size.")
     # Keep PDF pages separate for precise citations; combine unpaginated DOCX blocks.
-    if pages and all(page.page_number is None for page in pages):
+    if pages and all(page.page_number is None and page.sheet_name is None for page in pages):
         pages = [ExtractedPage("\n\n".join(page.text for page in pages))]
     chunks = []
     for page in pages:
@@ -42,7 +44,7 @@ def chunk_pages(pages: list[ExtractedPage], size: int | None = None, overlap: in
                 end = start + split_boundary(text[start:end], max(size // 2, overlap + 1))
             content = text[start:end].strip()
             if content:
-                chunks.append(TextChunk(content, len(chunks), page.page_number))
+                chunks.append(TextChunk(content, len(chunks), page.page_number, page.sheet_name, page.row_number))
                 if len(chunks) > config.max_document_chunks:
                     raise AppError(422, "This document creates too many chunks. Split it into smaller files.")
             if end == len(text):

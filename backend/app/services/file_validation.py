@@ -8,12 +8,13 @@ from pypdf import PdfReader
 from app.core.exceptions import AppError
 
 MIME_TYPES = {
+    "xlsx": {"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/zip"},
     "pdf": {"application/pdf"},
     "docx": {"application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/zip"},
     "txt": {"text/plain"},
     "md": {"text/plain", "text/markdown", "text/x-markdown"},
 }
-CANONICAL_MIME = {"pdf": "application/pdf", "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "txt": "text/plain", "md": "text/markdown"}
+CANONICAL_MIME = {"xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "pdf": "application/pdf", "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "txt": "text/plain", "md": "text/markdown"}
 
 
 @dataclass(frozen=True)
@@ -32,7 +33,7 @@ def validate_file(filename: str | None, mime: str | None, content: bytes, max_by
     if not name or len(name) > 255 or any(ord(char) < 32 or ord(char) == 127 for char in name):
         raise AppError(422, "Use a valid filename of at most 255 characters.")
     if extension not in MIME_TYPES:
-        raise AppError(415, "Supported file types are PDF, DOCX, TXT, and MD.")
+        raise AppError(415, "Supported file types are PDF, DOCX, TXT, MD, and XLSX.")
     if not content:
         raise AppError(422, "The file is empty.")
     if len(content) > max_bytes:
@@ -49,18 +50,23 @@ def validate_file(filename: str | None, mime: str | None, content: bytes, max_by
                 raise AppError(422, "Password-protected PDFs are not supported. Upload an unlocked PDF.")
             if not reader.pages:
                 raise ValueError("No pages")
-        elif extension == "docx":
+        elif extension in {"docx", "xlsx"}:
             with ZipFile(BytesIO(content)) as archive:
                 entries = archive.infolist()
                 if len(entries) > 10000 or sum(entry.file_size for entry in entries) > max_bytes * 5:
-                    raise AppError(422, "The DOCX expands beyond the permitted document size.")
-                if "word/document.xml" not in archive.namelist():
+                    raise AppError(422, "The document expands beyond the permitted document size.")
+                if ("word/document.xml" if extension == "docx" else "xl/workbook.xml") not in archive.namelist():
                     raise ValueError("Missing document")
                 if any(entry.flag_bits & 1 for entry in entries):
                     raise ValueError("Encrypted archive")
                 if archive.testzip() is not None:
                     raise ValueError("Corrupt archive")
-            DocxDocument(BytesIO(content))
+            if extension == "docx":
+                DocxDocument(BytesIO(content))
+            else:
+                from openpyxl import load_workbook
+                workbook = load_workbook(BytesIO(content), read_only=True, data_only=True, keep_links=False)
+                workbook.close()
         else:
             text = content.decode("utf-8-sig")
             if not text.strip():

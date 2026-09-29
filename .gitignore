@@ -1,5 +1,6 @@
-#.env
-#.env.*
+# Local credentials must never enter future commits.
+.env
+.env.*
 !.env.example
 .venv/
 __pycache__/

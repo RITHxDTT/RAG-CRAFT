@@ -68,11 +68,11 @@ def process_claimed(db, item, store=None):
         for chunk, vector in zip(chunks, vectors, strict=True):
             id = uuid4()
             records.append(DocumentChunk(id=id, document_id=doc_id, chunk_index=chunk.chunk_index,
-                                         page_number=chunk.page_number, content=chunk.content))
+                                         page_number=chunk.page_number, sheet_name=chunk.sheet_name, row_number=chunk.row_number, content=chunk.content))
             points.append({"id": str(id), "vector": vector, "payload": {
                 "organization_id": str(item["organization_id"]), "chatbot_id": str(item["chatbot_id"]),
                 "document_id": str(doc_id), "chunk_id": str(id), "document_name": item["name"],
-                "page_number": chunk.page_number, "chunk_index": chunk.chunk_index,
+                "sheet_name": chunk.sheet_name, "row_number": chunk.row_number, "page_number": chunk.page_number, "chunk_index": chunk.chunk_index,
                 "source_type": "DOCUMENT", "embedding_model": config.embedding_model,
             }})
         store.delete(item["organization_id"], item["chatbot_id"], doc_id)

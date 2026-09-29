@@ -48,6 +48,11 @@ def client(db, tmp_path, monkeypatch):
         except Exception:
             db.rollback()
             raise
+    from app.models.catalog import PlatformModel
+    from sqlalchemy import select
+    if not db.scalar(select(PlatformModel)):
+        db.add(PlatformModel(name="Llama 3.2 3B", model_identifier=get_settings().ollama_model, is_default=True))
+        db.commit()
     app.dependency_overrides[get_db] = override_db
     with TestClient(app, headers=HEADERS) as test_client:
         yield test_client

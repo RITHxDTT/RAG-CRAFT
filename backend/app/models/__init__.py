@@ -1,4 +1,4 @@
-from app.models.identity import User, Organization, OrganizationMember
+from app.models.identity import User, Organization, OrganizationMember, PasswordReset
 from app.models.chatbot import Chatbot, ChatbotSetting
 from app.models.knowledge import KnowledgeSource, Document, DocumentChunk, IngestionJob
 from app.models.conversation import Conversation, Message, MessageSource
@@ -9,3 +9,7 @@ __all__ = ["User", "Organization", "OrganizationMember", "Chatbot", "ChatbotSett
            "Message", "MessageSource", "ApiKey", "AuditLog", "VectorCleanup"]
 
 from app.models.vector_cleanup import VectorCleanup
+
+from app.models.catalog import PlatformModel, PromptTemplate
+
+from app.models.channels import ChannelIntegration, TelegramUpdate

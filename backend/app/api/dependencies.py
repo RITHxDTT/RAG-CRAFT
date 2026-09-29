@@ -22,7 +22,16 @@ def require_csrf(request: Request):
 
 
 def current_admin(request: Request, db: DB) -> AdminContext:
-    return authenticate(db, request.cookies.get(COOKIE_NAME))
+    ctx = authenticate(db, request.cookies.get(COOKIE_NAME))
+    if ctx.user.role != "ADMIN":
+        raise AppError(403, "Administrator access is required.")
+    return ctx
 
 
 Admin = Annotated[AdminContext, Depends(current_admin)]
+
+
+def current_user(request: Request, db: DB) -> AdminContext:
+    return authenticate(db, request.cookies.get(COOKIE_NAME))
+
+Authenticated = Annotated[AdminContext, Depends(current_user)]

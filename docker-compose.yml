@@ -23,7 +23,7 @@ services:
       - qdrant_data:/qdrant/storage
   frontend:
     profiles: ["ui"]
-    image: rag-craft-frontend:v1
+    image: rag-craft-frontend:v2
     build:
       context: ./frontend
       args:
@@ -31,7 +31,7 @@ services:
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-3000}:3000"
   backend:
-    image: rag-craft-backend:v1
+    image: rag-craft-backend:v2
     profiles: ["api"]
     build: ./backend
     env_file: .env
@@ -56,7 +56,7 @@ services:
       timeout: 6s
       retries: 10
   worker:
-    image: rag-craft-backend:v1
+    image: rag-craft-backend:v2
     profiles: ["api"]
     build: ./backend
     env_file: .env

@@ -6,6 +6,7 @@ from app.services.chatbot_service import require_chatbot
 
 
 def require_conversation(db, ctx, chatbot_id, conversation_id):
+    require_chatbot(db, ctx, chatbot_id)
     conversation = conversations.get_conversation(db, ctx.organization_id, chatbot_id, conversation_id)
     if not conversation:
         raise AppError(404, 'Conversation not found.')
@@ -24,10 +25,10 @@ def detail(db, ctx, chatbot_id, conversation_id):
     for source in conversations.sources(db, [m.id for m in messages]):
         grouped.setdefault(source.message_id, []).append(Source(
             chunk_id=source.document_chunk_id, document_id=source.document_id,
-            document_name=source.document_name, page_number=source.page_number,
+            document_name=source.document_name, sheet_name=source.sheet_name, row_number=source.row_number, page_number=source.page_number,
             chunk_index=source.chunk_index, excerpt=source.excerpt or '', score=source.score or 0,
         ))
-    return ConversationDetail(id=conversation.id, chatbot_id=conversation.chatbot_id, title=conversation.title,
+    return ConversationDetail(id=conversation.id, chatbot_id=conversation.chatbot_id, title=conversation.title, channel=conversation.channel,
         created_at=conversation.created_at, updated_at=conversation.updated_at,
         messages=[MessageView(id=m.id, role=m.role, content=m.content, created_at=m.created_at,
                               sources=grouped.get(m.id, [])) for m in messages])

@@ -49,7 +49,7 @@ def retrieve(db, organization_id, chatbot_id, question: str, top_k: int, store=N
         remaining -= len(content)
         result.append(RetrievedChunk(content=content, source=Source(
             chunk_id=chunk.id, document_id=document.id, document_name=document.name,
-            page_number=chunk.page_number, chunk_index=chunk.chunk_index,
+            sheet_name=chunk.sheet_name, row_number=chunk.row_number, page_number=chunk.page_number, chunk_index=chunk.chunk_index,
             excerpt=content[:1000], score=scores[chunk.id],
         )))
     logger.info("Retrieval completed organization_id=%s chatbot_id=%s chunks=%s", organization_id, chatbot_id, len(result))

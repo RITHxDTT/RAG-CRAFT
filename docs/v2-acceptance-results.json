@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-09-29T09:24:02.816898+00:00",
+  "checks": [
+    "Admin catalog and prompt; user registration and owned chatbot",
+    "Real Ollama embeddings and Qdrant indexing; document READY",
+    "Playground returns a real grounded answer and citation",
+    "PUBLIC_LINK uses the same real RAG and rejects another guest session",
+    "WEB_WIDGET uses the same real RAG and rejects another guest session",
+    "Conversation channels and SQL usage aggregates",
+    "Cross-chatbot retrieval and cross-user resource isolation",
+    "Public token revocation and widget disabling"
+  ],
+  "telegram": "mocked tests only; live credentials and public HTTPS required",
+  "browser": "not exercised by this script",
+  "local_rollout": {
+    "api_version": "2.0.0",
+    "database_migration": "a206_channels",
+    "database_backup": "private backup under backend/storage/backups",
+    "frontend_image": "rag-craft-frontend:v2",
+    "frontend_http_status": 200,
+    "readiness_http_status": 200,
+    "services": {
+      "api": "ok",
+      "postgres": "ok",
+      "qdrant": "ok",
+      "worker": "ok",
+      "ollama": "ok",
+      "generation_model": "ok",
+      "embedding_model": "ok"
+    }
+  }
+}

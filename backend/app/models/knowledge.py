@@ -34,6 +34,8 @@ class DocumentChunk(Record, Base):
     __table_args__ = (UniqueConstraint("document_id", "chunk_index"),)
     document_id: Mapped[UUID] = mapped_column(ForeignKey("documents.id", ondelete="CASCADE"), index=True)
     chunk_index: Mapped[int] = mapped_column(Integer)
+    sheet_name: Mapped[str | None] = mapped_column(String(120))
+    row_number: Mapped[int | None] = mapped_column(Integer)
     page_number: Mapped[int | None] = mapped_column(Integer)
     content: Mapped[str] = mapped_column(Text)
 

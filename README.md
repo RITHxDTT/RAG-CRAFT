@@ -1,3 +1,5 @@
+> **Version 2:** Multi-user ownership, registration/profile/reset, admin catalogs, XLSX, conversations, public sharing, widgets, Telegram, source viewing, and analytics are implemented. See [the V2 phase reports and runbook](docs/v2-implementation.md) for migration/setup commands, verification results, and remaining live checks. The V1 instructions below still describe the underlying local services.
+
 # RAG Craft — Version 1
 
 An admin workspace for document-grounded assistants: sign in → create a chatbot → upload knowledge → wait for indexing → ask questions → inspect citations and saved conversations.
@@ -121,7 +123,7 @@ The defaults are recorded in `.env.example`:
 
 Local document files live in `backend/storage/` unless `STORAGE_DIR` is set. Back up the database and document storage together. Changing the embedding model requires re-indexing; a different vector dimension requires a new `QDRANT_COLLECTION` as well. Chunk/context limits count characters, not model tokens.
 
-V1 has no OCR: scanned or empty PDFs fail with an explanation. DOCX/TXT/MD citations have excerpts but no invented page numbers. The small local model can still make mistakes; inspect cited excerpts. This prototype uses one ingestion worker and one API process with bounded generation and login throttling; it is not a distributed production deployment. Filesystem deletion staging can restore ordinary transaction failures, but a machine crash may require reconciling `.trash-*` files against PostgreSQL. Telegram, widgets, public links, crawling, billing, and other V2 features are outside this implementation.
+V1 has no OCR: scanned or empty PDFs fail with an explanation. DOCX/TXT/MD citations have excerpts but no invented page numbers. The small local model can still make mistakes; inspect cited excerpts. This prototype uses one ingestion worker and one API process with bounded generation and login throttling; it is not a distributed production deployment. Filesystem deletion staging can restore ordinary transaction failures, but a machine crash may require reconciling `.trash-*` files against PostgreSQL. V2 adds Telegram, widgets, and public links; see the V2 runbook. Crawling, billing, and other V3 exclusions remain outside this implementation.
 
 ## Tests and acceptance
 

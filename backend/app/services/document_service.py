@@ -32,6 +32,7 @@ def list_documents(db: Session, ctx: AdminContext, chatbot_id):
 
 
 def require_document(db, ctx, chatbot_id, document_id):
+    require_chatbot(db, ctx, chatbot_id)
     doc = documents.get_document(db, ctx.organization_id, chatbot_id, document_id)
     if not doc:
         raise AppError(404, "Document not found.")
@@ -111,4 +112,4 @@ def requeue(db, ctx, chatbot_id, document_id, *, retry: bool):
 
 def recent_activity(db, ctx):
     return [DocumentActivity(**DocumentView.model_validate(doc).model_dump(), chatbot_id=bot_id, chatbot_name=bot_name)
-            for doc, bot_id, bot_name in documents.recent_activity(db, ctx.organization_id)]
+            for doc, bot_id, bot_name in documents.recent_activity(db, ctx.organization_id, ctx.user.id)]

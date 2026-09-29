@@ -28,9 +28,9 @@ def jobs_for_document(db: Session, document_id):
                            .order_by(IngestionJob.created_at.desc(), IngestionJob.id)))
 
 
-def recent_activity(db: Session, organization_id):
+def recent_activity(db: Session, organization_id, owner_id):
     return db.execute(select(Document, Chatbot.id, Chatbot.name)
                       .join(KnowledgeSource, Document.knowledge_source_id == KnowledgeSource.id)
                       .join(Chatbot, KnowledgeSource.chatbot_id == Chatbot.id)
-                      .where(Chatbot.organization_id == organization_id)
+                      .where(Chatbot.organization_id == organization_id, Chatbot.owner_id == owner_id)
                       .order_by(Document.updated_at.desc(), Document.id).limit(8)).all()

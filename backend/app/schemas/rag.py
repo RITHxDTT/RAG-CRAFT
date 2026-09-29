@@ -12,6 +12,8 @@ class Source(BaseModel):
     chunk_id: UUID | None
     document_id: UUID | None
     document_name: str
+    sheet_name: str | None = None
+    row_number: int | None = None
     page_number: int | None
     chunk_index: int | None
     excerpt: str
