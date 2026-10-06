@@ -1,258 +1,328 @@
-# RAG CRAFT — Project Instructions
+# RAG CRAFT — Claude Instructions
 
-## 1. Project Overview
+## 1. Project
 
-RAG CRAFT is a platform that allows users to create document-grounded
-AI chatbots.
+RAG Craft is a platform for creating document-grounded AI chatbots.
 
-Each user can create and manage multiple chatbots. Each chatbot has its
-own knowledge base, configuration, documents, integrations, and chat
-sessions.
+Users can create multiple chatbots. Each chatbot has its own:
 
-The system uses Retrieval-Augmented Generation (RAG) so chatbot answers
-should be grounded in the documents belonging to that chatbot.
+- Configuration
+- Knowledge sources
+- Documents
+- Channels
+- Conversations
+- Analytics
+
+Resources belong to their owner and must remain isolated between users.
+
+Before making changes, inspect the existing implementation. Do not assume a feature is missing or complete.
 
 ---
 
-## 2. Main Technology Stack
+## 2. Current Development Phase
 
-### Frontend
+The project is currently in the **V2 Frontend Demo phase**.
+
+The purpose is to provide a functional demo that can be deployed to Vercel and used by the team to understand the complete UI and system workflow.
+
+### Current Stack
+
 - Next.js
 - TypeScript
 - Tailwind CSS
+- localStorage
+- IndexedDB when larger browser storage is required
+- Vercel deployment
 
-### Backend / AI Service
-- Python
-- FastAPI
+### Current Demo Accounts
 
-### Database
-- PostgreSQL
+ADMIN:
 
-### Vector Storage
-- pgvector or the vector database configured by the project
+- Email: `admin@gmail.com`
+- Password: `123`
+- Role: `ADMIN`
 
-### AI
-- Ollama
-- Local LLM
-- Local embedding model
+USER:
 
-### Infrastructure
-- Docker
-- Docker Compose
+- Email: `user@gmail.com`
+- Password: `123`
+- Role: `USER`
 
-Do not introduce a new framework, database, or major dependency unless
-there is a clear requirement for it.
+These credentials are intentionally hard-coded for the demo only.
+
+Users may also register accounts.
+
+Registered accounts:
+
+- Receive the `USER` role
+- Are stored locally
+- Can sign in after registration
+
+Do not treat the current authentication implementation as production security.
 
 ---
 
-## 3. Main System Features
+## 3. Current Demo Architecture
 
-RAG CRAFT includes:
+Use:
 
-- User authentication
-- User-based chatbot ownership
-- Multiple chatbots per user
-- Knowledge base management
-- Document upload and processing
-- RAG document retrieval
-- Source citations
+```text
+UI
+ ↓
+Service
+ ↓
+Repository / Storage
+ ↓
+localStorage / IndexedDB
+```
+
+Do NOT access `localStorage` throughout UI components.
+
+Keep storage behind services/repositories so it can be replaced later.
+
+Example:
+
+```text
+Chatbot UI
+    ↓
+ChatbotService
+    ↓
+ChatbotRepository
+    ↓
+localStorage
+```
+
+---
+
+## 4. Current Demo Scope
+
+The current application may include:
+
+- Sign In
+- Sign Up
+- Forgot Password simulation
+- Admin/User roles
+- Profile management
+- Chatbot CRUD
 - Chatbot configuration
-- Admin chat/playground
-- Public chatbot share links
-- Telegram integration
-- Web/iframe integration
+- Knowledge Base UI
+- Mock document processing
+- Mock chunking/indexing
+- Playground
+- Mock AI responses
+- Mock citations
+- Compare mode
+- Public Share Link
+- Guest Chat
+- Web Widget
+- Telegram configuration
+- Analytics
+- Admin management
+- System status UI
+
+When implementing a task, inspect the existing code first and only add/fix what is necessary.
+
+---
+
+## 5. Demo Data Rules
+
+Normal demo data may be stored in `localStorage`.
+
+Examples:
+
+- Users
+- Session
+- Profiles
+- Chatbots
+- Settings
+- Knowledge-source metadata
+- Channels
+- Conversations
 - Analytics
 
-Some features may not be implemented yet.
+Prefer IndexedDB for larger files or binary data.
 
-Always inspect the existing project before assuming a feature exists.
+Use namespaced storage keys, for example:
+
+```text
+ragcraft:v2:users
+ragcraft:v2:session
+ragcraft:v2:chatbots
+ragcraft:v2:knowledge
+ragcraft:v2:channels
+ragcraft:v2:conversations
+ragcraft:v2:analytics
+```
+
+Remember that browser storage is device/browser specific.
+
+Do not implement cross-device synchronization during this phase.
 
 ---
 
-## 4. User-Based Multi-Tenancy
+## 6. Ownership
 
-RAG CRAFT uses user-based ownership.
+Even in demo mode, design data for future multi-tenancy.
 
-A user can own multiple:
-
-- Chatbots
-- Knowledge bases
-- Documents
-- Integrations
-- Chat sessions
-
-Core resources should be associated with their owner where appropriate.
+Important records should include ownership where appropriate.
 
 Example:
 
-user
-  └── chatbot
-        ├── configuration
-        ├── knowledge base
-        │     └── documents
-        ├── integrations
-        └── conversations
+```json
+{
+  "id": "bot_001",
+  "ownerId": "user_001",
+  "name": "Company Assistant"
+}
+```
 
-Never allow one user to access another user's private resources.
+USER:
 
-Ownership and authorization must be checked on the backend.
+- Can access their own resources.
 
-Do not rely only on frontend restrictions for security.
+ADMIN:
 
----
+- Can view/manage platform-level demo resources.
 
-## 5. Knowledge Base Rules
-
-Each chatbot should have an isolated knowledge base.
-
-Supported document types may include:
-
-- PDF
-- DOCX
-- TXT
-- Markdown
-- XLSX
-- Web content
-
-The general ingestion flow is:
-
-Document
-    ↓
-Parse / Extract Text
-    ↓
-Clean Text
-    ↓
-Chunk
-    ↓
-Generate Embeddings
-    ↓
-Store Vectors
-    ↓
-Attach Metadata
-
-Metadata should make it possible to identify:
-
-- User
-- Chatbot
-- Document
-- Source
-- Chunk
-
-Retrieval must not return documents belonging to another user's chatbot.
+Do not mix data belonging to different users.
 
 ---
 
-## 6. RAG Flow
+## 7. Mock RAG
 
-The expected RAG flow is:
+Do NOT implement real AI infrastructure unless explicitly requested.
 
-User Question
-    ↓
-Validate User / Chatbot Access
-    ↓
-Process Query
-    ↓
-Retrieve Relevant Chunks
-    ↓
-Build Context
-    ↓
-Send Context + Question to LLM
-    ↓
-Generate Answer
-    ↓
-Return Answer + Source Citations
+Current RAG behavior is simulated.
 
-The chatbot should answer using the retrieved knowledge whenever the
-question depends on uploaded documents.
+Example document flow:
 
-Do not fabricate citations.
+```text
+Upload
+ ↓
+Processing
+ ↓
+Chunking
+ ↓
+Indexing
+ ↓
+Ready
+```
 
-A citation must point to an actual retrieved source.
+These states are for demonstrating the intended workflow.
 
----
+Mock data may include:
 
-## 7. Chatbot Configuration
+- Chunk count
+- Retrieved sources
+- AI responses
+- Citations
+- Processing status
 
-Each chatbot may have its own configuration, including:
-
-- Name
-- Description
-- System instructions
-- Tone
-- LLM/model
-- Answer length
-- Starter questions
-
-Configuration belonging to one chatbot must not affect another chatbot.
+Do not claim mock behavior is real AI processing.
 
 ---
 
-## 8. Deployment Channels
+## 8. Channels
 
-A chatbot may be accessed through:
+Current supported channel UI:
 
-### Website / Admin Chat
-Used by the chatbot owner to test the chatbot.
+- Public Share Link
+- Web Widget
+- Telegram
+
+Channel behavior may be simulated where backend infrastructure is not available.
+
+### Public Link
+
+Concept:
+
+```text
+/share/{chatbotSlug}/{token}
+```
+
+Guests can access published chatbots without administrative access.
+
+### Web Widget
+
+Support configuration such as:
+
+- Appearance
+- Position
+- Welcome message
+- Allowed domains
+- Preview
+- Generated embed code
+- Enable/disable
 
 ### Telegram
-Telegram communicates with the backend through a bot integration,
-normally using webhook-based communication.
 
-### Web Embed
-A chatbot may be embedded into another website using an iframe or
-supported web integration.
+Telegram connection is currently simulated unless explicitly implementing the real integration.
 
-### Public Share Link
-The chatbot owner can generate a public link.
-
-Example concept:
-
-/share/{public_token}
-
-A visitor with the link can chat with the published chatbot without
-receiving administrative access to the chatbot configuration or
-knowledge base.
-
-Public endpoints must have appropriate security and rate limiting.
+Never place real Telegram secrets in source code.
 
 ---
 
-## 9. API Rules
+## 9. Future Production Architecture
 
-When creating or modifying APIs:
+The target architecture is different from the current demo.
 
-- Use clear REST endpoints.
-- Validate request data.
-- Return appropriate HTTP status codes.
-- Handle errors consistently.
-- Keep business logic out of route/controller code when possible.
-- Separate API, service, database, and AI/RAG responsibilities.
-- Check authorization for protected resources.
-- Never expose secrets in API responses.
+Future:
+
+```text
+Next.js
+   ↓
+API Gateway / Ingress
+   ↓
+FastAPI Services
+   ↓
+├── PostgreSQL
+├── Qdrant
+└── Ollama / LLM
+```
+
+Production will eventually include:
+
+- FastAPI
+- PostgreSQL
+- Qdrant
+- Ollama
+- Embedding model
+- Real document processing
+- Real RAG retrieval
+- Real citations
+- Secure authentication
+- Real integrations
+- Kubernetes infrastructure
+
+Do NOT introduce these into the current demo unless explicitly requested.
+
+Code the current frontend so migration to this architecture is straightforward.
 
 ---
 
-## 10. Security Rules
+## 10. Future RAG Flow
 
-Never:
+When real RAG is implemented, follow:
 
-- Hard-code passwords
-- Hard-code API keys
-- Commit secrets
-- Expose database credentials
-- Expose private document content without authorization
-- Trust user-provided resource IDs without ownership validation
+```text
+Question
+ ↓
+Validate User / Chatbot
+ ↓
+Retrieve Relevant Chunks
+ ↓
+Build Context
+ ↓
+LLM
+ ↓
+Answer + Citations
+```
 
-Use environment variables for secrets.
+Each chatbot must have an isolated knowledge base.
 
-Example:
+Retrieval must be scoped by chatbot/owner.
 
-DATABASE_URL
-SECRET_KEY
-OLLAMA_BASE_URL
-TELEGRAM_BOT_TOKEN
-
-`.env` files containing real secrets should not be committed to Git.
+Never fabricate real citations.
 
 ---
 
@@ -260,177 +330,173 @@ TELEGRAM_BOT_TOKEN
 
 When modifying the project:
 
-1. Inspect the existing code first.
-2. Follow the existing architecture.
-3. Keep changes small and focused.
-4. Do not rewrite unrelated files.
-5. Reuse existing functions and services where possible.
+1. Inspect existing code first.
+2. Follow existing architecture.
+3. Reuse existing components/services.
+4. Make focused changes.
+5. Avoid unrelated refactoring.
 6. Avoid unnecessary dependencies.
-7. Use meaningful variable and function names.
-8. Add validation where necessary.
-9. Handle expected errors.
-10. Keep code understandable for students and team members.
+7. Use TypeScript types/interfaces.
+8. Keep business logic outside UI components where practical.
+9. Keep storage access behind repositories/services.
+10. Handle loading, errors, and empty states.
+11. Preserve responsive design.
+12. Do not over-engineer simple demo requirements.
 
-Do not over-engineer simple requirements.
+Do not rebuild working features unnecessarily.
 
 ---
 
-## 12. AI Assistant Workflow
+## 12. Security
 
-For every significant task, follow this workflow:
+### Demo Phase
 
+Fixed credentials and browser storage are intentionally allowed for the current demo.
+
+They must NOT be considered production security.
+
+### Production
+
+Never:
+
+- Store plaintext passwords
+- Hard-code production credentials
+- Commit API keys/tokens
+- Expose database credentials
+- Expose private documents
+- Trust client-side authorization alone
+
+Production secrets must use environment variables.
+
+---
+
+## 13. Claude Workflow
+
+For significant tasks:
+
+```text
 Understand
-    ↓
+ ↓
 Inspect
-    ↓
+ ↓
 Plan
-    ↓
-Review
-    ↓
+ ↓
 Implement
-    ↓
+ ↓
 Test
-    ↓
-Debug
-    ↓
+ ↓
 Verify
+```
 
-### Step 1 — Understand
+### Inspect
 
-Restate the requirement and identify the expected result.
+Before changing code:
 
-Do not start coding if the requirement is unclear.
-
-### Step 2 — Inspect
-
-Before modifying code:
-
-- Read this CLAUDE.md
-- Inspect the project structure
 - Read relevant existing files
-- Check existing dependencies
-- Check existing database models/schema
-- Check existing APIs/services
-- Identify reusable code
+- Check existing components
+- Check existing services
+- Check dependencies
+- Identify reusable implementation
 
-Do not assume files or features exist.
+### Plan
 
-### Step 3 — Plan
+For major changes, briefly explain:
 
-Before making a major change, explain:
+- What will change
+- Files affected
+- New files if required
+- Important architecture decisions
 
-- What needs to change
-- Which files need to change
-- Whether new files are required
-- Database changes
-- API changes
-- Security implications
-- How the change will be tested
+If explicitly asked to provide a plan first, do not implement until approved.
 
-Do not implement yet when explicitly asked for a plan.
+### Implement
 
-### Step 4 — Review
+- Make the smallest appropriate changes.
+- Do not rewrite unrelated code.
+- Follow the existing design system.
 
-Allow the developer to review the proposed approach before major
-implementation.
+### Test
 
-### Step 5 — Implement
+Run relevant:
 
-After approval:
+- Type checks
+- Lint
+- Build
+- Tests
 
-- Make the smallest necessary changes
-- Follow existing architecture
-- Avoid unrelated refactoring
+Test the changed workflow.
 
-### Step 6 — Test
+### Verify
 
-Run relevant tests and checks.
+Before finishing:
 
-Examples:
-
-- Unit tests
-- API tests
-- RAG retrieval tests
-- Authorization tests
-- Build checks
-
-### Step 7 — Debug
-
-If something fails:
-
-1. Read the actual error.
-2. Identify the likely cause.
-3. Inspect the relevant code/configuration.
-4. Apply a focused fix.
-5. Run the test again.
-
-Do not randomly modify multiple files to make an error disappear.
-
-### Step 8 — Verify
-
-Before considering a task complete:
-
-- Confirm the requested feature works.
-- Confirm existing important functionality still works.
-- Review changed files.
-- Check for accidental secret exposure.
-- Summarize what changed.
+- Confirm requested behavior works
+- Check related functionality
+- Review changed files
+- Check for exposed secrets
+- Summarize changes
 
 ---
 
-## 13. Git Rules
+## 14. Git
 
-Use Git to keep changes reviewable.
+Before significant work:
 
-Before major work:
-
+```bash
 git status
+```
 
-After implementation:
+After changes:
 
+```bash
 git diff
-
-Only commit files related to the task.
-
-Use clear commit messages.
-
-Examples:
-
-feat: add document upload API
-
-feat: add public chatbot share link
-
-fix: enforce chatbot ownership
-
-fix: prevent cross-user document retrieval
-
-test: add RAG retrieval tests
-
-docs: update project instructions
+```
 
 Do not commit:
 
-- .env
-- passwords
+- `.env`
+- Tokens
 - API keys
-- tokens
-- temporary files
-- generated files that should be ignored
+- Passwords except intentional demo credentials
+- Temporary files
+
+Keep commits focused.
 
 ---
 
-## 14. Important Rule
+## 15. Detailed Requirements
 
-AI-generated code must not be accepted blindly.
+Do NOT place every feature specification in this file.
 
-The developer remains responsible for:
+`CLAUDE.md` contains stable project rules only.
 
-- Reviewing changes
-- Approving implementation
-- Running tests
-- Checking security
-- Verifying the final behavior
+When a task has a detailed specification, follow the user's current prompt or the relevant documentation in the repository.
 
-The AI proposes and assists.
+Priority:
 
-The developer decides.
+```text
+Current User Requirement
+        ↓
+CLAUDE.md Project Rules
+        ↓
+Existing Project Architecture
+```
+
+If the current requirement conflicts with an old implementation, explain the conflict before making a major architectural change.
+
+---
+
+## 16. Most Important Rules
+
+1. Current phase = **V2 Frontend Demo**.
+2. Deployment target = **Vercel**.
+3. Current persistence = **localStorage / IndexedDB**.
+4. Fixed Admin/User accounts are intentionally allowed.
+5. Do not require PostgreSQL for the current demo.
+6. Do not require FastAPI for the current demo.
+7. Do not require Qdrant or Ollama for the current demo.
+8. Keep code ready for future backend migration.
+9. Preserve user/chatbot ownership boundaries.
+10. Inspect before changing code.
+11. Do not unnecessarily rewrite working code.
+12. Do not over-engineer the demo.

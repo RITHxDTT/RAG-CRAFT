@@ -5,3 +5,9 @@
 **/*.pyc
 .pytest_cache
 storage
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+*.log
+.DS_Store
