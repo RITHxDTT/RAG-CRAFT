@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.env*
+out
+coverage
+*.tsbuildinfo
+*.log
+.DS_Store
