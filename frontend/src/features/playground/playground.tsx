@@ -173,7 +173,7 @@ export function Playground({
       <div className="conversation-controls">
         <label>
           <span className="rc-inline">
-            <MessageSquare style={{ width: "13px", height: "13px", color: "#0d9488" }} />
+            <MessageSquare style={{ width: "13px", height: "13px" }} />
             {t("pg.session")}
           </span>
           <select value={conversationId || ""} disabled={!!pending || loading} onChange={(event) => void selectConversation(event.target.value)}>
@@ -249,9 +249,9 @@ export function Playground({
           <article className={`chat-message ${message.role.toLowerCase()}`} key={message.id}>
             <div className="rc-inline" style={{ marginBottom: "6px" }}>
               {message.role === "USER" ? (
-                <User style={{ width: "13px", height: "13px", color: "#99f6e4" }} />
+                <User style={{ width: "13px", height: "13px" }} />
               ) : (
-                <Bot style={{ width: "13px", height: "13px", color: "#0d9488" }} />
+                <Bot style={{ width: "13px", height: "13px" }} />
               )}
               <span className="message-role">{message.role === "USER" ? t("pg.you") : name}</span>
             </div>
@@ -264,7 +264,7 @@ export function Playground({
           <>
             <article className="chat-message user">
               <div className="rc-inline" style={{ marginBottom: "6px" }}>
-                <User style={{ width: "13px", height: "13px", color: "#99f6e4" }} />
+                <User style={{ width: "13px", height: "13px" }} />
                 <span className="message-role">{t("pg.you")}</span>
               </div>
               <div className="message-content">{pending}</div>

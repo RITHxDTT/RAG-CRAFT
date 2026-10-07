@@ -133,7 +133,7 @@ export function PublicChat({
   const isWidget = kind === "widget";
 
   return (
-    <div className={`public-chat-viewport ${isWidget ? "widget-mode" : "page-mode"}`} style={{"--public-primary":bot?.color || "#0d9488"} as React.CSSProperties}>
+    <div className={`public-chat-viewport ${isWidget ? "widget-mode" : "page-mode"}`} style={{"--public-primary":bot?.color || "#0f172a"} as React.CSSProperties}>
       <main className="public-chat-shell">
         {/* Top Header */}
         <header className="public-chat-nav">
@@ -236,7 +236,7 @@ export function PublicChat({
                     >
                       {isCopied ? (
                         <>
-                          <Check style={{ width: "12px", height: "12px", color: "#10b981" }} />
+                          <Check style={{ width: "12px", height: "12px" }} />
                           <span className="text-emerald-600">{t("pub.copied")}</span>
                         </>
                       ) : (

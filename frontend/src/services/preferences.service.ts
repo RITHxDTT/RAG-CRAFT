@@ -5,8 +5,12 @@ import { KEYS } from "@/storage/keys";
 export type Locale = "en" | "ko";
 export const LOCALES: Locale[] = ["en", "ko"];
 
+export type SiteTheme = "light" | "dark";
+
 interface Preferences {
   locale?: Locale;
+  /** Theme for pages shown before sign-in (landing, login). */
+  siteTheme?: SiteTheme;
 }
 
 function read(): Preferences {
@@ -25,5 +29,11 @@ export const preferencesService = {
   setLocale(locale: Locale) {
     if (!LOCALES.includes(locale)) return;
     storage.write<Preferences>(KEYS.preferences, { ...read(), locale });
+  },
+  siteTheme(): SiteTheme {
+    return read().siteTheme === "light" ? "light" : "dark";
+  },
+  setSiteTheme(siteTheme: SiteTheme) {
+    storage.write<Preferences>(KEYS.preferences, { ...read(), siteTheme });
   },
 };

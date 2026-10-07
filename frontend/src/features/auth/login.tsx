@@ -1,10 +1,12 @@
 "use client";
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { authService } from "@/services/auth.service";
 import { errorMessage } from "@/services/api";
 import type { CurrentUser } from "@/types/auth";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n/context";
+import { useSiteTheme } from "@/features/landing/use-site-theme";
 import {
   Sparkles,
   ShieldCheck,
@@ -15,10 +17,14 @@ import {
   AlertCircle,
   Lock,
   Mail,
+  Moon,
+  Sun,
+  ArrowLeft,
 } from "lucide-react";
 
 export function Login({ onLogin }: { onLogin: (user: CurrentUser) => void }) {
   const t = useT();
+  const [theme, toggleTheme] = useSiteTheme();
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [resetToken, setResetToken] = useState("");
   const [notice, setNotice] = useState("");
@@ -67,9 +73,13 @@ export function Login({ onLogin }: { onLogin: (user: CurrentUser) => void }) {
   return (
     <main className="login-layout">
       <section className="login-intro">
+        <Link href="/" className="login-back">
+          <ArrowLeft size={14} />
+          {t("auth.backHome")}
+        </Link>
         <div className="brand-mark">RC</div>
         <p className="eyebrow">
-          <Sparkles style={{ width: "13px", height: "13px", color: "#2dd4bf" }} />
+          <Sparkles style={{ width: "13px", height: "13px" }} />
           {t("auth.platform")}
         </p>
         <h1>
@@ -100,7 +110,18 @@ export function Login({ onLogin }: { onLogin: (user: CurrentUser) => void }) {
               <Lock style={{ width: "12px", height: "12px" }} />
               {t("auth.demoAccess")}
             </p>
-            <LanguageSwitcher compact />
+            <div className="rc-inline" style={{ gap: 8 }}>
+              <LanguageSwitcher compact />
+              <button
+                type="button"
+                className="rc-icon-button"
+                onClick={toggleTheme}
+                aria-label={theme === "dark" ? t("theme.switchToLight") : t("theme.switchToDark")}
+                title={theme === "dark" ? t("theme.switchToLight") : t("theme.switchToDark")}
+              >
+                {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
+              </button>
+            </div>
           </div>
           <h2>
             {mode === "register" ? t("auth.registerTitle") : mode === "forgot" ? t("auth.forgotTitle") : t("auth.signInTitle")}

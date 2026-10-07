@@ -2,15 +2,16 @@
 import type { CSSProperties } from "react";
 
 // Soft, theme-friendly pairs picked deterministically from the person's name.
+// Monochrome brand: shades of ink and paper, picked deterministically from the name.
 const PALETTE: { bg: string; fg: string }[] = [
-  { bg: "#e0f2f1", fg: "#0f766e" },
-  { bg: "#e0e7ff", fg: "#4338ca" },
-  { bg: "#fef3c7", fg: "#b45309" },
-  { bg: "#dbeafe", fg: "#1d4ed8" },
-  { bg: "#fce7f3", fg: "#be185d" },
-  { bg: "#dcfce7", fg: "#15803d" },
-  { bg: "#ede9fe", fg: "#6d28d9" },
-  { bg: "#ffedd5", fg: "#c2410c" },
+  { bg: "#0f172a", fg: "#ffffff" },
+  { bg: "#e2e8f0", fg: "#0f172a" },
+  { bg: "#334155", fg: "#ffffff" },
+  { bg: "#f1f5f9", fg: "#0f172a" },
+  { bg: "#64748b", fg: "#ffffff" },
+  { bg: "#cbd5e1", fg: "#0f172a" },
+  { bg: "#1e293b", fg: "#ffffff" },
+  { bg: "#94a3b8", fg: "#0f172a" },
 ];
 
 function hash(value: string) {

@@ -1,0 +1,37 @@
+/* Landing page extras: glow shadows and ambient animations ported from the lightning concept. */
+.landing { font-family: var(--font-sans); }
+.landing .font-mono, .landing code, .landing .font-mono * { font-family: var(--font-mono); }
+
+.landing .shadow-glow-light { box-shadow: 0 0 25px 3px rgba(15, 23, 42, 0.25), 0 10px 30px -5px rgba(0, 0, 0, 0.2); }
+.dark .landing .shadow-glow-dark, .landing .dark\:shadow-glow-dark:is(.dark *) { box-shadow: 0 0 30px 4px rgba(255, 255, 255, 0.55), 0 0 70px 10px rgba(255, 255, 255, 0.15); }
+.landing .shadow-core-light { box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9); }
+.dark .landing .shadow-core-dark { box-shadow: 0 0 50px 10px rgba(255, 255, 255, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4); }
+
+@keyframes verticalBeamPulse {
+  0%, 100% { opacity: 0.35; transform: translateX(-50%) scaleX(0.95); }
+  50% { opacity: 0.75; transform: translateX(-50%) scaleX(1.05); }
+}
+.landing .animate-beam { animation: verticalBeamPulse 4.5s ease-in-out infinite; }
+
+@keyframes floatDust {
+  0% { transform: translateY(0) scale(0.9); opacity: 0.2; }
+  50% { transform: translateY(-40px) scale(1.1); opacity: 0.8; }
+  100% { transform: translateY(-80px) scale(0.9); opacity: 0; }
+}
+.landing .dust-particle { animation: floatDust 6s infinite linear; }
+
+.landing canvas { transition: none !important; }
+.landing a, .landing button { -webkit-tap-highlight-color: transparent; }
+.landing h1, .landing h2, .landing h3 { color: inherit; }
+.landing .rc-lang { background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.1); }
+.dark .landing .rc-lang { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15); }
+.dark .landing .rc-lang button { color: #cbd5e1; }
+.dark .landing .rc-lang button.chosen { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .animate-beam, .landing .dust-particle, .landing .animate-pulse { animation: none !important; }
+}
+
+/* Landing buttons are styled only by their utility classes; reset the app's legacy button defaults. */
+.landing button { padding: 0; min-height: 0; background: transparent; border: 0; box-shadow: none; font-size: inherit; }
+.landing button svg, .landing a svg { flex-shrink: 0; }

@@ -140,14 +140,8 @@ export function ChatbotList({
                 </div>
                 <div className="health-bar-track">
                   <div
-                    className="health-bar-fill"
-                    style={{
-                      width: `${docCount === 0 ? 0 : readyPercent}%`,
-                      background:
-                        failedCount > 0
-                          ? "linear-gradient(90deg, #10b981 0%, #f59e0b 80%, #f43f5e 100%)"
-                          : "linear-gradient(90deg, #0d9488 0%, #10b981 100%)",
-                    }}
+                    className={`health-bar-fill ${failedCount > 0 ? "has-failed" : ""}`}
+                    style={{ width: `${docCount === 0 ? 0 : readyPercent}%` }}
                   />
                 </div>
               </div>

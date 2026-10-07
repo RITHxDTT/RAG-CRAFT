@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { CurrentUser } from "@/types/auth";
 import type { Chatbot, Dashboard } from "@/types/chatbot";
@@ -19,6 +20,7 @@ import { Avatar } from "@/components/avatar";
 import { UserMenu } from "@/components/user-menu";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "@/i18n/context";
+import { applyHtmlTheme } from "@/features/landing/use-site-theme";
 import {
   LayoutDashboard,
   Bot,
@@ -82,6 +84,10 @@ export function Workspace({
   const [loggingOut, setLoggingOut] = useState(false);
   const admin = user.role === "ADMIN";
   const dark = user.theme === "dark";
+
+  useEffect(() => {
+    applyHtmlTheme(dark);
+  }, [dark]);
 
   async function refresh() {
     try {
@@ -191,13 +197,13 @@ export function Workspace({
   return (
     <div className={`app-layout ${dark ? "demo-dark" : ""}`}>
       <aside className="sidebar">
-        <div className="brand">
+        <Link className="brand" href="/" title={t("auth.backHome")}>
           <span className="brand-mark">RC</span>
           <span>
             {t("app.name")}
             <small>{t("app.tagline")}</small>
           </span>
-        </div>
+        </Link>
 
         <div className="workspace-label">
           <div className="organization-icon">

@@ -122,12 +122,11 @@ export function KnowledgeBase({ chatbotId, onChanged }: { chatbotId: string; onC
   const fileIcon = (fileType: string) => {
     const ext = fileType.toLowerCase();
     const size = { width: "16px", height: "16px" };
-    if (ext.includes("pdf")) return <FileText style={{ ...size, color: "#e11d48" }} />;
-    if (ext.includes("doc")) return <FileText style={{ ...size, color: "#2563eb" }} />;
-    if (ext.includes("xls")) return <FileSpreadsheet style={{ ...size, color: "#16a34a" }} />;
-    if (ext.includes("web")) return <Globe style={{ ...size, color: "#7c3aed" }} />;
-    if (ext.includes("md") || ext.includes("json") || ext.includes("txt")) return <FileCode style={{ ...size, color: "#0d9488" }} />;
-    return <File style={{ ...size, color: "#64748b" }} />;
+    if (ext.includes("pdf") || ext.includes("doc")) return <FileText style={size} />;
+    if (ext.includes("xls")) return <FileSpreadsheet style={size} />;
+    if (ext.includes("web")) return <Globe style={size} />;
+    if (ext.includes("md") || ext.includes("json") || ext.includes("txt")) return <FileCode style={size} />;
+    return <File style={size} />;
   };
 
   return (

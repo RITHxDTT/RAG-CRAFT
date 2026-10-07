@@ -35,7 +35,7 @@ export function RecentActivity({ onSelect }: { onSelect: (botId: string) => void
     <section className="recent-activity">
       <div className="section-heading">
         <h2 className="rc-inline">
-          <Activity style={{ width: "18px", height: "18px", color: "#0d9488" }} />
+          <Activity style={{ width: "18px", height: "18px" }} />
           {t("activity.title")}
         </h2>
       </div>

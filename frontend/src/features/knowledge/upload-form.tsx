@@ -79,7 +79,7 @@ export function UploadForm({
             if (!busy) setFiles(Array.from(e.dataTransfer.files));
           }}
         >
-          <UploadCloud size={36} color="#0d9488" />
+          <UploadCloud size={36} />
           <span>{t("upload.drop")}</span>
           <input
             type="file"

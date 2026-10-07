@@ -51,27 +51,28 @@ interface ChartTheme {
 }
 
 const THEMES: Record<"light" | "dark", ChartTheme> = {
+  // Monochrome brand: shades of ink in light mode, shades of white in dark mode.
   light: {
-    series: ["#0f9d8a", "#6f6ee0", "#f0a63a", "#4f93d6", "#d8688a", "#9aa8b8"],
-    rose: "#d8688a",
-    grid: "#eef1f4",
+    series: ["#0f172a", "#7b8798", "#b9c2cd", "#3f4b5c", "#d9dee5", "#59667a"],
+    rose: "#c2410c",
+    grid: "rgba(15, 23, 42, 0.07)",
     axis: "#8a95a3",
-    cursor: "#f3f6f8",
+    cursor: "rgba(15, 23, 42, 0.04)",
     tipBg: "#ffffff",
-    tipBorder: "#e6eaee",
-    tipText: "#253344",
-    track: "#eef1f4",
+    tipBorder: "rgba(15, 23, 42, 0.1)",
+    tipText: "#0f172a",
+    track: "rgba(15, 23, 42, 0.08)",
   },
   dark: {
-    series: ["#2dd4bf", "#8b8cf5", "#fbbf5c", "#6fb1ff", "#f08aa6", "#7f8b9a"],
-    rose: "#f08aa6",
-    grid: "#2b3747",
+    series: ["#ffffff", "#8c98a9", "#56637a", "#c9d1dc", "#3a4556", "#e7ebf0"],
+    rose: "#f87171",
+    grid: "rgba(255, 255, 255, 0.07)",
     axis: "#8c99a9",
-    cursor: "#263242",
-    tipBg: "#1f2a3a",
-    tipBorder: "#344257",
-    tipText: "#e2e8f0",
-    track: "#2b3747",
+    cursor: "rgba(255, 255, 255, 0.04)",
+    tipBg: "#0f1420",
+    tipBorder: "rgba(255, 255, 255, 0.12)",
+    tipText: "#f1f5f9",
+    track: "rgba(255, 255, 255, 0.1)",
   },
 };
 

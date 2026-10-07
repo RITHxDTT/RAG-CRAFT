@@ -14,7 +14,7 @@ export function DocumentDetail({ document, chatbotId, onClose }: { document: Det
     <section className="panel" aria-label={t("doc.details")} style={{ marginTop: "24px" }}>
       <div className="section-heading">
         <div className="rc-inline" style={{ gap: "10px" }}>
-          <FileText style={{ width: "20px", height: "20px", color: "#0d9488" }} />
+          <FileText style={{ width: "20px", height: "20px" }} />
           <h2 className="document-name">{document.name}</h2>
         </div>
         <button onClick={onClose} className="rc-inline">
@@ -72,7 +72,7 @@ export function DocumentDetail({ document, chatbotId, onClose }: { document: Det
       </div>
 
       <h3 className="job-heading rc-inline">
-        <History style={{ width: "16px", height: "16px", color: "#0d9488" }} />
+        <History style={{ width: "16px", height: "16px" }} />
         {t("doc.history")}
       </h3>
       <ul className="job-list">

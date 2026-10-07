@@ -1,4 +1,4 @@
-import { AdminApp } from "@/features/auth/admin-app";
+import { Landing } from "@/features/landing/landing";
 export default function Home() {
-  return <AdminApp />;
+  return <Landing />;
 }
