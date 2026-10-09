@@ -1,0 +1,48 @@
+server:
+  port: ${PORT:8086}
+
+spring:
+  application:
+    name: channel-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5438/channel_db}
+    username: ${DB_USER:ragcraft}
+    password: ${DB_PASSWORD:ragcraft}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+
+ragcraft:
+  internal-token: ${INTERNAL_TOKEN:change-me-internal-token}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  public-api-url: ${PUBLIC_API_URL:http://localhost:8080}
+  cors-origins: ${CORS_ORIGINS:http://localhost:3000}
+  jwt:
+    secret: ${JWT_SECRET:development-only-secret-change-me-please-32chars}
+  services:
+    chatbot: ${CHATBOT_SERVICE_URL:http://localhost:8083}
+    conversation: ${CONVERSATION_SERVICE_URL:http://localhost:8085}
+
+channel:
+  # 32+ character key used to encrypt Telegram bot tokens at rest (AES-GCM).
+  encryption-key: ${INTEGRATION_ENCRYPTION_KEY:development-only-integration-key-change-me-32}
+  # live = call api.telegram.org; simulated = accept any token and pretend the webhook is registered.
+  telegram-mode: ${TELEGRAM_MODE:simulated}
+  guest-rate-limit-per-minute: ${GUEST_RATE_LIMIT:30}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:channel;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:

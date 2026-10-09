@@ -1,0 +1,49 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  servlet:
+    multipart:
+      # The gateway forwards request bodies byte for byte; parsing multipart here would consume the upload.
+      enabled: false
+
+gateway:
+  cors-origins: ${CORS_ORIGINS:http://localhost:3000}
+  connect-timeout-millis: 3000
+  read-timeout-millis: 60000
+  services:
+    identity: ${IDENTITY_SERVICE_URL:http://localhost:8081}
+    catalog: ${CATALOG_SERVICE_URL:http://localhost:8082}
+    chatbot: ${CHATBOT_SERVICE_URL:http://localhost:8083}
+    knowledge: ${KNOWLEDGE_SERVICE_URL:http://localhost:8084}
+    conversation: ${CONVERSATION_SERVICE_URL:http://localhost:8085}
+    channel: ${CHANNEL_SERVICE_URL:http://localhost:8086}
+    analytics: ${ANALYTICS_SERVICE_URL:http://localhost:8087}
+  # First matching pattern wins. Paths are identical to the FastAPI backend so the frontend contract is unchanged.
+  routes:
+    - pattern: ^/api/auth(/.*)?$
+      service: identity
+    - pattern: ^/api/admin/users(/.*)?$
+      service: identity
+    - pattern: ^/api/(models|prompt-templates)(/.*)?$
+      service: catalog
+    - pattern: ^/api/admin/(models|prompt-templates)(/.*)?$
+      service: catalog
+    - pattern: ^/api/knowledge(/.*)?$
+      service: knowledge
+    - pattern: ^/api/chatbots/[^/]+/documents(/.*)?$
+      service: knowledge
+    - pattern: ^/api/chatbots/[^/]+/(ask|compare|conversations)(/.*)?$
+      service: conversation
+    - pattern: ^/api/chatbots/[^/]+/channels(/.*)?$
+      service: channel
+    - pattern: ^/api/public(/.*)?$
+      service: channel
+    - pattern: ^/api/webhooks(/.*)?$
+      service: channel
+    - pattern: ^/api/(analytics|admin/analytics)(/.*)?$
+      service: analytics
+    - pattern: ^/api/(chatbots|dashboard|admin/chatbots)(/.*)?$
+      service: chatbot

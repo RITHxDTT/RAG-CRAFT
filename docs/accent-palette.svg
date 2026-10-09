@@ -1,0 +1,379 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="2014" viewBox="0 0 1240 2014">
+<rect width="1240" height="2014" fill="#ffffff"/>
+<text x="56" y="84" font-family="Inter, Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">RAG Craft · green, yellow, red &amp; purple accents</text>
+<text x="56" y="116" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" fill="#64748b">Semantic colors from frontend/src/app (globals.css, ui-enhance.css, ui-mono.css) and analytics charts · status badges, notes, toasts, danger actions, role badges</text>
+<circle cx="62" cy="146" r="5" fill="#10b981"/>
+<text x="76" y="150" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">GREEN · SUCCESS, READY, LIVE, ONLINE</text>
+<g><rect x="56" y="166" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="167" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="180" width="148" height="58" rx="10" fill="#10b981" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="274" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#10b981</text>
+<text x="70" y="290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">emerald-500</text>
+<text x="70" y="306" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge dot, live dot,</text>
+<text x="70" y="318" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">online dot, green stat</text>
+<text x="70" y="330" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">icon, --accent-emerald</text>
+</g>
+<g><rect x="248" y="166" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="167" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="262" y="180" width="148" height="58" rx="10" fill="#047857" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="274" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#047857</text>
+<text x="262" y="290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">emerald-700</text>
+<text x="262" y="306" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge text, light</text>
+</g>
+<g><rect x="440" y="166" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="167" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="454" y="180" width="148" height="58" rx="10" fill="#065f46" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="274" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#065f46</text>
+<text x="454" y="290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">emerald-800</text>
+<text x="454" y="306" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Success note text, light</text>
+</g>
+<g><rect x="632" y="166" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="167" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="646" y="180" width="148" height="58" rx="10" fill="#0f9d72" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="274" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#0f9d72</text>
+<text x="646" y="290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">green</text>
+<text x="646" y="306" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Health good, trend up</text>
+<text x="646" y="318" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">text, light</text>
+</g>
+<g><rect x="824" y="166" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="167" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="838" y="180" width="148" height="58" rx="10" fill="#368f75" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="274" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#368f75</text>
+<text x="838" y="290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">green</text>
+<text x="838" y="306" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge text</text>
+<text x="838" y="318" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">(ui-refresh), light</text>
+</g>
+<g><rect x="1016" y="166" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="167" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="1030" y="180" width="148" height="58" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="274" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#ecfdf5</text>
+<text x="1030" y="290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">emerald-50</text>
+<text x="1030" y="306" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge, success note,</text>
+<text x="1030" y="318" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">stat tile fill, light</text>
+</g>
+<g><rect x="56" y="350" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="351" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="364" width="148" height="58" rx="10" fill="#eaf6f1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="458" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#eaf6f1</text>
+<text x="70" y="474" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">mint</text>
+<text x="70" y="490" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge fill</text>
+<text x="70" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">(ui-refresh), light</text>
+</g>
+<g><rect x="248" y="350" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="351" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="262" y="364" width="148" height="58" rx="10" fill="#e6f7f1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="458" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#e6f7f1</text>
+<text x="262" y="474" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">mint</text>
+<text x="262" y="490" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Trend up fill, light</text>
+</g>
+<g><rect x="440" y="350" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="351" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="454" y="364" width="148" height="58" rx="10" fill="#a7f3d0" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="458" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#a7f3d0</text>
+<text x="454" y="474" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">emerald-200</text>
+<text x="454" y="490" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge and success</text>
+<text x="454" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">note border, light · note</text>
+<text x="454" y="514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">and toast text, dark</text>
+</g>
+<g><rect x="632" y="350" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="351" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="646" y="364" width="148" height="58" rx="10" fill="#5eead4" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="458" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#5eead4</text>
+<text x="646" y="474" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">teal-300</text>
+<text x="646" y="490" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge text, trend</text>
+<text x="646" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">up, toast icon, dark</text>
+</g>
+<g><rect x="824" y="350" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="351" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="838" y="364" width="148" height="58" rx="10" fill="#16352c"/>
+<text x="838" y="458" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#16352c</text>
+<text x="838" y="474" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">deep green</text>
+<text x="838" y="490" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Ready badge, success note,</text>
+<text x="838" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">toast, stat tile fill,</text>
+<text x="838" y="514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">dark</text>
+</g>
+<g><rect x="1016" y="350" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="351" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="1030" y="364" width="148" height="58" rx="10" fill="#1f4d3f" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="458" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#1f4d3f</text>
+<text x="1030" y="474" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">deep green</text>
+<text x="1030" y="490" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Success note and toast</text>
+<text x="1030" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">border, dark</text>
+</g>
+<circle cx="62" cy="566" r="5" fill="#f59e0b"/>
+<text x="76" y="570" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">YELLOW · QUEUED, DRAFT, REVIEW</text>
+<g><rect x="56" y="586" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="587" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="600" width="148" height="58" rx="10" fill="#f59e0b" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="694" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f59e0b</text>
+<text x="70" y="710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">amber-500</text>
+<text x="70" y="726" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Queued badge dot,</text>
+<text x="70" y="738" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--accent-amber</text>
+</g>
+<g><rect x="248" y="586" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="587" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="262" y="600" width="148" height="58" rx="10" fill="#b45309" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="694" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#b45309</text>
+<text x="262" y="710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">amber-700</text>
+<text x="262" y="726" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Queued badge text, light</text>
+</g>
+<g><rect x="440" y="586" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="587" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="454" y="600" width="148" height="58" rx="10" fill="#92400e" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="694" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#92400e</text>
+<text x="454" y="710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">amber-800</text>
+<text x="454" y="726" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Draft and review badge</text>
+<text x="454" y="738" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">text, light</text>
+</g>
+<g><rect x="632" y="586" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="587" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="646" y="600" width="148" height="58" rx="10" fill="#fffbeb" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="694" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fffbeb</text>
+<text x="646" y="710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">amber-50</text>
+<text x="646" y="726" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Queued badge fill, light</text>
+</g>
+<g><rect x="824" y="586" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="587" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="838" y="600" width="148" height="58" rx="10" fill="#fef3c7" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="694" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fef3c7</text>
+<text x="838" y="710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">amber-100</text>
+<text x="838" y="726" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Draft and review badge</text>
+<text x="838" y="738" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">fill, light</text>
+</g>
+<g><rect x="1016" y="586" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="587" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="1030" y="600" width="148" height="58" rx="10" fill="#fde68a" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="694" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fde68a</text>
+<text x="1030" y="710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">amber-200</text>
+<text x="1030" y="726" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Queued badge border, light</text>
+</g>
+<g><rect x="56" y="770" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="771" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="784" width="148" height="58" rx="10" fill="#fcd34d" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="878" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fcd34d</text>
+<text x="70" y="894" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">amber-300</text>
+<text x="70" y="910" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Queued, draft, review</text>
+<text x="70" y="922" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">badge text, dark</text>
+</g>
+<g><rect x="248" y="770" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="771" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="262" y="784" width="148" height="58" rx="10" fill="#3b2f14"/>
+<text x="262" y="878" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#3b2f14</text>
+<text x="262" y="894" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">deep amber</text>
+<text x="262" y="910" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Queued, draft, review</text>
+<text x="262" y="922" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">badge fill, dark</text>
+</g>
+<circle cx="62" cy="986" r="5" fill="#f43f5e"/>
+<text x="76" y="990" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">RED · DANGER, FAILED, ERROR</text>
+<g><rect x="56" y="1006" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1007" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="1020" width="148" height="58" rx="10" fill="#f43f5e" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1114" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f43f5e</text>
+<text x="70" y="1130" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-500</text>
+<text x="70" y="1146" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Failed badge dot, rose</text>
+<text x="70" y="1158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">stat icon, --accent-rose</text>
+</g>
+<g><rect x="248" y="1006" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1007" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="262" y="1020" width="148" height="58" rx="10" fill="#e11d48" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1114" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#e11d48</text>
+<text x="262" y="1130" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-600</text>
+<text x="262" y="1146" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Danger button text and</text>
+<text x="262" y="1158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">hover fill, light</text>
+</g>
+<g><rect x="440" y="1006" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1007" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="454" y="1020" width="148" height="58" rx="10" fill="#be123c"/>
+<text x="454" y="1114" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#be123c</text>
+<text x="454" y="1130" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-700</text>
+<text x="454" y="1146" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Failed badge text, error</text>
+<text x="454" y="1158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">box, danger zone heading,</text>
+<text x="454" y="1170" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">retry, global error bar</text>
+</g>
+<g><rect x="632" y="1006" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="1007" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="646" y="1020" width="148" height="58" rx="10" fill="#9f1239"/>
+<text x="646" y="1114" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#9f1239</text>
+<text x="646" y="1130" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-800</text>
+<text x="646" y="1146" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Error badge text, light ·</text>
+<text x="646" y="1158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">global error bar, dark</text>
+</g>
+<g><rect x="824" y="1006" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="1007" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="838" y="1020" width="148" height="58" rx="10" fill="#b91c1c"/>
+<text x="838" y="1114" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#b91c1c</text>
+<text x="838" y="1130" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">red-700</text>
+<text x="838" y="1146" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--rc-danger, mono theme,</text>
+<text x="838" y="1158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">light</text>
+</g>
+<g><rect x="1016" y="1006" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="1007" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="1030" y="1020" width="148" height="58" rx="10" fill="#d6455f" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="1114" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#d6455f</text>
+<text x="1030" y="1130" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose</text>
+<text x="1030" y="1146" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--rc-danger (ui-enhance),</text>
+<text x="1030" y="1158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">trend down text, light</text>
+</g>
+<g><rect x="56" y="1190" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1191" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="1204" width="148" height="58" rx="10" fill="#c2410c" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1298" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#c2410c</text>
+<text x="70" y="1314" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">orange-700</text>
+<text x="70" y="1330" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Chart failed series, light</text>
+</g>
+<g><rect x="248" y="1190" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1191" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="262" y="1204" width="148" height="58" rx="10" fill="#fff1f2" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1298" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fff1f2</text>
+<text x="262" y="1314" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-50</text>
+<text x="262" y="1330" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Failed badge, error box,</text>
+<text x="262" y="1342" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">danger button fill, light</text>
+</g>
+<g><rect x="440" y="1190" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1191" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="454" y="1204" width="148" height="58" rx="10" fill="#fef2f2" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="1298" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fef2f2</text>
+<text x="454" y="1314" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">red-50</text>
+<text x="454" y="1330" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--rc-danger-soft, mono</text>
+<text x="454" y="1342" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">theme, light</text>
+</g>
+<g><rect x="632" y="1190" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="1191" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="646" y="1204" width="148" height="58" rx="10" fill="#fff1f3" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="1298" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fff1f3</text>
+<text x="646" y="1314" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-50</text>
+<text x="646" y="1330" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--rc-danger-soft</text>
+<text x="646" y="1342" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">(ui-enhance), light</text>
+</g>
+<g><rect x="824" y="1190" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="1191" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="838" y="1204" width="148" height="58" rx="10" fill="#fdeef1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="1298" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fdeef1</text>
+<text x="838" y="1314" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose</text>
+<text x="838" y="1330" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Trend down fill, light</text>
+</g>
+<g><rect x="1016" y="1190" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="1191" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="1030" y="1204" width="148" height="58" rx="10" fill="#ffe4e6" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="1298" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#ffe4e6</text>
+<text x="1030" y="1314" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-100</text>
+<text x="1030" y="1330" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Error badge fill, light</text>
+</g>
+<g><rect x="56" y="1374" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1375" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="1388" width="148" height="58" rx="10" fill="#fecdd3" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1482" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fecdd3</text>
+<text x="70" y="1498" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-200</text>
+<text x="70" y="1514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Failed badge, error box,</text>
+<text x="70" y="1526" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">danger zone border, light</text>
+</g>
+<g><rect x="248" y="1374" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1375" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="262" y="1388" width="148" height="58" rx="10" fill="#fca5a5" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1482" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fca5a5</text>
+<text x="262" y="1498" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">red-300</text>
+<text x="262" y="1514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--rc-danger, mono theme,</text>
+<text x="262" y="1526" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">dark</text>
+</g>
+<g><rect x="440" y="1374" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1375" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="454" y="1388" width="148" height="58" rx="10" fill="#fda4af" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="1482" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fda4af</text>
+<text x="454" y="1498" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-300</text>
+<text x="454" y="1514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Failed badge, error box,</text>
+<text x="454" y="1526" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">danger zone text, dark</text>
+</g>
+<g><rect x="632" y="1374" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="1375" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="646" y="1388" width="148" height="58" rx="10" fill="#fb7185" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="1482" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#fb7185</text>
+<text x="646" y="1498" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">rose-400</text>
+<text x="646" y="1514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Danger text button, trend</text>
+<text x="646" y="1526" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">down, --rc-danger</text>
+<text x="646" y="1538" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">(ui-enhance), dark</text>
+</g>
+<g><rect x="824" y="1374" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="1375" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="838" y="1388" width="148" height="58" rx="10" fill="#f87171" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="1482" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f87171</text>
+<text x="838" y="1498" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">red-400</text>
+<text x="838" y="1514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Chart failed series, dark</text>
+</g>
+<g><rect x="1016" y="1374" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="1375" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="1030" y="1388" width="148" height="58" rx="10" fill="rgba(239, 68, 68, 0.14)"/>
+<text x="1030" y="1482" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#0f172a">rgba(239, 68, 68, 0.14)</text>
+<text x="1030" y="1498" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">red-500 / 14%</text>
+<text x="1030" y="1514" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--rc-danger-soft, mono</text>
+<text x="1030" y="1526" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">theme, dark</text>
+</g>
+<g><rect x="56" y="1558" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1559" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="70" y="1572" width="148" height="58" rx="10" fill="#3f1f2a"/>
+<text x="70" y="1666" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#3f1f2a</text>
+<text x="70" y="1682" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">deep rose</text>
+<text x="70" y="1698" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Failed badge, error box,</text>
+<text x="70" y="1710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">rose stat tile fill, dark</text>
+</g>
+<g><rect x="248" y="1558" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1559" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="262" y="1572" width="148" height="58" rx="10" fill="#3b1f29"/>
+<text x="262" y="1666" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#3b1f29</text>
+<text x="262" y="1682" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">deep rose</text>
+<text x="262" y="1698" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--rc-danger-soft</text>
+<text x="262" y="1710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">(ui-enhance), dark</text>
+</g>
+<g><rect x="440" y="1558" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1559" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="454" y="1572" width="148" height="58" rx="10" fill="#5a2a3a"/>
+<text x="454" y="1666" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#5a2a3a</text>
+<text x="454" y="1682" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">deep rose</text>
+<text x="454" y="1698" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Error box and danger zone</text>
+<text x="454" y="1710" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">border, dark</text>
+</g>
+<g><rect x="632" y="1558" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="1559" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="646" y="1572" width="148" height="58" rx="10" fill="#2a1f26"/>
+<text x="646" y="1666" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#2a1f26</text>
+<text x="646" y="1682" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">deep rose</text>
+<text x="646" y="1698" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Danger zone fill, dark</text>
+</g>
+<circle cx="62" cy="1774" r="5" fill="#6d28d9"/>
+<text x="76" y="1778" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">PURPLE · ADMIN ROLE, TAGS</text>
+<g><rect x="56" y="1794" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1795" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="70" y="1808" width="148" height="58" rx="10" fill="#6d28d9" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1902" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#6d28d9</text>
+<text x="70" y="1918" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">violet-700</text>
+<text x="70" y="1934" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Admin role badge text, tag</text>
+<text x="70" y="1946" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">tone text</text>
+</g>
+<g><rect x="248" y="1794" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1795" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="262" y="1808" width="148" height="58" rx="10" fill="#6366f1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1902" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#6366f1</text>
+<text x="262" y="1918" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">indigo-500</text>
+<text x="262" y="1934" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">--accent-indigo</text>
+</g>
+<g><rect x="440" y="1794" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1795" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="454" y="1808" width="148" height="58" rx="10" fill="#ede9fe" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="1902" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#ede9fe</text>
+<text x="454" y="1918" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">violet-100</text>
+<text x="454" y="1934" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Admin role badge fill</text>
+</g>
+<g><rect x="632" y="1794" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="1795" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="646" y="1808" width="148" height="58" rx="10" fill="#f5f3ff" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="1902" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f5f3ff</text>
+<text x="646" y="1918" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">violet-50</text>
+<text x="646" y="1934" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Tag tone fill</text>
+</g>
+<g><rect x="824" y="1794" width="176" height="168" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="1795" width="174" height="84" rx="13" fill="#ffffff"/>
+<rect x="838" y="1808" width="148" height="58" rx="10" fill="#ddd6fe" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="1902" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#ddd6fe</text>
+<text x="838" y="1918" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10" fill="#94a3b8">violet-200</text>
+<text x="838" y="1934" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" fill="#64748b">Tag tone border</text>
+</g>
+</svg>

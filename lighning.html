@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onion AI — Modular Compute Powered By CORA Engine</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        onion: {
+                            black: '#050608',
+                            dark: '#0a0d14',
+                            card: '#0f1420',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            lightBg: '#f6f7fb',
+                            lightCard: '#ffffff',
+                            lightBorder: 'rgba(0, 0, 0, 0.08)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                    },
+                    boxShadow: {
+                        'glow-pill-dark': '0 0 30px 4px rgba(255, 255, 255, 0.55), 0 0 70px 10px rgba(255, 255, 255, 0.15)',
+                        'glow-pill-light': '0 0 25px 3px rgba(15, 23, 42, 0.25), 0 10px 30px -5px rgba(0, 0, 0, 0.2)',
+                        'core-dark': '0 0 50px 10px rgba(255, 255, 255, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4)',
+                        'core-light': '0 15px 35px -5px rgba(0, 0, 0, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)'
+                    }
+                }
+            }
+        };
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Smooth transitions for theme switching */
+        *, *::before, *::after {
+            transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+            transition-duration: 250ms;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Exclude canvas animation loop from CSS transitions */
+        canvas {
+            transition: none !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #050608;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f3f8;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 9999px;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel-dark {
+            background: rgba(15, 20, 32, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel-light {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        /* Beam animation */
+        @keyframes verticalBeamPulse {
+            0%, 100% { opacity: 0.35; transform: scaleX(0.95); }
+            50% { opacity: 0.75; transform: scaleX(1.05); }
+        }
+        .animate-beam {
+            animation: verticalBeamPulse 4.5s ease-in-out infinite;
+        }
+
+        /* Stardust particle float animation */
+        @keyframes floatDust {
+            0% { transform: translateY(0px) scale(0.9); opacity: 0.2; }
+            50% { transform: translateY(-40px) scale(1.1); opacity: 0.8; }
+            100% { transform: translateY(-80px) scale(0.9); opacity: 0; }
+        }
+        .dust-particle {
+            animation: floatDust 6s infinite linear;
+        }
+    </style>
+</head>
+<body class="bg-[#f6f7fb] text-slate-900 dark:bg-[#050608] dark:text-slate-100 font-sans antialiased overflow-x-hidden selection:bg-slate-300 selection:text-black dark:selection:bg-white dark:selection:text-black min-h-screen relative">
+
+    <canvas id="onionWaveCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Ambient Vignette & Radial Glow Shading Layer -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <!-- Center Spotlight Beam Behind Icon -->
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 w-48 sm:w-80 h-[800px] bg-gradient-to-b from-white/10 via-white/5 to-transparent dark:from-white/[0.08] dark:via-white/[0.03] dark:to-transparent blur-2xl animate-beam"></div>
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-slate-300/30 dark:bg-white/[0.03] blur-3xl pointer-events-none"></div>
+    </div>
+
+    <div class="relative z-10 flex flex-col min-h-screen">
+
+        <header class="w-full fixed top-0 left-0 z-50 transition-all duration-300 backdrop-blur-xl border-b border-black/5 dark:border-white/5 bg-white/70 dark:bg-[#050608]/75" id="navHeader">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+                
+                <!-- Brand / Onion Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-8 h-8 rounded-full border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/10 flex items-center justify-center p-1.5 shadow-sm group-hover:scale-105 transition-transform">
+                        <!-- Onion AI 4-Petal Geometric Mark -->
+                        <svg class="w-full h-full text-slate-900 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2C6.5 6.5 6.5 12 12 12C17.5 12 17.5 6.5 12 2Z" fill="currentColor" fill-opacity="0.3"/>
+                            <path d="M12 22C6.5 17.5 6.5 12 12 12C17.5 12 17.5 17.5 12 22Z" fill="currentColor" fill-opacity="0.3"/>
+                            <path d="M2 12C6.5 6.5 12 6.5 12 12C12 17.5 6.5 17.5 2 12Z" fill="currentColor" fill-opacity="0.3"/>
+                            <path d="M22 12C17.5 6.5 12 6.5 12 12C12 17.5 17.5 17.5 22 12Z" fill="currentColor" fill-opacity="0.3"/>
+                            <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span class="text-base font-semibold tracking-tight text-slate-900 dark:text-white">Onion AI</span>
+                </a>
+
+                <!-- Centered Onion Navigation Menu -->
+                <nav class="hidden md:flex items-center gap-7 lg:gap-9 text-xs sm:text-[13px] font-medium text-slate-600 dark:text-slate-300">
+                    <a href="#what-are-we" class="hover:text-black dark:hover:text-white transition-colors">What Are We</a>
+                    <a href="#how-it-works" class="hover:text-black dark:hover:text-white transition-colors">How It Works</a>
+                    <a href="#what-we-provide" class="hover:text-black dark:hover:text-white transition-colors">What We Provide</a>
+                    <a href="#use-cases" class="hover:text-black dark:hover:text-white transition-colors">Use Cases</a>
+                    <a href="#dev-stack" class="hover:text-black dark:hover:text-white transition-colors">Dev Stack</a>
+                </nav>
+
+                <!-- Right Action Buttons + Dark/Light Mode Toggle -->
+                <div class="flex items-center gap-3">
+                    
+                    <!-- Theme Toggle Switch -->
+                    <button id="themeToggleBtn" aria-label="Toggle Theme" class="flex items-center justify-center w-9 h-9 rounded-full border border-black/10 dark:border-white/15 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 transition-all">
+                        <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                    </button>
+
+                    <!-- Glowing Whitepaper Capsule Button (Onion AI signature style) -->
+                    <button id="openWhitepaperBtn" class="inline-flex items-center justify-center text-xs font-semibold px-5 py-2.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-black hover:opacity-95 transition-all duration-300 shadow-glow-pill-light dark:shadow-glow-pill-dark active:scale-95">
+                        Whitepaper
+                    </button>
+
+                    <!-- Mobile Hamburger -->
+                    <button id="mobileNavToggle" class="md:hidden p-2 rounded-lg text-slate-700 dark:text-slate-300">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="hidden md:hidden px-6 pt-3 pb-6 border-b border-black/5 dark:border-white/5 bg-white dark:bg-[#050608] space-y-3 text-sm">
+                <a href="#what-are-we" class="block py-1.5 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white">What Are We</a>
+                <a href="#how-it-works" class="block py-1.5 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white">How It Works</a>
+                <a href="#what-we-provide" class="block py-1.5 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white">What We Provide</a>
+                <a href="#use-cases" class="block py-1.5 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white">Use Cases</a>
+                <a href="#dev-stack" class="block py-1.5 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white">Dev Stack</a>
+            </div>
+        </header>
+
+        <main class="flex-grow pt-28">
+
+            <section class="relative min-h-[85vh] flex flex-col items-center justify-between px-4 sm:px-6 pt-8 pb-12 overflow-hidden text-center">
+
+                <!-- Ambient Stardust Elements Floating -->
+                <div class="absolute inset-0 pointer-events-none">
+                    <span class="absolute left-1/4 top-1/4 w-1 h-1 bg-white rounded-full dust-particle"></span>
+                    <span class="absolute right-1/4 top-1/3 w-1.5 h-1.5 bg-white/70 rounded-full dust-particle" style="animation-delay: 2s;"></span>
+                    <span class="absolute left-1/3 top-2/3 w-1 h-1 bg-white/50 rounded-full dust-particle" style="animation-delay: 4s;"></span>
+                    <span class="absolute right-1/3 top-1/2 w-1.5 h-1.5 bg-white/80 rounded-full dust-particle" style="animation-delay: 1.5s;"></span>
+                </div>
+
+                <div class="max-w-4xl mx-auto flex flex-col items-center z-10">
+                    
+                    <!-- Top Pill Tag: WELCOME TO OUR ONION AI -->
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md mb-8 hover:border-black/20 dark:hover:border-white/20 transition-all cursor-default">
+                        <!-- Star spark icon -->
+                        <svg class="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
+                        </svg>
+                        <span class="text-[11px] font-mono tracking-[0.2em] uppercase text-slate-700 dark:text-slate-300 font-medium">
+                            Welcome to our Onion AI
+                        </span>
+                    </div>
+
+                    <!-- Main Punchy Headline matching screenshot -->
+                    <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-950 dark:text-white leading-[1.08] max-w-4xl">
+                        Modular Compute <br class="hidden sm:block" />
+                        Powered By CORA Engine.
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="mt-6 text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-400 font-normal tracking-wide max-w-xl">
+                        Voice-triggered. Chain-aware. Built to scale.
+                    </p>
+
+                    <!-- Main Glowing CTA: Enter the MCP Engine -->
+                    <div class="mt-8 flex flex-col sm:flex-row items-center gap-4">
+                        <button id="enterMcpBtn" class="px-8 py-3.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-black font-semibold text-xs sm:text-sm tracking-wide transition-all duration-300 shadow-glow-pill-light dark:shadow-glow-pill-dark active:scale-95 hover:scale-105 flex items-center gap-2">
+                            <span>Enter the MCP Engine</span>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </button>
+                        
+                        <!-- Voice trigger test button -->
+                        <button id="voiceTriggerBtn" class="px-6 py-3.5 rounded-full border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.04] text-slate-800 dark:text-slate-300 hover:text-black dark:hover:text-white text-xs sm:text-sm font-medium flex items-center gap-2 backdrop-blur-md active:scale-95 transition-all">
+                            <i data-lucide="mic" class="w-4 h-4 text-emerald-500 animate-pulse"></i>
+                            <span>Voice Trigger Demo</span>
+                        </button>
+                    </div>
+
+                    <div class="mt-16 sm:mt-20 relative flex flex-col items-center justify-center">
+                        
+                        <!-- Vertical Ascension Pillar -->
+                        <div class="absolute -top-16 w-16 sm:w-24 h-40 bg-gradient-to-t from-white/20 via-white/5 to-transparent blur-md pointer-events-none"></div>
+
+                        <!-- Squircle Outer Frame with Bevel and Inner Glow -->
+                        <div class="group relative w-20 h-20 sm:w-24 sm:h-24 rounded-[28px] p-[1.5px] bg-gradient-to-b from-white/40 via-white/10 to-transparent dark:from-white/30 dark:via-white/5 dark:to-white/0 shadow-core-light dark:shadow-core-dark cursor-pointer transition-transform duration-500 hover:scale-110" id="coraCoreTrigger">
+                            
+                            <!-- Inner Glass Surface -->
+                            <div class="w-full h-full rounded-[26px] bg-slate-100/90 dark:bg-[#111624]/90 backdrop-blur-2xl flex items-center justify-center border border-black/10 dark:border-white/15 overflow-hidden relative">
+                                
+                                <!-- Subtle sweeping shine sweep -->
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                                <!-- Center 4-Petal Icon inside Squircle -->
+                                <div class="relative w-10 h-10 sm:w-11 sm:h-11 text-slate-900 dark:text-white flex items-center justify-center">
+                                    <svg class="w-full h-full drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <!-- Top Petal -->
+                                        <path d="M12 2.5C7.5 6.5 7.5 11.5 12 11.5C16.5 11.5 16.5 6.5 12 2.5Z" fill="currentColor" fill-opacity="0.35"/>
+                                        <!-- Bottom Petal -->
+                                        <path d="M12 21.5C7.5 17.5 7.5 12.5 12 12.5C16.5 12.5 16.5 17.5 12 21.5Z" fill="currentColor" fill-opacity="0.35"/>
+                                        <!-- Left Petal -->
+                                        <path d="M2.5 12C6.5 7.5 11.5 7.5 11.5 12C11.5 16.5 6.5 16.5 2.5 12Z" fill="currentColor" fill-opacity="0.35"/>
+                                        <!-- Right Petal -->
+                                        <path d="M21.5 12C17.5 7.5 12.5 7.5 12.5 12C12.5 16.5 17.5 16.5 21.5 12Z" fill="currentColor" fill-opacity="0.35"/>
+                                        <!-- Central Node -->
+                                        <circle cx="12" cy="12" r="1.8" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pulse status label -->
+                        <span class="mt-4 text-[10px] font-mono tracking-widest uppercase text-slate-500 dark:text-slate-400">
+                            Node ID: CORA-01 // Online
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="w-full max-w-6xl mx-auto mt-16 pt-8 border-t border-black/5 dark:border-white/5 z-10">
+                    <div class="flex flex-wrap items-center justify-center gap-7 sm:gap-11 opacity-65 hover:opacity-100 transition-opacity text-slate-800 dark:text-slate-300">
+                        
+                        <!-- Google -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="search" class="w-3.5 h-3.5"></i> Google
+                        </div>
+
+                        <!-- Ethereum -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="layers" class="w-3.5 h-3.5"></i> Ethereum
+                        </div>
+
+                        <!-- Brave -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="shield" class="w-3.5 h-3.5"></i> Brave
+                        </div>
+
+                        <!-- Slack -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="hash" class="w-3.5 h-3.5"></i> Slack
+                        </div>
+
+                        <!-- Alchemy -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="zap" class="w-3.5 h-3.5"></i> Alchemy
+                        </div>
+
+                        <!-- Solana -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="sun" class="w-3.5 h-3.5"></i> Solana
+                        </div>
+
+                        <!-- GitHub -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="github" class="w-3.5 h-3.5"></i> GitHub
+                        </div>
+
+                        <!-- Cloud -->
+                        <div class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide">
+                            <i data-lucide="cloud" class="w-3.5 h-3.5"></i> Google Cloud
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="max-w-6xl mx-auto px-4 sm:px-6 py-20 relative z-10" id="what-are-we">
+                
+                <div class="text-center max-w-3xl mx-auto mb-10">
+                    <span class="text-xs font-mono tracking-widest uppercase text-slate-500 dark:text-slate-400">Architecture</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
+                        What should your chatbot know?
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base mt-3 max-w-xl mx-auto">
+                        Connect arbitrary unstructured sources into high-speed vector embeddings, queryable in millisecond intervals.
+                    </p>
+                </div>
+
+                <!-- Live Search Query Simulation Bar -->
+                <div class="max-w-2xl mx-auto relative group">
+                    <div class="relative flex items-center bg-white dark:bg-[#0c101a] border border-black/10 dark:border-white/10 rounded-full px-5 py-3.5 shadow-xl hover:border-black/20 dark:hover:border-white/25 focus-within:ring-2 focus-within:ring-slate-400 dark:focus-within:ring-white/20 transition-all">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
+                        <input 
+                            type="text" 
+                            id="liveQueryInput" 
+                            placeholder="Connect enterprise docs, GitHub repo, or enter API query..." 
+                            value="Query liquid staking lockup policy & Ethereum smart contract audits"
+                            class="bg-transparent w-full text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none"
+                        />
+                        <button id="runQueryBtn" class="shrink-0 ml-2 w-8 h-8 rounded-full bg-slate-900 text-white dark:bg-white dark:text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-sm">
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Preset Tag Pills -->
+                    <div class="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
+                        <span class="text-slate-400 text-[11px] font-mono mr-1">Quick index:</span>
+                        <button class="preset-tag px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all text-xs" data-query="Index GitHub repos: solidity/core and rust-consensus">
+                            API Specs
+                        </button>
+                        <button class="preset-tag px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all text-xs" data-query="Load HR handbook and remote-equity vesting schedule">
+                            Internal Wiki
+                        </button>
+                        <button class="preset-tag px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all text-xs" data-query="Synthesize Q3 financial runway & venture debt terms">
+                            Financial Models
+                        </button>
+                        <button class="preset-tag px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all text-xs" data-query="Audit GDPR & SOC2 compliance policy guidelines">
+                            Compliance Policy
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 relative z-10" id="how-it-works">
+                
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-xs font-mono tracking-widest uppercase text-slate-500 dark:text-slate-400">Verifiable Grounding</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
+                        Build AI chatbots that cite their sources
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-2">
+                        Every response produces a cryptographic backlink to raw verified files, eliminating hallucinations.
+                    </p>
+                </div>
+
+                <!-- Dual-Pane Live Playground -->
+                <div class="rounded-3xl p-4 sm:p-6 bg-slate-200/50 dark:bg-white/[0.03] border border-black/5 dark:border-white/10 shadow-2xl backdrop-blur-2xl">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                        
+                        <!-- Left Pane: AI Chat Conversation -->
+                        <div class="lg:col-span-7 bg-white dark:bg-[#0b0f17] rounded-2xl border border-black/5 dark:border-white/10 p-5 flex flex-col justify-between min-h-[380px]">
+                            
+                            <!-- Header -->
+                            <div class="flex items-center justify-between border-b border-black/5 dark:border-white/10 pb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                    <span class="text-xs font-mono font-medium text-slate-800 dark:text-slate-200">CORA Session: Active</span>
+                                </div>
+                                <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+                                    Latency: 42ms
+                                </span>
+                            </div>
+
+                            <!-- Messages Area -->
+                            <div class="space-y-4 py-4 flex-grow overflow-y-auto" id="chatStreamBox">
+                                
+                                <div class="flex justify-end">
+                                    <div class="bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%] text-xs sm:text-sm">
+                                        What is the liquid staking lockup policy and protocol slashing rate?
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col items-start space-y-2">
+                                    <div class="bg-slate-50 dark:bg-[#131926] border border-black/5 dark:border-white/10 text-slate-800 dark:text-slate-200 rounded-2xl rounded-tl-sm p-4 text-xs sm:text-sm leading-relaxed">
+                                        <p class="mb-3">
+                                            Liquid staked positions retain immediate secondary AMM liquidity. Native protocol unstaking mandates a 
+                                            <span class="font-semibold text-slate-950 dark:text-white">7-day de-bonding cooldown</span> 
+                                            <button onclick="inspectCitation('src1')" class="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-mono text-[11px] cursor-pointer hover:bg-indigo-500/25">
+                                                [Source 1: Sec 4.2]
+                                            </button>
+                                            with zero early redemption fee.
+                                        </p>
+                                        <p>
+                                            In cases of Byzantine node double-signing, exactly 
+                                            <span class="font-semibold text-slate-950 dark:text-white">1.5% of validator stake</span> 
+                                            <button onclick="inspectCitation('src2')" class="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-mono text-[11px] cursor-pointer hover:bg-indigo-500/25">
+                                                [Doc #24: Slashing]
+                                            </button>
+                                            is penalized and burned irrevocably.
+                                        </p>
+                                    </div>
+
+                                    <!-- Citation Pills -->
+                                    <div class="flex flex-wrap items-center gap-2 text-[11px] pt-1">
+                                        <span class="text-slate-400 font-mono">Sources:</span>
+                                        <button onclick="inspectCitation('src1')" class="px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all">
+                                            Staking_Rules_v2.pdf
+                                        </button>
+                                        <button onclick="inspectCitation('src2')" class="px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all">
+                                            Slashing_Spec_EIP89.md
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Input Bar -->
+                            <div class="border-t border-black/5 dark:border-white/10 pt-3">
+                                <form id="chatQueryForm" class="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        id="userChatPrompt"
+                                        placeholder="Ask a question about connected data..." 
+                                        class="flex-grow bg-slate-100 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none"
+                                    />
+                                    <button type="submit" class="px-4 py-2.5 bg-slate-900 text-white dark:bg-white dark:text-black font-semibold rounded-xl text-xs hover:opacity-90 transition-opacity">
+                                        Ask
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Pane: Document Excerpt Inspector -->
+                        <div class="lg:col-span-5 bg-white dark:bg-[#0b0f17] rounded-2xl border border-black/5 dark:border-white/10 p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-black/5 dark:border-white/10 pb-3 mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="file-search" class="w-4 h-4 text-slate-500"></i>
+                                        <span class="text-xs font-mono font-medium text-slate-800 dark:text-slate-200">Ground Truth Inspector</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono uppercase tracking-wider text-slate-500 bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded">
+                                        SHA-256 Validated
+                                    </span>
+                                </div>
+
+                                <div class="bg-slate-50 dark:bg-[#07090e] rounded-xl p-3.5 border border-black/5 dark:border-white/5 font-mono text-[11px] leading-relaxed max-h-[280px] overflow-y-auto space-y-3" id="docViewerBox">
+                                    <div class="text-slate-400">// Reference: /specs/staking_mechanics.md</div>
+                                    
+                                    <div id="src1" class="p-2.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200 transition-all">
+                                        <div class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold mb-1">[Source 1: Sec 4.2 Cooldown]</div>
+                                        "Native withdrawal queues enforce a 7-day de-bonding cooldown period during which no newly generated consensus yields accrue."
+                                    </div>
+
+                                    <div id="src2" class="p-2.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-900 dark:text-cyan-200 transition-all">
+                                        <div class="text-[10px] text-cyan-600 dark:text-cyan-400 font-semibold mb-1">[Doc #24: Byzantine Fault Rules]</div>
+                                        "Infractions classified under Byzantine double-signing mandate an immediate 1.5% slash of the bonded validator stake, directly burnt via address(0)."
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-between text-xs">
+                                <span class="text-slate-500 flex items-center gap-1.5">
+                                    <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-500"></i> Attribution Score
+                                </span>
+                                <span class="font-mono text-emerald-600 dark:text-emerald-400 font-bold">99.8% Ground Truth</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 relative z-10" id="what-we-provide">
+                
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-xs font-mono tracking-widest uppercase text-slate-500 dark:text-slate-400">Hyperparameter Control</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
+                        Tune every answer
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-2">
+                        Adjust latency, retrieval depth, and determinism in real-time.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Feature Cards -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="p-5 rounded-2xl bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="sliders" class="w-4 h-4 text-slate-500"></i> Strict Grounding
+                            </h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                                Lock responses to authenticated knowledge vectors only. Prevent unwanted extrapolations.
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="cpu" class="w-4 h-4 text-slate-500"></i> Modular LLM Routing
+                            </h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                                Dynamically switches between lightweight reasoning models and deep architectural synthesizers.
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="code-2" class="w-4 h-4 text-slate-500"></i> JSON Output
+                            </h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                                Direct export into Python, TypeScript, or REST WebSocket SDK endpoints.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Sliders & Output Console -->
+                    <div class="lg:col-span-7 bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10 rounded-3xl p-6 shadow-xl">
+                        
+                        <div class="space-y-6">
+                            
+                            <!-- Slider 1 -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2 text-xs">
+                                    <label class="font-medium text-slate-700 dark:text-slate-300">Temperature (Creativity vs Determinism)</label>
+                                    <span id="labelTemp" class="font-mono font-bold text-slate-900 dark:text-white bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded">0.15</span>
+                                </div>
+                                <input type="range" id="paramTemp" min="0" max="1" step="0.01" value="0.15" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white">
+                            </div>
+
+                            <!-- Slider 2 -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2 text-xs">
+                                    <label class="font-medium text-slate-700 dark:text-slate-300">Top-K Retrieval Nodes</label>
+                                    <span id="labelTopK" class="font-mono font-bold text-slate-900 dark:text-white bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded">6 chunks</span>
+                                </div>
+                                <input type="range" id="paramTopK" min="1" max="20" step="1" value="6" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white">
+                            </div>
+
+                            <!-- Slider 3 -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2 text-xs">
+                                    <label class="font-medium text-slate-700 dark:text-slate-300">Attribution Confidence Threshold</label>
+                                    <span id="labelThreshold" class="font-mono font-bold text-slate-900 dark:text-white bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded">94%</span>
+                                </div>
+                                <input type="range" id="paramThreshold" min="60" max="99" step="1" value="94" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white">
+                            </div>
+
+                            <!-- Code Output Preview -->
+                            <div class="mt-4 pt-4 border-t border-black/5 dark:border-white/10">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-mono text-slate-400">cora_runtime_config.json</span>
+                                    <button id="copyJsonBtn" class="text-[11px] font-mono text-slate-700 dark:text-slate-300 hover:underline flex items-center gap-1">
+                                        <i data-lucide="copy" class="w-3 h-3"></i> Copy
+                                    </button>
+                                </div>
+                                <pre id="configJsonDisplay" class="bg-slate-100 dark:bg-[#07090e] p-3.5 rounded-xl border border-black/5 dark:border-white/5 font-mono text-[11px] text-emerald-600 dark:text-emerald-400 overflow-x-auto leading-relaxed">{
+  "engine": "onion-cora-v1",
+  "temperature": 0.15,
+  "top_k_chunks": 6,
+  "confidence_threshold": 0.94,
+  "execution_mode": "chain_verified"
+}</pre>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 relative z-10" id="use-cases">
+                
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="text-xs font-mono tracking-widest uppercase text-slate-500 dark:text-slate-400">Applications</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
+                        Endless applications
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-2">
+                        Deploy specialized AI agents across your internal stack in minutes.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    
+                    <div class="rounded-2xl p-5 bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
+                        <div class="w-8 h-8 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-700 dark:text-slate-300 mb-3">
+                            <i data-lucide="headphones" class="w-4 h-4"></i>
+                        </div>
+                        <h4 class="text-sm font-semibold text-slate-900 dark:text-white">Admissions & Onboarding</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Autonomous candidate intake and dynamic query verification against prerequisite manuals.</p>
+                    </div>
+
+                    <div class="rounded-2xl p-5 bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
+                        <div class="w-8 h-8 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-700 dark:text-slate-300 mb-3">
+                            <i data-lucide="award" class="w-4 h-4"></i>
+                        </div>
+                        <h4 class="text-sm font-semibold text-slate-900 dark:text-white">Scholarship FAQ</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Parses grant eligibility criteria and computes disbursement schedules with zero hallucination.</p>
+                    </div>
+
+                    <div class="rounded-2xl p-5 bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
+                        <div class="w-8 h-8 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-700 dark:text-slate-300 mb-3">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                        </div>
+                        <h4 class="text-sm font-semibold text-slate-900 dark:text-white">HR Policy Sentinel</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Instant compliance clarification regarding employee handbook terms, insurance, and stock plans.</p>
+                    </div>
+
+                    <div class="rounded-2xl p-5 bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
+                        <div class="w-8 h-8 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-700 dark:text-slate-300 mb-3">
+                            <i data-lucide="map" class="w-4 h-4"></i>
+                        </div>
+                        <h4 class="text-sm font-semibold text-slate-900 dark:text-white">Library & Compliance Guide</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Fast semantic retrieval through 100,000+ legal filings, patents, and technical archives.</p>
+                    </div>
+
+                    <div class="rounded-2xl p-5 bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
+                        <div class="w-8 h-8 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-700 dark:text-slate-300 mb-3">
+                            <i data-lucide="terminal" class="w-4 h-4"></i>
+                        </div>
+                        <h4 class="text-sm font-semibold text-slate-900 dark:text-white">API Reference Copilot</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Generates clean client code and endpoint tests directly from OpenAPI documentation.</p>
+                    </div>
+
+                    <div class="rounded-2xl p-5 bg-white dark:bg-[#0b0f17] border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all">
+                        <div class="w-8 h-8 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-700 dark:text-slate-300 mb-3">
+                            <i data-lucide="life-buoy" class="w-4 h-4"></i>
+                        </div>
+                        <h4 class="text-sm font-semibold text-slate-900 dark:text-white">Tier-1 Support Desk</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Handles customer inquiries with automatic citation links to knowledge base articles.</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 relative z-10" id="dev-stack">
+                
+                <div class="rounded-3xl p-8 bg-slate-900 text-white dark:bg-[#0b0f17] border border-black/10 dark:border-white/10 relative overflow-hidden">
+                    <div class="max-w-2xl">
+                        <span class="text-xs font-mono uppercase tracking-widest text-slate-400 block mb-2">Developers // Quick Embed</span>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Deploy to your website in one line</h3>
+                        <p class="text-slate-400 text-xs sm:text-sm mt-2 mb-6">
+                            No complex backend setup required. Paste the CDN snippet or import our lightweight TypeScript client.
+                        </p>
+                    </div>
+
+                    <div class="bg-black/60 rounded-xl p-4 border border-white/10 font-mono text-xs text-slate-300 flex items-center justify-between gap-4">
+                        <code class="overflow-x-auto select-all" id="embedTagCode">&lt;script src="https://cdn.onion-ai.io/cora/client.js" data-engine-id="onion_cora_0x8f2" async&gt;&lt;/script&gt;</code>
+                        <button id="copyEmbedBtn" class="shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors">
+                            <i data-lucide="clipboard" class="w-3.5 h-3.5"></i>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="max-w-4xl mx-auto px-4 sm:px-6 py-24 text-center relative z-10">
+                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-950 dark:text-white tracking-tight mb-4">
+                    Ready to build?
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base mb-8 max-w-md mx-auto">
+                    Experience deterministic modular AI with verified hardware execution.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button class="px-9 py-3.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-black font-semibold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all shadow-glow-pill-light dark:shadow-glow-pill-dark">
+                        Create your free cluster
+                    </button>
+                    <a href="#what-are-we" class="px-7 py-3.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-slate-800 dark:text-slate-300 text-xs sm:text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-all">
+                        Talk to an Architect
+                    </a>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="border-t border-black/5 dark:border-white/5 py-12 relative z-10 bg-white/50 dark:bg-[#050608]/80 text-xs text-slate-500">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 rounded-full border border-black/10 dark:border-white/15 flex items-center justify-center text-slate-800 dark:text-white text-[11px] font-bold">
+                        ✦
+                    </div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Onion AI × CORA Protocol</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="#what-are-we" class="hover:text-black dark:hover:text-white transition-colors">Architecture</a>
+                    <a href="#how-it-works" class="hover:text-black dark:hover:text-white transition-colors">Citations</a>
+                    <a href="#what-we-provide" class="hover:text-black dark:hover:text-white transition-colors">Parameters</a>
+                    <a href="#use-cases" class="hover:text-black dark:hover:text-white transition-colors">Use Cases</a>
+                </div>
+                <div>
+                    <span>© 2026 Onion AI Labs. All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Voice Trigger Interactive Modal Backdrop -->
+    <div id="voiceModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#0b0f17] border border-black/10 dark:border-white/15 rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl relative">
+            <button id="closeVoiceModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-black dark:hover:text-white">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="w-14 h-14 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <i data-lucide="mic" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1">Listening for Voice Trigger...</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Say "Hey Onion, synthesize staking lockup rules"</p>
+            <div class="h-10 flex items-center justify-center gap-1 mb-4" id="voiceWaveform">
+                <span class="w-1 h-3 bg-emerald-500 rounded-full animate-bounce"></span>
+                <span class="w-1 h-7 bg-emerald-500 rounded-full animate-bounce" style="animation-delay: 0.1s;"></span>
+                <span class="w-1 h-5 bg-emerald-500 rounded-full animate-bounce" style="animation-delay: 0.2s;"></span>
+                <span class="w-1 h-8 bg-emerald-500 rounded-full animate-bounce" style="animation-delay: 0.15s;"></span>
+                <span class="w-1 h-4 bg-emerald-500 rounded-full animate-bounce" style="animation-delay: 0.25s;"></span>
+            </div>
+            <button id="simulateVoiceCommandBtn" class="w-full py-2.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-black text-xs font-semibold hover:opacity-90 transition-opacity">
+                Simulate Voice Command
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastMessage" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white dark:bg-white dark:text-black px-4 py-2.5 rounded-full font-medium text-xs shadow-2xl flex items-center gap-2">
+        <i data-lucide="check" class="w-4 h-4 text-emerald-400 dark:text-emerald-600"></i>
+        <span id="toastText">Action completed</span>
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        /* ==========================================================
+           1. PROCEDURAL 3D CURVED RIBBONS & TOPOGRAPHIC AMPHITHEATER
+           ========================================================== */
+        const canvas = document.getElementById('onionWaveCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let targetX = mouseX;
+        let targetY = mouseY;
+        let animationTime = 0;
+
+        function handleResize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        window.addEventListener('mousemove', (e) => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+        });
+
+        function renderRibbonLandscape() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Interpolate mouse movements
+            mouseX += (targetX - mouseX) * 0.04;
+            mouseY += (targetY - mouseY) * 0.04;
+            animationTime += 0.007;
+
+            const isDark = document.documentElement.classList.contains('dark');
+
+            // Set colors based on Dark/Light mode
+            const strokeColor = isDark ? 255 : 30;
+            const ribbonLines = 36;
+            const horizonY = height * 0.46;
+
+            // Draw amphitheater parametric curve ribbons
+            for (let i = 0; i < ribbonLines; i++) {
+                ctx.beginPath();
+                const progress = i / ribbonLines;
+                const alpha = (0.03 + progress * 0.075) * (isDark ? 1.0 : 0.65);
+                
+                ctx.strokeStyle = `rgba(${strokeColor}, ${strokeColor}, ${strokeColor}, ${alpha})`;
+                ctx.lineWidth = 1.0 + progress * 0.6;
+
+                // Parabolic perspective amphitheater curve
+                const baseY = horizonY + Math.pow(progress, 1.8) * (height - horizonY);
+
+                for (let x = 0; x <= width; x += 18) {
+                    // Curved depression in the center
+                    const normalizedX = (x - width / 2) / (width / 2);
+                    const parabolicSag = (1 - normalizedX * normalizedX) * 45 * Math.sin(progress * Math.PI);
+                    
+                    // Wave ripple
+                    const wave = Math.sin(x * 0.004 + animationTime + i * 0.2) * (10 + progress * 25);
+                    
+                    // Cursor magnetic pull
+                    const distToMouse = Math.hypot(x - mouseX, baseY - mouseY);
+                    const mouseBulge = Math.max(0, 1 - distToMouse / 380) * 22;
+
+                    const y = baseY + parabolicSag + wave + mouseBulge;
+
+                    if (x === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // Radial Glow Beacon at Horizon
+            const beaconGlow = ctx.createRadialGradient(
+                width / 2, horizonY * 0.95, 10,
+                width / 2, horizonY * 0.95, Math.min(width * 0.45, 450)
+            );
+            if (isDark) {
+                beaconGlow.addColorStop(0, 'rgba(255, 255, 255, 0.12)');
+                beaconGlow.addColorStop(0.5, 'rgba(255, 255, 255, 0.03)');
+                beaconGlow.addColorStop(1, 'transparent');
+            } else {
+                beaconGlow.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+                beaconGlow.addColorStop(0.5, 'rgba(0, 0, 0, 0.015)');
+                beaconGlow.addColorStop(1, 'transparent');
+            }
+            ctx.fillStyle = beaconGlow;
+            ctx.fillRect(0, 0, width, height);
+
+            requestAnimationFrame(renderRibbonLandscape);
+        }
+        renderRibbonLandscape();
+
+        /* ==========================================================
+           2. THEME SWITCHER (OBSIDIAN DARK & STUDIO LIGHT)
+           ========================================================== */
+        const themeBtn = document.getElementById('themeToggleBtn');
+        const rootEl = document.documentElement;
+
+        themeBtn.addEventListener('click', () => {
+            rootEl.classList.toggle('dark');
+            const isDarkNow = rootEl.classList.contains('dark');
+            showToast(isDarkNow ? 'Obsidian Dark Mode enabled' : 'Studio Light Mode enabled');
+            lucide.createIcons();
+        });
+
+        /* ==========================================================
+           3. TOAST HELPER
+           ========================================================== */
+        const toast = document.getElementById('toastMessage');
+        const toastText = document.getElementById('toastText');
+        let toastTimer;
+
+        function showToast(msg) {
+            clearTimeout(toastTimer);
+            toastText.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+
+        /* ==========================================================
+           4. SQUIRCLE HERO INTERACTION & SOUND FEEL
+           ========================================================== */
+        const coraCore = document.getElementById('coraCoreTrigger');
+        coraCore.addEventListener('click', () => {
+            showToast('CORA MCP Core pinged: Latency 14ms across 1,024 decentralized nodes');
+        });
+
+        /* ==========================================================
+           5. HERO SEARCH & PRESET TAGS
+           ========================================================== */
+        const liveQueryInput = document.getElementById('liveQueryInput');
+        const runQueryBtn = document.getElementById('runQueryBtn');
+        const presetTags = document.querySelectorAll('.preset-tag');
+
+        presetTags.forEach(btn => {
+            btn.addEventListener('click', () => {
+                liveQueryInput.value = btn.getAttribute('data-query');
+                liveQueryInput.focus();
+                showToast(`Loaded preset: ${btn.textContent.trim()}`);
+            });
+        });
+
+        runQueryBtn.addEventListener('click', () => {
+            if (!liveQueryInput.value.trim()) return;
+            showToast(`Routing query through CORA Sub-Agents...`);
+            document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        /* ==========================================================
+           6. INTERACTIVE CITATION INSPECTOR
+           ========================================================== */
+        function inspectCitation(id) {
+            const el = document.getElementById(id);
+            const container = document.getElementById('docViewerBox');
+            if (!el || !container) return;
+
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            el.classList.add('ring-2', 'ring-slate-900', 'dark:ring-white', 'scale-[1.02]');
+            setTimeout(() => {
+                el.classList.remove('ring-2', 'ring-slate-900', 'dark:ring-white', 'scale-[1.02]');
+            }, 1800);
+
+            showToast(`Inspecting ground-truth: ${id === 'src1' ? 'Section 4.2' : 'Doc #24'}`);
+        }
+
+        // Live Chat Submission Simulation
+        const chatForm = document.getElementById('chatQueryForm');
+        const chatInput = document.getElementById('userChatPrompt');
+        const chatBox = document.getElementById('chatStreamBox');
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // User bubble
+            const userDiv = document.createElement('div');
+            userDiv.className = 'flex justify-end';
+            userDiv.innerHTML = `
+                <div class="bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%] text-xs sm:text-sm">
+                    ${text}
+                </div>
+            `;
+            chatBox.appendChild(userDiv);
+            chatInput.value = '';
+
+            // Bot response simulation with citation
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'flex flex-col items-start space-y-2';
+                botDiv.innerHTML = `
+                    <div class="bg-slate-50 dark:bg-[#131926] border border-black/5 dark:border-white/10 text-slate-800 dark:text-slate-200 rounded-2xl rounded-tl-sm p-4 text-xs sm:text-sm leading-relaxed">
+                        <p>
+                            CORA nodes confirmed consensus match. Parameter guidelines remain locked under 
+                            <button onclick="inspectCitation('src1')" class="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-mono text-[11px] cursor-pointer">
+                                [Source 1: Sec 4.2]
+                            </button> 
+                            with cryptographic certainty.
+                        </p>
+                    </div>
+                `;
+                chatBox.appendChild(botDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                lucide.createIcons();
+            }, 450);
+        });
+
+        /* ==========================================================
+           7. HYPERPARAMETER CONTROLLER & JSON GENERATOR
+           ========================================================== */
+        const paramTemp = document.getElementById('paramTemp');
+        const paramTopK = document.getElementById('paramTopK');
+        const paramThreshold = document.getElementById('paramThreshold');
+
+        const labelTemp = document.getElementById('labelTemp');
+        const labelTopK = document.getElementById('labelTopK');
+        const labelThreshold = document.getElementById('labelThreshold');
+        const configJsonDisplay = document.getElementById('configJsonDisplay');
+
+        function updateJsonConfig() {
+            const t = parseFloat(paramTemp.value).toFixed(2);
+            const k = parseInt(paramTopK.value);
+            const thresh = parseInt(paramThreshold.value);
+
+            labelTemp.textContent = t;
+            labelTopK.textContent = `${k} chunks`;
+            labelThreshold.textContent = `${thresh}%`;
+
+            const configObj = {
+                engine: "onion-cora-v1",
+                temperature: parseFloat(t),
+                top_k_chunks: k,
+                confidence_threshold: thresh / 100,
+                execution_mode: thresh > 90 ? "chain_verified" : "balanced_inference"
+            };
+
+            configJsonDisplay.textContent = JSON.stringify(configObj, null, 2);
+        }
+
+        paramTemp.addEventListener('input', updateJsonConfig);
+        paramTopK.addEventListener('input', updateJsonConfig);
+        paramThreshold.addEventListener('input', updateJsonConfig);
+
+        /* ==========================================================
+           8. CLIPBOARD COPY UTILITIES
+           ========================================================== */
+        function copyText(str, successMessage) {
+            const temp = document.createElement('textarea');
+            temp.value = str;
+            temp.style.position = 'fixed';
+            temp.style.left = '-9999px';
+            document.body.appendChild(temp);
+            temp.focus();
+            temp.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error(err);
+            }
+            document.body.removeChild(temp);
+            showToast(successMessage);
+        }
+
+        document.getElementById('copyJsonBtn').addEventListener('click', () => {
+            copyText(configJsonDisplay.textContent, 'JSON config copied to clipboard');
+        });
+
+        document.getElementById('copyEmbedBtn').addEventListener('click', () => {
+            copyText(document.getElementById('embedTagCode').textContent, 'Embed script copied to clipboard');
+        });
+
+        /* ==========================================================
+           9. VOICE TRIGGER SIMULATOR MODAL
+           ========================================================== */
+        const voiceBtn = document.getElementById('voiceTriggerBtn');
+        const voiceModal = document.getElementById('voiceModal');
+        const closeVoiceModalBtn = document.getElementById('closeVoiceModalBtn');
+        const simulateVoiceBtn = document.getElementById('simulateVoiceCommandBtn');
+
+        voiceBtn.addEventListener('click', () => {
+            voiceModal.classList.remove('hidden');
+            voiceModal.classList.add('flex');
+        });
+
+        closeVoiceModalBtn.addEventListener('click', () => {
+            voiceModal.classList.add('hidden');
+            voiceModal.classList.remove('flex');
+        });
+
+        simulateVoiceBtn.addEventListener('click', () => {
+            voiceModal.classList.add('hidden');
+            voiceModal.classList.remove('flex');
+            liveQueryInput.value = 'Synthesizing staking lockup rules via voice command...';
+            showToast('Voice intent parsed by CORA Voice SDK');
+            document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        /* ==========================================================
+           10. MOBILE MENU & WHITEPAPER TRIGGER
+           ========================================================== */
+        const mobileToggle = document.getElementById('mobileNavToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.getElementById('openWhitepaperBtn').addEventListener('click', () => {
+            showToast('Opening Onion AI × CORA Whitepaper 2.0 (PDF)');
+        });
+
+        document.getElementById('enterMcpBtn').addEventListener('click', () => {
+            document.getElementById('what-we-provide').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

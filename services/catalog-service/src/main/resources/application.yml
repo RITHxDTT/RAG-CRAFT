@@ -1,0 +1,40 @@
+server:
+  port: ${PORT:8082}
+
+spring:
+  application:
+    name: catalog-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/catalog_db}
+    username: ${DB_USER:ragcraft}
+    password: ${DB_PASSWORD:ragcraft}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+
+ragcraft:
+  internal-token: ${INTERNAL_TOKEN:change-me-internal-token}
+  cors-origins: ${CORS_ORIGINS:http://localhost:3000}
+  jwt:
+    secret: ${JWT_SECRET:development-only-secret-change-me-please-32chars}
+
+catalog:
+  # Seeds the demo models (Llama 3.2 3B, Qwen, Custom Model) and the default prompt when the tables are empty.
+  seed-defaults: ${SEED_DEFAULTS:true}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:catalog;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:

@@ -1,0 +1,241 @@
+# RAG Craft microservices: one Spring Boot service per domain, each with its own PostgreSQL database.
+#
+#   cp .env.microservices.example .env.microservices   # then edit the secrets
+#   docker compose -f docker-compose.microservices.yml --env-file .env.microservices up --build
+#
+# The frontend talks only to the api-gateway on port 8080. Databases are published on 5433-5439 for local tools.
+# The existing FastAPI backend (docker-compose.yml) is untouched and will become the RAG service later.
+
+x-service-env: &service-env
+  JWT_SECRET: ${JWT_SECRET}
+  INTERNAL_TOKEN: ${INTERNAL_TOKEN}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+  FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+  PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:8080}
+  DB_USER: ${DB_USER:-ragcraft}
+  DB_PASSWORD: ${DB_PASSWORD}
+  IDENTITY_SERVICE_URL: http://identity-service:8081
+  CATALOG_SERVICE_URL: http://catalog-service:8082
+  CHATBOT_SERVICE_URL: http://chatbot-service:8083
+  KNOWLEDGE_SERVICE_URL: http://knowledge-service:8084
+  CONVERSATION_SERVICE_URL: http://conversation-service:8085
+  CHANNEL_SERVICE_URL: http://channel-service:8086
+  ANALYTICS_SERVICE_URL: http://analytics-service:8087
+
+x-postgres: &postgres
+  image: postgres:17-alpine
+  restart: unless-stopped
+  environment:
+    POSTGRES_USER: ${DB_USER:-ragcraft}
+    POSTGRES_PASSWORD: ${DB_PASSWORD}
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ragcraft} -d $$POSTGRES_DB"]
+    interval: 5s
+    timeout: 5s
+    retries: 20
+
+x-healthcheck: &service-healthcheck
+  interval: 10s
+  timeout: 5s
+  retries: 12
+  start_period: 40s
+
+services:
+  # ---------- databases (one per service) ----------
+  identity-db:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-ragcraft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: identity_db
+    ports: ["127.0.0.1:5433:5432"]
+    volumes: [identity_data:/var/lib/postgresql/data]
+
+  catalog-db:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-ragcraft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: catalog_db
+    ports: ["127.0.0.1:5434:5432"]
+    volumes: [catalog_data:/var/lib/postgresql/data]
+
+  chatbot-db:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-ragcraft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: chatbot_db
+    ports: ["127.0.0.1:5435:5432"]
+    volumes: [chatbot_data:/var/lib/postgresql/data]
+
+  knowledge-db:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-ragcraft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: knowledge_db
+    ports: ["127.0.0.1:5436:5432"]
+    volumes: [knowledge_data:/var/lib/postgresql/data]
+
+  conversation-db:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-ragcraft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: conversation_db
+    ports: ["127.0.0.1:5437:5432"]
+    volumes: [conversation_data:/var/lib/postgresql/data]
+
+  channel-db:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-ragcraft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: channel_db
+    ports: ["127.0.0.1:5438:5432"]
+    volumes: [channel_data:/var/lib/postgresql/data]
+
+  analytics-db:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-ragcraft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: analytics_db
+    ports: ["127.0.0.1:5439:5432"]
+    volumes: [analytics_data:/var/lib/postgresql/data]
+
+  # ---------- services ----------
+  identity-service:
+    build: { context: ./services, dockerfile: identity-service/Dockerfile }
+    image: rag-craft-identity-service:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+      DB_URL: jdbc:postgresql://identity-db:5432/identity_db
+      SEED_DEMO_ACCOUNTS: ${SEED_DEMO_ACCOUNTS:-true}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      MAIL_MODE: ${MAIL_MODE:-log}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    depends_on: { identity-db: { condition: service_healthy } }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
+
+  catalog-service:
+    build: { context: ./services, dockerfile: catalog-service/Dockerfile }
+    image: rag-craft-catalog-service:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+      DB_URL: jdbc:postgresql://catalog-db:5432/catalog_db
+    depends_on: { catalog-db: { condition: service_healthy } }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"]
+
+  chatbot-service:
+    build: { context: ./services, dockerfile: chatbot-service/Dockerfile }
+    image: rag-craft-chatbot-service:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+      DB_URL: jdbc:postgresql://chatbot-db:5432/chatbot_db
+    depends_on:
+      chatbot-db: { condition: service_healthy }
+      catalog-service: { condition: service_healthy }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8083/health"]
+
+  knowledge-service:
+    build: { context: ./services, dockerfile: knowledge-service/Dockerfile }
+    image: rag-craft-knowledge-service:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+      DB_URL: jdbc:postgresql://knowledge-db:5432/knowledge_db
+      STORAGE_DIR: /app/storage
+      PROCESSING_MODE: ${PROCESSING_MODE:-mock}
+    volumes: [knowledge_files:/app/storage]
+    depends_on:
+      knowledge-db: { condition: service_healthy }
+      chatbot-service: { condition: service_healthy }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8084/health"]
+
+  conversation-service:
+    build: { context: ./services, dockerfile: conversation-service/Dockerfile }
+    image: rag-craft-conversation-service:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+      DB_URL: jdbc:postgresql://conversation-db:5432/conversation_db
+      RAG_MODE: ${RAG_MODE:-mock}
+      RAG_SERVICE_URL: ${RAG_SERVICE_URL:-http://backend:8000}
+    depends_on:
+      conversation-db: { condition: service_healthy }
+      chatbot-service: { condition: service_healthy }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8085/health"]
+
+  channel-service:
+    build: { context: ./services, dockerfile: channel-service/Dockerfile }
+    image: rag-craft-channel-service:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+      DB_URL: jdbc:postgresql://channel-db:5432/channel_db
+      INTEGRATION_ENCRYPTION_KEY: ${INTEGRATION_ENCRYPTION_KEY}
+      TELEGRAM_MODE: ${TELEGRAM_MODE:-simulated}
+    depends_on:
+      channel-db: { condition: service_healthy }
+      conversation-service: { condition: service_healthy }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8086/health"]
+
+  analytics-service:
+    build: { context: ./services, dockerfile: analytics-service/Dockerfile }
+    image: rag-craft-analytics-service:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+      DB_URL: jdbc:postgresql://analytics-db:5432/analytics_db
+    depends_on:
+      analytics-db: { condition: service_healthy }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8087/health"]
+
+  api-gateway:
+    build: { context: ./services, dockerfile: api-gateway/Dockerfile }
+    image: rag-craft-api-gateway:2.0
+    restart: unless-stopped
+    environment:
+      <<: *service-env
+    ports: ["8080:8080"]
+    depends_on:
+      identity-service: { condition: service_healthy }
+      catalog-service: { condition: service_healthy }
+      chatbot-service: { condition: service_healthy }
+      knowledge-service: { condition: service_healthy }
+      conversation-service: { condition: service_healthy }
+      channel-service: { condition: service_healthy }
+      analytics-service: { condition: service_healthy }
+    healthcheck:
+      <<: *service-healthcheck
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+
+volumes:
+  identity_data:
+  catalog_data:
+  chatbot_data:
+  knowledge_data:
+  conversation_data:
+  channel_data:
+  analytics_data:
+  knowledge_files:

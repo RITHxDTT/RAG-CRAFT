@@ -1,0 +1,126 @@
+# RAG Craft landing page colors
+# Source: frontend/src/features/landing/landing.tsx, frontend/src/app/landing.css, frontend/src/features/landing/ribbon-canvas.tsx
+# Style: black and white monochrome. Tailwind slate scale for text, pure black/white with opacity for surfaces and glow.
+
+## Page backgrounds
+#f6f7fb    light page background (bg-[#f6f7fb])
+#050608    dark page background, header and footer base (bg-[#050608])
+#0b0f17    dark card / panel background
+#111624    dark inner surface (core squircle, assistant bubble)
+#07090e    dark code block background
+
+## Text (Tailwind slate scale)
+#020617    slate-950  hero and CTA headline, light mode
+#0f172a    slate-900  headings, pill button background, light mode
+#1e293b    slate-800  body text, light mode
+#334155    slate-700  nav links, icons, light mode
+#475569    slate-600  subtitles, light mode
+#64748b    slate-500  eyebrows, captions, footer text
+#94a3b8    slate-400  subtitles and eyebrows, dark mode
+#cbd5e1    slate-300  nav links and body text, dark mode
+#e2e8f0    slate-200  icon color, dark mode
+#f1f5f9    slate-100  body text, dark mode
+#ffffff    white      headings and pill button background, dark mode
+#000000    black      pill button text, dark mode
+
+## Surfaces and borders (black or white with opacity)
+rgba(0, 0, 0, 0.03)     light card fill, pills, hero tag
+rgba(0, 0, 0, 0.05)     light icon tiles, beam gradient start
+rgba(0, 0, 0, 0.10)     light borders
+rgba(0, 0, 0, 0.15)     light brand circle border, cited source border
+rgba(0, 0, 0, 0.20)     light card hover border, core gradient start
+rgba(255, 255, 255, 0.03)  dark section panel fill, ambient glow
+rgba(255, 255, 255, 0.04)  dark hero tag fill
+rgba(255, 255, 255, 0.05)  dark icon tiles, stack chips
+rgba(255, 255, 255, 0.06)  dark cited source fill
+rgba(255, 255, 255, 0.08)  dark beam gradient start
+rgba(255, 255, 255, 0.10)  dark card borders, copy button
+rgba(255, 255, 255, 0.15)  dark brand circle border
+rgba(255, 255, 255, 0.20)  dark card hover border, copy button hover
+rgba(255, 255, 255, 0.30)  dark core squircle gradient start
+rgba(255, 255, 255, 0.70)  light header glass (bg-white/70)
+rgba(255, 255, 255, 0.50)  light footer glass (bg-white/50)
+rgba(5, 6, 8, 0.75)        dark header glass (bg-[#050608]/75)
+rgba(5, 6, 8, 0.80)        dark footer glass (bg-[#050608]/80)
+#f8fafc    slate-50   assistant bubble, light mode
+#f1f5f9    slate-100  code block, light mode
+#e2e8f0    slate-200  section panel fill at 50% (bg-slate-200/50), light mode
+#cbd5e1    slate-300  ambient glow at 30% (bg-slate-300/30), light mode; selection highlight
+
+## Glow shadows (landing.css)
+rgba(15, 23, 42, 0.25) + rgba(0, 0, 0, 0.20)      light pill button glow
+rgba(255, 255, 255, 0.55) + rgba(255, 255, 255, 0.15)  dark pill button glow
+rgba(0, 0, 0, 0.12) + rgba(255, 255, 255, 0.90)   light core squircle shadow and inner highlight
+rgba(255, 255, 255, 0.12) + rgba(255, 255, 255, 0.40)  dark core squircle glow and inner highlight
+
+## Ribbon canvas animation (ribbon-canvas.tsx)
+rgb(30, 30, 30)   line color, light mode, alpha 0.02 to 0.07
+rgb(255, 255, 255) line color, dark mode, alpha 0.03 to 0.105
+rgba(15, 23, 42, 0.08) -> rgba(15, 23, 42, 0.02)       light horizon glow
+rgba(255, 255, 255, 0.12) -> rgba(255, 255, 255, 0.03) dark horizon glow
+
+## Dust particles
+#0f172a at 30% to 60% opacity   light mode
+#ffffff at 50% to 100% opacity  dark mode
+
+# ------------------------------------------------------------
+# Accent colors: green, yellow, red, purple
+# Source: frontend/src/app/globals.css, ui-enhance.css, ui-mono.css, features/admin/analytics.tsx
+# Board: docs/accent-palette.svg
+# Note: the black & white theme (ui-mono.css) overrides most green/yellow/purple badges
+#       to ink colors; red danger colors stay active everywhere.
+
+## Green (success, ready, live, online)
+#10b981    emerald-500  ready badge dot, live dot, online dot, green stat icon, --accent-emerald
+#047857    emerald-700  ready badge text, light
+#065f46    emerald-800  success note text, light
+#0f9d72    green        health good, trend up text, light
+#368f75    green        ready badge text (ui-refresh), light
+#ecfdf5    emerald-50   ready badge, success note, stat tile fill, light
+#eaf6f1    mint         ready badge fill (ui-refresh), light
+#e6f7f1    mint         trend up fill, light
+#a7f3d0    emerald-200  ready badge / success note border, light; note and toast text, dark
+#5eead4    teal-300     ready badge text, trend up, toast icon, dark
+#16352c    deep green   ready badge, success note, toast, stat tile fill, dark
+#1f4d3f    deep green   success note and toast border, dark
+
+## Yellow (queued, draft, review)
+#f59e0b    amber-500    queued badge dot, --accent-amber
+#b45309    amber-700    queued badge text, light
+#92400e    amber-800    draft and review badge text, light
+#fffbeb    amber-50     queued badge fill, light
+#fef3c7    amber-100    draft and review badge fill, light
+#fde68a    amber-200    queued badge border, light
+#fcd34d    amber-300    queued, draft, review badge text, dark
+#3b2f14    deep amber   queued, draft, review badge fill, dark
+
+## Red (danger, failed, error)
+#f43f5e    rose-500     failed badge dot, rose stat icon, --accent-rose
+#e11d48    rose-600     danger button text and hover fill, light
+#be123c    rose-700     failed badge text, error box, danger zone heading, retry, global error bar
+#9f1239    rose-800     error badge text, light; global error bar, dark
+#b91c1c    red-700      --rc-danger, mono theme, light
+#d6455f    rose         --rc-danger (ui-enhance), trend down text, light
+#c2410c    orange-700   chart failed series, light
+#fff1f2    rose-50      failed badge, error box, danger button fill, light
+#fef2f2    red-50       --rc-danger-soft, mono theme, light
+#fff1f3    rose-50      --rc-danger-soft (ui-enhance), light
+#fdeef1    rose         trend down fill, light
+#ffe4e6    rose-100     error badge fill, light
+#fecdd3    rose-200     failed badge, error box, danger zone border, light
+#fca5a5    red-300      --rc-danger, mono theme, dark
+#fda4af    rose-300     failed badge, error box, danger zone text, dark
+#fb7185    rose-400     danger text button, trend down, --rc-danger (ui-enhance), dark
+#f87171    red-400      chart failed series, dark
+rgba(239, 68, 68, 0.14)  red-500 at 14%  --rc-danger-soft, mono theme, dark
+#3f1f2a    deep rose    failed badge, error box, rose stat tile fill, dark
+#3b1f29    deep rose    --rc-danger-soft (ui-enhance), dark
+#5a2a3a    deep rose    error box and danger zone border, dark
+#2a1f26    deep rose    danger zone fill, dark
+
+## Purple (admin role, tags)
+#6d28d9    violet-700   admin role badge text, tag tone text
+#6366f1    indigo-500   --accent-indigo
+#ede9fe    violet-100   admin role badge fill
+#f5f3ff    violet-50    tag tone fill
+#ddd6fe    violet-200   tag tone border

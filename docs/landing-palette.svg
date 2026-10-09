@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1934" viewBox="0 0 1240 1934">
+<rect width="1240" height="1934" fill="#ffffff"/>
+<text x="56" y="84" font-family="Inter, Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">RAG Craft landing page · black &amp; white palette</text>
+<text x="56" y="116" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" fill="#64748b">Monochrome system from frontend/src/features/landing · slate scale for text · black or white at low opacity for surfaces · white glow in dark mode</text>
+<text x="56" y="160" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">PAGE BACKGROUNDS</text>
+<g><rect x="56" y="176" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="177" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="72" y="190" width="144" height="58" rx="10" fill="#f6f7fb" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="284" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f6f7fb</text>
+<text x="70" y="304" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">Light page</text></g>
+<g><rect x="248" y="176" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="177" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="264" y="190" width="144" height="58" rx="10" fill="#050608" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="284" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#050608</text>
+<text x="262" y="304" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">Dark page / header / footer</text></g>
+<g><rect x="440" y="176" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="177" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="456" y="190" width="144" height="58" rx="10" fill="#0b0f17" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="284" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#0b0f17</text>
+<text x="454" y="304" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">Dark card</text></g>
+<g><rect x="632" y="176" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="177" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="648" y="190" width="144" height="58" rx="10" fill="#111624" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="284" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#111624</text>
+<text x="646" y="304" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">Dark inner surface</text></g>
+<g><rect x="824" y="176" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="177" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="840" y="190" width="144" height="58" rx="10" fill="#07090e" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="284" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#07090e</text>
+<text x="838" y="304" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">Dark code block</text></g>
+<text x="56" y="378" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">TEXT · TAILWIND SLATE SCALE</text>
+<g><rect x="56" y="394" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="395" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="72" y="408" width="144" height="58" rx="10" fill="#020617" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#020617</text>
+<text x="70" y="522" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-950 hero headline</text></g>
+<g><rect x="248" y="394" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="395" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="264" y="408" width="144" height="58" rx="10" fill="#0f172a" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#0f172a</text>
+<text x="262" y="522" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-900 headings, pill button</text></g>
+<g><rect x="440" y="394" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="395" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="456" y="408" width="144" height="58" rx="10" fill="#1e293b" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#1e293b</text>
+<text x="454" y="522" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-800 body</text></g>
+<g><rect x="632" y="394" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="395" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="648" y="408" width="144" height="58" rx="10" fill="#334155" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#334155</text>
+<text x="646" y="522" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-700 nav, icons</text></g>
+<g><rect x="824" y="394" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="395" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="840" y="408" width="144" height="58" rx="10" fill="#475569" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#475569</text>
+<text x="838" y="522" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-600 subtitles</text></g>
+<g><rect x="1016" y="394" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="395" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="1032" y="408" width="144" height="58" rx="10" fill="#64748b" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="502" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#64748b</text>
+<text x="1030" y="522" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-500 eyebrows, footer</text></g>
+<g><rect x="56" y="560" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="561" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="72" y="574" width="144" height="58" rx="10" fill="#94a3b8" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="668" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#94a3b8</text>
+<text x="70" y="688" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-400 dark subtitles</text></g>
+<g><rect x="248" y="560" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="561" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="264" y="574" width="144" height="58" rx="10" fill="#cbd5e1" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="668" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#cbd5e1</text>
+<text x="262" y="688" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-300 dark nav, body</text></g>
+<g><rect x="440" y="560" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="561" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="456" y="574" width="144" height="58" rx="10" fill="#e2e8f0" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="668" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#e2e8f0</text>
+<text x="454" y="688" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-200 dark icons</text></g>
+<g><rect x="632" y="560" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="561" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="648" y="574" width="144" height="58" rx="10" fill="#f1f5f9" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="668" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f1f5f9</text>
+<text x="646" y="688" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-100 dark body</text></g>
+<g><rect x="824" y="560" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="561" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="840" y="574" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="668" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#ffffff</text>
+<text x="838" y="688" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">white dark headings, pill</text></g>
+<g><rect x="1016" y="560" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="561" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="1032" y="574" width="144" height="58" rx="10" fill="#000000" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="668" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#000000</text>
+<text x="1030" y="688" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">black pill text (dark)</text></g>
+<text x="56" y="762" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">SURFACES &amp; BORDERS · LIGHT MODE (black at opacity)</text>
+<g><rect x="56" y="778" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="779" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="72" y="792" width="144" height="58" rx="10" fill="#000000" fill-opacity="0.03" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="886" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">black 3%</text>
+<text x="70" y="906" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">card fill, pills</text></g>
+<g><rect x="248" y="778" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="779" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="264" y="792" width="144" height="58" rx="10" fill="#000000" fill-opacity="0.05" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="886" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">black 5%</text>
+<text x="262" y="906" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">icon tiles</text></g>
+<g><rect x="440" y="778" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="779" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="456" y="792" width="144" height="58" rx="10" fill="#000000" fill-opacity="0.1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="886" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">black 10%</text>
+<text x="454" y="906" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">borders</text></g>
+<g><rect x="632" y="778" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="779" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="648" y="792" width="144" height="58" rx="10" fill="#000000" fill-opacity="0.15" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="886" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">black 15%</text>
+<text x="646" y="906" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">brand circle, cited source</text></g>
+<g><rect x="824" y="778" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="779" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="840" y="792" width="144" height="58" rx="10" fill="#000000" fill-opacity="0.2" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="886" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">black 20%</text>
+<text x="838" y="906" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">hover border</text></g>
+<g><rect x="1016" y="778" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="779" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="1032" y="792" width="144" height="58" rx="10" fill="#f8fafc" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="886" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f8fafc</text>
+<text x="1030" y="906" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-50 assistant bubble</text></g>
+<g><rect x="56" y="944" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="945" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="72" y="958" width="144" height="58" rx="10" fill="#f1f5f9" fill-opacity="1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1052" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#f1f5f9</text>
+<text x="70" y="1072" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">slate-100 code block</text></g>
+<g><rect x="248" y="944" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="945" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="264" y="958" width="144" height="58" rx="10" fill="#e2e8f0" fill-opacity="0.5" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1052" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">slate-200 50%</text>
+<text x="262" y="1072" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">section panel</text></g>
+<g><rect x="440" y="944" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="945" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="456" y="958" width="144" height="58" rx="10" fill="#cbd5e1" fill-opacity="0.3" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="1052" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">slate-300 30%</text>
+<text x="454" y="1072" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">ambient glow</text></g>
+<text x="56" y="1146" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">SURFACES &amp; BORDERS · DARK MODE (white at opacity)</text>
+<g><rect x="56" y="1162" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1163" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="72" y="1176" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1270" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 3%</text>
+<text x="70" y="1290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">section panel, glow</text></g>
+<g><rect x="248" y="1162" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1163" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="264" y="1176" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.04" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1270" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 4%</text>
+<text x="262" y="1290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">hero tag</text></g>
+<g><rect x="440" y="1162" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1163" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="456" y="1176" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.05" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="1270" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 5%</text>
+<text x="454" y="1290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">icon tiles, chips</text></g>
+<g><rect x="632" y="1162" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="1163" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="648" y="1176" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.06" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="1270" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 6%</text>
+<text x="646" y="1290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">cited source</text></g>
+<g><rect x="824" y="1162" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="1163" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="840" y="1176" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.08" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="1270" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 8%</text>
+<text x="838" y="1290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">beam start</text></g>
+<g><rect x="1016" y="1162" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="1163" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="1032" y="1176" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="1270" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 10%</text>
+<text x="1030" y="1290" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">card borders</text></g>
+<g><rect x="56" y="1328" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1329" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="72" y="1342" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.15" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1436" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 15%</text>
+<text x="70" y="1456" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">brand circle border</text></g>
+<g><rect x="248" y="1328" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1329" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="264" y="1342" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.2" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1436" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 20%</text>
+<text x="262" y="1456" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">hover border</text></g>
+<g><rect x="440" y="1328" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1329" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="456" y="1342" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.3" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="1436" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 30%</text>
+<text x="454" y="1456" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">core squircle</text></g>
+<text x="56" y="1530" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="2" fill="#64748b">GLASS, GLOW &amp; CANVAS</text>
+<g><rect x="56" y="1546" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1547" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="72" y="1560" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.7" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1654" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 70%</text>
+<text x="70" y="1674" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">light header glass</text></g>
+<g><rect x="248" y="1546" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1547" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="264" y="1560" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.5" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1654" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 50%</text>
+<text x="262" y="1674" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">light footer glass</text></g>
+<g><rect x="440" y="1546" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="441" y="1547" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="456" y="1560" width="144" height="58" rx="10" fill="#050608" fill-opacity="0.75" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="454" y="1654" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#050608 75%</text>
+<text x="454" y="1674" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">dark header glass</text></g>
+<g><rect x="632" y="1546" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="633" y="1547" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="648" y="1560" width="144" height="58" rx="10" fill="#050608" fill-opacity="0.8" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="646" y="1654" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">#050608 80%</text>
+<text x="646" y="1674" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">dark footer glass</text></g>
+<g><rect x="824" y="1546" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="825" y="1547" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="840" y="1560" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.55" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="838" y="1654" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 55%</text>
+<text x="838" y="1674" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">dark pill glow</text></g>
+<g><rect x="1016" y="1546" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="1017" y="1547" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="1032" y="1560" width="144" height="58" rx="10" fill="#0f172a" fill-opacity="0.25" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="1030" y="1654" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">ink 25%</text>
+<text x="1030" y="1674" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">light pill glow</text></g>
+<g><rect x="56" y="1712" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="57" y="1713" width="174" height="84" rx="13" fill="#f6f7fb"/>
+<rect x="72" y="1726" width="144" height="58" rx="10" fill="#1e1e1e" fill-opacity="0.07" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="70" y="1820" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">rgb(30,30,30) 2–7%</text>
+<text x="70" y="1840" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">ribbon lines, light</text></g>
+<g><rect x="248" y="1712" width="176" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="249" y="1713" width="174" height="84" rx="13" fill="#050608"/>
+<rect x="264" y="1726" width="144" height="58" rx="10" fill="#ffffff" fill-opacity="0.1" stroke="#94a3b8" stroke-opacity="0.35"/>
+<text x="262" y="1820" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#0f172a">white 3–10%</text>
+<text x="262" y="1840" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b">ribbon lines, dark</text></g>
+</svg>

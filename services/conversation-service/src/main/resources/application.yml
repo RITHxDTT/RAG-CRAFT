@@ -1,0 +1,46 @@
+server:
+  port: ${PORT:8085}
+
+spring:
+  application:
+    name: conversation-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5437/conversation_db}
+    username: ${DB_USER:ragcraft}
+    password: ${DB_PASSWORD:ragcraft}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+
+ragcraft:
+  internal-token: ${INTERNAL_TOKEN:change-me-internal-token}
+  cors-origins: ${CORS_ORIGINS:http://localhost:3000}
+  jwt:
+    secret: ${JWT_SECRET:development-only-secret-change-me-please-32chars}
+  services:
+    chatbot: ${CHATBOT_SERVICE_URL:http://localhost:8083}
+    knowledge: ${KNOWLEDGE_SERVICE_URL:http://localhost:8084}
+    analytics: ${ANALYTICS_SERVICE_URL:http://localhost:8087}
+
+rag:
+  # mock = simulated answers built from READY documents (no LLM). external = POST to the FastAPI RAG service.
+  mode: ${RAG_MODE:mock}
+  url: ${RAG_SERVICE_URL:http://localhost:8000}
+  max-sources: ${RAG_MAX_SOURCES:3}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:conversation;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:

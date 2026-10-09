@@ -11,3 +11,7 @@ node_modules/
 backend/storage/
 .DS_Store
 *.tsbuildinfo
+
+# microservices secrets
+.env.microservices
+!.env.microservices.example

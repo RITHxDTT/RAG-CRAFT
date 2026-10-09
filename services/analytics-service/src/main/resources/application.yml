@@ -1,0 +1,42 @@
+server:
+  port: ${PORT:8087}
+
+spring:
+  application:
+    name: analytics-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5439/analytics_db}
+    username: ${DB_USER:ragcraft}
+    password: ${DB_PASSWORD:ragcraft}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+
+ragcraft:
+  internal-token: ${INTERNAL_TOKEN:change-me-internal-token}
+  cors-origins: ${CORS_ORIGINS:http://localhost:3000}
+  jwt:
+    secret: ${JWT_SECRET:development-only-secret-change-me-please-32chars}
+  services:
+    identity: ${IDENTITY_SERVICE_URL:http://localhost:8081}
+    chatbot: ${CHATBOT_SERVICE_URL:http://localhost:8083}
+    knowledge: ${KNOWLEDGE_SERVICE_URL:http://localhost:8084}
+    conversation: ${CONVERSATION_SERVICE_URL:http://localhost:8085}
+    channel: ${CHANNEL_SERVICE_URL:http://localhost:8086}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:analytics;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:

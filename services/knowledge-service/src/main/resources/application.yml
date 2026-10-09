@@ -1,0 +1,56 @@
+server:
+  port: ${PORT:8084}
+
+spring:
+  application:
+    name: knowledge-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5436/knowledge_db}
+    username: ${DB_USER:ragcraft}
+    password: ${DB_PASSWORD:ragcraft}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-file-size: ${MAX_UPLOAD_SIZE_MB:20}MB
+      max-request-size: ${MAX_UPLOAD_SIZE_MB:20}MB
+
+ragcraft:
+  internal-token: ${INTERNAL_TOKEN:change-me-internal-token}
+  cors-origins: ${CORS_ORIGINS:http://localhost:3000}
+  jwt:
+    secret: ${JWT_SECRET:development-only-secret-change-me-please-32chars}
+  services:
+    chatbot: ${CHATBOT_SERVICE_URL:http://localhost:8083}
+
+knowledge:
+  storage-dir: ${STORAGE_DIR:./storage/knowledge}
+  max-upload-size-mb: ${MAX_UPLOAD_SIZE_MB:20}
+  chunk-size: ${CHUNK_SIZE:800}
+  chunk-overlap: ${CHUNK_OVERLAP:100}
+  max-document-chunks: ${MAX_DOCUMENT_CHUNKS:2000}
+  processing:
+    # mock = simulate the ingestion pipeline inside this service (no embeddings).
+    # external = leave documents QUEUED for the FastAPI RAG service (later phase).
+    mode: ${PROCESSING_MODE:mock}
+    stage-millis: ${PROCESSING_STAGE_MILLIS:900}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:knowledge;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+knowledge:
+  storage-dir: ${java.io.tmpdir}/ragcraft-knowledge
