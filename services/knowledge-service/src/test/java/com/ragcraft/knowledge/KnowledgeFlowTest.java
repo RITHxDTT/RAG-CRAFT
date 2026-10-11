@@ -45,7 +45,9 @@ class KnowledgeFlowTest {
     @Autowired ObjectMapper json;
     @Autowired DocumentRepository documents;
     @Autowired MockIngestionProcessor processor;
+    @Autowired com.ragcraft.knowledge.repository.KnowledgeSourceRepository sourceRepository;
     @MockitoBean ChatbotAccess chatbots;
+    @MockitoBean com.ragcraft.knowledge.service.QuotaGuard quota;
 
     final UUID owner = UUID.randomUUID();
     final UUID stranger = UUID.randomUUID();
@@ -77,6 +79,8 @@ class KnowledgeFlowTest {
                 .andExpect(jsonPath("$.file_type", is("TXT")))
                 .andReturn().getResponse().getContentAsString();
         UUID id = UUID.fromString(json.readTree(created).get("id").asText());
+        // The hosted schema only accepts DOCUMENT or WEBSITE here, so a drifting constant would fail every upload there.
+        org.junit.jupiter.api.Assertions.assertTrue(sourceRepository.findAll().stream().allMatch(source -> java.util.Set.of("DOCUMENT", "WEBSITE").contains(source.getSourceType())));
 
         // Duplicate content is rejected for the same chatbot.
         mvc.perform(multipart("/api/chatbots/" + chatbot + "/documents").file(file).header("Authorization", bearer(owner)))
@@ -130,5 +134,32 @@ class KnowledgeFlowTest {
         mvc.perform(get("/api/knowledge/recent").header("Authorization", bearer(owner)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].chatbot_name", is("Company Assistant")));
+    }
+
+    @Test
+    void sameNameNeedsReplaceOrSkipAndStorageQuotaIsEnforced() throws Exception {
+        MockMultipartFile first = new MockMultipartFile("file", "Policy.txt", "text/plain", "Leave policy: eighteen days.".getBytes(StandardCharsets.UTF_8));
+        String created = mvc.perform(multipart("/api/chatbots/" + chatbot + "/documents").file(first).header("Authorization", bearer(owner)))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
+        UUID id = UUID.fromString(json.readTree(created).get("id").asText());
+
+        // Different content but the same name (case-insensitive): the caller must choose Replace or Skip.
+        MockMultipartFile sameName = new MockMultipartFile("file", "policy.TXT", "text/plain", "A newer policy text.".getBytes(StandardCharsets.UTF_8));
+        mvc.perform(multipart("/api/chatbots/" + chatbot + "/documents").file(sameName).header("Authorization", bearer(owner)))
+                .andExpect(status().isConflict()).andExpect(jsonPath("$.code", is("DUPLICATE_NAME")));
+        // Replace keeps the document and queues it again.
+        mvc.perform(multipart("/api/chatbots/" + chatbot + "/documents/" + id + "/replace").file(sameName).with(request -> { request.setMethod("PUT"); return request; })
+                        .header("Authorization", bearer(owner)))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.status", is("QUEUED")));
+
+        // The storage quota is checked before anything is stored.
+        org.mockito.Mockito.doThrow(AppException.withCode(org.springframework.http.HttpStatus.FORBIDDEN, "Storage limit reached.", "QUOTA_STORAGE"))
+                .when(quota).assertCanStore(any(), org.mockito.ArgumentMatchers.anyLong());
+        MockMultipartFile other = new MockMultipartFile("file", "other.txt", "text/plain", "Something else entirely.".getBytes(StandardCharsets.UTF_8));
+        mvc.perform(multipart("/api/chatbots/" + chatbot + "/documents").file(other).header("Authorization", bearer(owner)))
+                .andExpect(status().isForbidden()).andExpect(jsonPath("$.code", is("QUOTA_STORAGE")));
+        mvc.perform(get("/api/chatbots/" + chatbot + "/documents").header("Authorization", bearer(owner))).andExpect(jsonPath("$", hasSize(1)));
+        mvc.perform(get("/api/internal/owners/" + owner + "/storage").header("X-Internal-Token", "change-me-internal-token"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.bytes_used", greaterThan(0)));
     }
 }

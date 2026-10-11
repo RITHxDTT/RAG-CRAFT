@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+!.env.craftrag.example
 .venv/
 __pycache__/
 *.py[cod]
@@ -15,3 +16,6 @@ backend/storage/
 # microservices secrets
 .env.microservices
 !.env.microservices.example
+
+# local service logs and pids
+services/.run/

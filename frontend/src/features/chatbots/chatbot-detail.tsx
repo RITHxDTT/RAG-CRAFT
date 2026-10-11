@@ -2,6 +2,8 @@
 import { useState } from "react";
 import type { Chatbot } from "@/types/chatbot";
 import { chatbotService } from "@/services/chatbot.service";
+import { appealService } from "@/services/appeal.service";
+import { inputDialog } from "@/components/confirm-dialog";
 import { errorMessage } from "@/services/api";
 import { StatusBadge } from "@/components/status-badge";
 import { KnowledgeBase } from "@/features/knowledge/knowledge-base";
@@ -68,11 +70,31 @@ export function ChatbotDetail({
     }
   }
 
-  async function remove() {
+  async function appeal() {
+    const message = await inputDialog({ message: t("detail.disabledBanner", { reason: bot.disabled_reason || "—" }), inputLabel: t("detail.appeal.message"), multiline: true, maxLength: 500, confirmLabel: t("detail.appeal"), danger: false });
+    if (message === null) return;
     setBusy(true);
     setError("");
     try {
-      await chatbotService.delete(bot.id);
+      await appealService.submit(bot.id, message);
+    } catch (error) {
+      setError(errorMessage(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function remove() {
+    // Deleting requires retyping the chatbot name.
+    const typed = await inputDialog({ title: t("detail.delete.title"), message: t("detail.delete.question", { name: bot.name }), inputLabel: t("detail.delete.typeName"), expect: bot.name, confirmLabel: t("detail.delete.confirm") });
+    if (typed === null) {
+      setConfirm(false);
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      await chatbotService.delete(bot.id, typed);
       onDeleted();
     } catch (error) {
       setError(errorMessage(error));
@@ -110,24 +132,24 @@ export function ChatbotDetail({
             <Copy size={14} />
             {t("detail.duplicate")}
           </button>
-          <button
-            disabled={busy}
-            className={bot.status === "ACTIVE" ? "" : "primary"}
-            onClick={() =>
-              void run(() =>
-                chatbotService.update(bot.id, {
-                  name: bot.name,
-                  description: bot.description,
-                  status: bot.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
-                }),
-              )
-            }
-          >
-            <Power size={14} />
-            {bot.status === "ACTIVE" ? t("detail.disable") : t("detail.activate")}
-          </button>
+          {bot.status === "DISABLED" ? (
+            <button disabled={busy} className="primary" onClick={() => void appeal()}>
+              <Power size={14} />
+              {t("detail.appeal")}
+            </button>
+          ) : bot.status !== "DRAFT" && (
+            <button
+              disabled={busy}
+              className={bot.status === "ACTIVE" ? "" : "primary"}
+              onClick={() => void run(() => (bot.status === "ACTIVE" ? chatbotService.pause(bot.id) : chatbotService.publish(bot.id)))}
+            >
+              <Power size={14} />
+              {bot.status === "ACTIVE" ? t("detail.pause") : bot.status === "PAUSED" ? t("detail.resume") : t("detail.publish")}
+            </button>
+          )}
         </div>
       </header>
+      {bot.status === "DISABLED" && <p className="error" role="alert">{t("detail.disabledBanner", { reason: bot.disabled_reason || "—" })}</p>}
 
       <nav className="tabs" aria-label="Chatbot sections">
         {tabs.map(({ id, icon: Icon }) => (

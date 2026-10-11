@@ -22,6 +22,14 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
     long countByOwnerIdAndStatus(UUID ownerId, String status);
     long countByStatus(String status);
 
+    /** Bytes stored by one owner, for the storage quota. */
+    @Query("select coalesce(sum(d.sizeBytes), 0) from Document d where d.ownerId = :ownerId")
+    long sumSizeByOwner(UUID ownerId);
+
+    /** Same file name in the same chatbot is a duplicate, whatever its case. */
+    @Query("select d from Document d where d.chatbotId = :chatbotId and lower(d.name) = lower(:name)")
+    List<Document> findByChatbotIdAndNameIgnoreCase(UUID chatbotId, String name);
+
     @Query("select d.chatbotId, d.status, count(d) from Document d where d.chatbotId in :chatbotIds group by d.chatbotId, d.status")
     List<Object[]> countByChatbotAndStatus(Collection<UUID> chatbotIds);
 

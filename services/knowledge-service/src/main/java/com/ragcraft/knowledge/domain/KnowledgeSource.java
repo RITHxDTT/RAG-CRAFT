@@ -10,7 +10,8 @@ import java.util.UUID;
 @Table(name = "knowledge_sources")
 public class KnowledgeSource extends BaseEntity {
 
-    public static final String FILE = "FILE";
+    /** Matches the database CHECK (DOCUMENT or WEBSITE) and the FastAPI backend, which also calls an uploaded file a DOCUMENT. */
+    public static final String DOCUMENT = "DOCUMENT";
     public static final String WEBSITE = "WEBSITE";
 
     @Column(name = "chatbot_id", nullable = false) private UUID chatbotId;

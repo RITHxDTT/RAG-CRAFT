@@ -29,7 +29,7 @@ class AuthFlowTest {
     @Test
     void registerLoginProfileAndLogout() throws Exception {
         String registered = mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"full_name\":\"Test Person\",\"email\":\"test@example.com\",\"password\":\"secret1\",\"confirm_password\":\"secret1\",\"terms\":true}"))
+                        .content("{\"full_name\":\"Test Person\",\"email\":\"test@example.com\",\"password\":\"secret-pass-1\",\"confirm_password\":\"secret-pass-1\",\"terms\":true}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.user.role", is("USER")))
                 .andExpect(jsonPath("$.user.organization_name", is("My Workspace")))
@@ -43,8 +43,8 @@ class AuthFlowTest {
         mvc.perform(patch("/api/auth/me").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON)
                         .content("{\"display_name\":\"Tester\",\"theme\":\"dark\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.display_name", is("Tester")))
-                .andExpect(jsonPath("$.theme", is("dark")));
+                .andExpect(jsonPath("$.user.display_name", is("Tester")))
+                .andExpect(jsonPath("$.user.theme", is("dark")));
 
         mvc.perform(post("/api/auth/logout").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
         // The token version was bumped, so the old token is rejected.
@@ -61,7 +61,8 @@ class AuthFlowTest {
         mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"admin@gmail.com\",\"password\":\"wrong\"}"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.detail", is("Invalid credentials or disabled account.")));
+                .andExpect(jsonPath("$.detail", is("Invalid email or password.")))
+                .andExpect(jsonPath("$.code", is("INVALID_CREDENTIALS")));
     }
 
     @Test

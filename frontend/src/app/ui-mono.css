@@ -217,11 +217,11 @@ input[type="checkbox"] { accent-color: var(--ink); }
 .badge-active, .badge-ready, .badge-live, .badge-connected, .badge-online,
 .demo-dark .badge-active, .demo-dark .badge-ready, .demo-dark .badge-live, .demo-dark .badge-connected { background: var(--ink); color: var(--ink-contrast); }
 .badge-active .badge-dot, .badge-ready .badge-dot, .badge-live .badge-dot { background: currentColor; }
-.badge-draft, .badge-review, .badge-queued, .demo-dark .badge-draft, .demo-dark .badge-review, .demo-dark .badge-queued { background: var(--ink-5); color: var(--text-secondary); border-color: var(--ink-10); }
+.badge-draft, .badge-pending, .badge-unverified, .badge-review, .badge-queued, .demo-dark .badge-draft, .demo-dark .badge-pending, .demo-dark .badge-unverified, .demo-dark .badge-review, .demo-dark .badge-queued { background: var(--ink-5); color: var(--text-secondary); border-color: var(--ink-10); }
 .badge-processing, .badge-uploading, .badge-chunking, .badge-indexing, .badge-crawling, .badge-extracting,
 .demo-dark .badge-processing, .demo-dark .badge-uploading, .demo-dark .badge-chunking, .demo-dark .badge-indexing, .demo-dark .badge-crawling, .demo-dark .badge-extracting { background: var(--ink-10); color: var(--text-primary); }
-.badge-inactive, .badge-off, .badge-disconnected, .demo-dark .badge-inactive, .demo-dark .badge-off { background: transparent; color: var(--text-muted); border-color: var(--ink-10); }
-.badge-error, .badge-failed, .demo-dark .badge-error, .demo-dark .badge-failed { background: var(--rc-danger-soft); color: var(--rc-danger); border-color: transparent; }
+.badge-inactive, .badge-paused, .badge-off, .badge-disconnected, .demo-dark .badge-inactive, .demo-dark .badge-paused, .demo-dark .badge-off { background: transparent; color: var(--text-muted); border-color: var(--ink-10); }
+.badge-error, .badge-disabled, .badge-suspended, .badge-pending_deletion, .badge-failed, .demo-dark .badge-error, .demo-dark .badge-disabled, .demo-dark .badge-suspended, .demo-dark .badge-pending_deletion, .demo-dark .badge-failed { background: var(--rc-danger-soft); color: var(--rc-danger); border-color: transparent; }
 .rc-badge-neutral { background: var(--ink-5); color: var(--text-muted); }
 .rc-role-badge.role-admin, .demo-dark .rc-role-badge.role-admin { background: var(--ink); color: var(--ink-contrast); }
 .rc-role-badge.role-user { background: var(--ink-5); color: var(--text-secondary); }

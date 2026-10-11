@@ -14,7 +14,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmailIgnoreCase(String email);
     boolean existsByEmailIgnoreCase(String email);
-    long countByActiveTrue();
+    long countByStatus(String status);
+    List<User> findByStatusAndDeletionRequestedAtBefore(String status, java.time.Instant before);
 
     @Query("select u from User u where lower(u.email) like lower(concat('%', :search, '%')) " +
            "or lower(u.fullName) like lower(concat('%', :search, '%')) order by u.createdAt desc")

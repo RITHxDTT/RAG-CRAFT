@@ -30,8 +30,13 @@ public class JwtService {
     }
 
     public String issue(UserPrincipal principal) {
+        return issue(principal, properties.getJwt().getSessionMinutes());
+    }
+
+    /** Issues a token valid for the given number of minutes (a longer value backs "remember me"). */
+    public String issue(UserPrincipal principal, int minutes) {
         Instant now = Instant.now();
-        Instant expiry = now.plus(Duration.ofMinutes(properties.getJwt().getSessionMinutes()));
+        Instant expiry = now.plus(Duration.ofMinutes(minutes));
         return Jwts.builder()
                 .subject(principal.userId().toString())
                 .issuer(properties.getJwt().getIssuer())

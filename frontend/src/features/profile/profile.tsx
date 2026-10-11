@@ -52,6 +52,7 @@ export function Profile({ user, onChanged }: { user: CurrentUser; onChanged: (us
           },
           String(data.get("password")),
           String(data.get("confirm")),
+          { currentPassword: String(data.get("current") || "") },
         ),
       );
     } catch (error) {
@@ -164,6 +165,10 @@ export function Profile({ user, onChanged }: { user: CurrentUser; onChanged: (us
           {/* Security */}
           <h3 className="rc-form-section"><Lock size={15} />{t("profile.security")}</h3>
           <div className="form-columns two">
+            <label>
+              {t("profile.currentPassword")}
+              <input name="current" type="password" autoComplete="current-password" />
+            </label>
             <label>
               {t("profile.newPassword")}
               <input name="password" type="password" autoComplete="new-password" />

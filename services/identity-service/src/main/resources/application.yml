@@ -29,6 +29,7 @@ ragcraft:
     cookie-secure: ${COOKIE_SECURE:false}
   services:
     chatbot: ${CHATBOT_SERVICE_URL:http://localhost:8083}
+    knowledge: ${KNOWLEDGE_SERVICE_URL:http://localhost:8084}
 
 identity:
   # Demo accounts admin@gmail.com / user@gmail.com with password 123, as in the frontend demo.
@@ -37,6 +38,9 @@ identity:
   admin-password: ${ADMIN_PASSWORD:}
   # log = print reset tokens to the log and return them in the API (development only). smtp is not wired yet.
   mail-mode: ${MAIL_MODE:log}
+  # false = new accounts start UNVERIFIED and must confirm an e-mailed link before signing in.
+  auto-verify-email: ${AUTO_VERIFY_EMAIL:true}
+  max-failed-attempts: ${MAX_FAILED_ATTEMPTS:5}
 
 ---
 spring:

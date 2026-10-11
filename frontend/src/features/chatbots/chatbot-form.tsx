@@ -8,7 +8,7 @@ import { confirmDialog } from "@/components/confirm-dialog";
 import { useT } from "@/i18n/context";
 import { Bot, Sliders, Cpu, Check, X, Loader2, AlertCircle } from "lucide-react";
 
-const TONES = ["PROFESSIONAL", "FRIENDLY", "CONCISE", "EDUCATIONAL", "DETAILED"] as const;
+const TONES = ["PROFESSIONAL", "FRIENDLY", "CASUAL", "FORMAL", "CUSTOM"] as const;
 
 export function ChatbotForm({
   bot,
@@ -49,7 +49,7 @@ export function ChatbotForm({
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const values = new FormData(event.currentTarget);
-    if (bot?.status === "ACTIVE" && values.get("status") === "INACTIVE" && !(await confirmDialog({ message: t("form.confirmDisable"), confirmLabel: t("common.disable") })))
+    if (bot?.status === "ACTIVE" && values.get("status") === "PAUSED" && !(await confirmDialog({ message: t("form.confirmDisable"), confirmLabel: t("common.disable") })))
       return;
     setBusy(true);
     setError("");
@@ -74,11 +74,11 @@ export function ChatbotForm({
         custom_instruction: String(values.get("custom_instruction") || ""),
         tone: String(values.get("tone")) as NonNullable<Chatbot["settings"]["tone"]>,
         top_k: Number(values.get("top_k") || 5),
-        temperature: Number(values.get("temperature") || 0.2),
-        answer_length: String(values.get("answer_length") || "MEDIUM") as Chatbot["settings"]["answer_length"],
+        temperature: Number(values.get("temperature") || 0.4),
+        answer_length: String(values.get("answer_length") || "CONCISE") as Chatbot["settings"]["answer_length"],
       };
       const result = bot
-        ? await chatbotService.update(bot.id, { ...data, settings, status: String(values.get("status")) as Chatbot["status"] })
+        ? await chatbotService.update(bot.id, { ...data, settings, status: (String(values.get("status") ?? bot.status)) as Chatbot["status"] })
         : await chatbotService.create({ ...data, settings });
       onSaved(result);
     } catch (error) {
@@ -172,11 +172,11 @@ export function ChatbotForm({
 
             <label>
               <span>{t("form.status")}</span>
-              <select name="status" defaultValue={bot.status}>
-                <option value="DRAFT">{t("form.status.DRAFT")}</option>
-                <option value="ERROR">{t("form.status.ERROR")}</option>
-                <option value="ACTIVE">{t("form.status.ACTIVE")}</option>
-                <option value="INACTIVE">{t("form.status.INACTIVE")}</option>
+              <select name="status" defaultValue={bot.status} disabled={bot.status === "DISABLED"}>
+                {/* Only the current status and the moves the lifecycle allows are offered. */}
+                <option value={bot.status}>{t(`form.status.${bot.status}`)}</option>
+                {(bot.status === "PENDING" || bot.status === "PAUSED") && <option value="ACTIVE">{t("form.status.ACTIVE")}</option>}
+                {bot.status === "ACTIVE" && <option value="PAUSED">{t("form.status.PAUSED")}</option>}
               </select>
             </label>
 
@@ -204,14 +204,13 @@ export function ChatbotForm({
               </label>
               <label>
                 <span>{t("form.temperature")}</span>
-                <input name="temperature" type="number" min={0} max={2} step={0.1} defaultValue={bot.settings.temperature} required />
+                <input name="temperature" type="number" min={0} max={1} step={0.1} defaultValue={bot.settings.temperature} required />
               </label>
               <label>
                 <span>{t("form.answerLength")}</span>
                 <select name="answer_length" defaultValue={bot.settings.answer_length}>
-                  <option value="SHORT">{t("form.length.SHORT")}</option>
-                  <option value="MEDIUM">{t("form.length.MEDIUM")}</option>
-                  <option value="LONG">{t("form.length.LONG")}</option>
+                  <option value="CONCISE">{t("form.length.CONCISE")}</option>
+                  <option value="DETAILED">{t("form.length.DETAILED")}</option>
                 </select>
               </label>
             </div>

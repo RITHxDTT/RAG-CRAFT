@@ -51,11 +51,13 @@ public class KnowledgeService {
     private final IngestionJobRepository jobs;
     private final FileStorage storage;
     private final ChatbotAccess chatbots;
+    private final QuotaGuard quota;
     private final MockIngestionProcessor processor;
 
     public KnowledgeService(KnowledgeProperties properties, KnowledgeSourceRepository sources, DocumentRepository documents,
                             DocumentChunkRepository chunks, IngestionJobRepository jobs, FileStorage storage, ChatbotAccess chatbots,
-                            MockIngestionProcessor processor) {
+                            MockIngestionProcessor processor, QuotaGuard quota) {
+        this.quota = quota;
         this.properties = properties;
         this.sources = sources;
         this.documents = documents;
@@ -80,13 +82,19 @@ public class KnowledgeService {
     public DocumentResponse upload(UUID chatbotId, MultipartFile file, UserPrincipal principal) {
         ChatbotSummary bot = chatbots.require(chatbotId, principal);
         FileValidation.Checked checked = FileValidation.check(file, properties.getMaxUploadSizeMb());
-        sources.findByChatbotIdAndSourceTypeAndSourceKey(chatbotId, KnowledgeSource.FILE, checked.sha256())
+        sources.findByChatbotIdAndSourceTypeAndSourceKey(chatbotId, KnowledgeSource.DOCUMENT, checked.sha256())
                 .ifPresent(existing -> { throw AppException.conflict("This file was already uploaded to this chatbot."); });
+        // A document with the same name already exists: the caller chooses Replace (PUT .../replace) or Skip.
+        if (!documents.findByChatbotIdAndNameIgnoreCase(chatbotId, file.getOriginalFilename()).isEmpty()) {
+            throw AppException.withCode(org.springframework.http.HttpStatus.CONFLICT,
+                    "\"" + file.getOriginalFilename() + "\" already exists in this chatbot. Choose Replace or Skip.", "DUPLICATE_NAME");
+        }
+        quota.assertCanStore(bot.ownerId(), file.getSize());
 
         KnowledgeSource source = new KnowledgeSource();
         source.setChatbotId(chatbotId);
         source.setOwnerId(bot.ownerId());
-        source.setSourceType(KnowledgeSource.FILE);
+        source.setSourceType(KnowledgeSource.DOCUMENT);
         source.setSourceKey(checked.sha256());
         sources.save(source);
 
@@ -116,6 +124,7 @@ public class KnowledgeService {
         }
         sources.findByChatbotIdAndSourceTypeAndSourceKey(chatbotId, KnowledgeSource.WEBSITE, url.toString())
                 .ifPresent(existing -> { throw AppException.conflict("This website was already added to this chatbot."); });
+        quota.assertCanStore(bot.ownerId(), 48_000);
         KnowledgeSource source = new KnowledgeSource();
         source.setChatbotId(chatbotId);
         source.setOwnerId(bot.ownerId());
@@ -178,6 +187,9 @@ public class KnowledgeService {
         Document document = require(chatbotId, documentId, principal);
         if (document.isWebsite()) throw AppException.badRequest("Website sources cannot be replaced with a file.");
         FileValidation.Checked checked = FileValidation.check(file, properties.getMaxUploadSizeMb());
+        quota.assertCanStore(document.getOwnerId(), file.getSize() - document.getSizeBytes());
+        documents.findByChatbotIdAndNameIgnoreCase(chatbotId, file.getOriginalFilename()).stream().filter(other -> !other.getId().equals(documentId)).findAny()
+                .ifPresent(other -> { throw AppException.conflict("Another document already uses that name."); });
         storage.delete(document.getStorageKey());
         document.setName(file.getOriginalFilename());
         document.setFileType(checked.extension().toUpperCase());
@@ -251,6 +263,8 @@ public class KnowledgeService {
     }
 
     @Transactional(readOnly = true)
+    public long storageUsed(UUID ownerId) { return documents.sumSizeByOwner(ownerId); }
+
     public StatsResponse stats(UUID ownerId) {
         long total = ownerId == null ? documents.count() : documents.countByOwnerId(ownerId);
         long files = ownerId == null ? documents.countByFileTypeNot("WEBSITE") : documents.countByOwnerIdAndFileTypeNot(ownerId, "WEBSITE");

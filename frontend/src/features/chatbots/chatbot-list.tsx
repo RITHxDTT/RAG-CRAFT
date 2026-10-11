@@ -15,7 +15,7 @@ import {
   Search,
 } from "lucide-react";
 
-const STATUSES = ["ALL", "DRAFT", "ACTIVE", "INACTIVE", "ERROR"] as const;
+const STATUSES = ["ALL", "DRAFT", "PENDING", "ACTIVE", "PAUSED", "DISABLED"] as const;
 
 export function ChatbotList({
   bots,

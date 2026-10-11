@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { authService } from "@/services/auth.service";
-import { errorMessage } from "@/services/api";
+import { ApiError, errorMessage } from "@/services/api";
 import type { CurrentUser } from "@/types/auth";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n/context";
@@ -27,6 +27,7 @@ export function Login({ onLogin }: { onLogin: (user: CurrentUser) => void }) {
   const [theme, toggleTheme] = useSiteTheme();
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [resetToken, setResetToken] = useState("");
+  const [needOtp, setNeedOtp] = useState(false);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -41,7 +42,7 @@ export function Login({ onLogin }: { onLogin: (user: CurrentUser) => void }) {
       if (mode === "forgot") {
         const result = await authService.forgot(String(data.get("email")));
         setNotice(result.message);
-        setResetToken(result.token);
+        setResetToken(result.token ?? "");
         return;
       }
       if (mode === "register") {
@@ -56,8 +57,15 @@ export function Login({ onLogin }: { onLogin: (user: CurrentUser) => void }) {
         setNotice(t("auth.accountCreated"));
         return;
       }
-      onLogin(await authService.login(String(data.get("email")), String(data.get("password"))));
+      onLogin(
+        await authService.login(String(data.get("email")), String(data.get("password")), {
+          remember: data.get("remember") === "on",
+          otp: String(data.get("otp") || "") || undefined,
+        }),
+      );
     } catch (error) {
+      // An account with an authenticator app asks for its 6-digit code before signing in.
+      if (error instanceof ApiError && error.code === "MFA_REQUIRED") setNeedOtp(true);
       setError(errorMessage(error));
     } finally {
       setBusy(false);
@@ -179,6 +187,18 @@ export function Login({ onLogin }: { onLogin: (user: CurrentUser) => void }) {
                   />
                   <Lock />
                 </div>
+              </label>
+            )}
+            {mode === "login" && needOtp && (
+              <label>
+                <span>{t("auth.otp")}</span>
+                <input name="otp" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" required />
+              </label>
+            )}
+            {mode === "login" && (
+              <label className="checkbox-label">
+                <input type="checkbox" name="remember" />
+                {t("auth.remember")}
               </label>
             )}
             {mode === "register" && (

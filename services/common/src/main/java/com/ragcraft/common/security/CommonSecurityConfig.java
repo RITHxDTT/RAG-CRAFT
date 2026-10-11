@@ -36,7 +36,8 @@ public class CommonSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/health/**", "/error").permitAll()
-                .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
+                .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/forgot-password", "/api/auth/reset-password",
+                        "/api/auth/verify-email", "/api/auth/resend-verification", "/api/auth/confirm-email-change").permitAll()
                 .requestMatchers("/api/public/**", "/api/webhooks/**").permitAll()
                 .requestMatchers("/api/internal/**").hasRole(JwtAuthFilter.ROLE_INTERNAL)
                 .requestMatchers("/api/admin/**").hasAnyRole(UserPrincipal.ROLE_ADMIN, JwtAuthFilter.ROLE_INTERNAL)

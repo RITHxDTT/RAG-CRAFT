@@ -18,8 +18,18 @@ public class PlatformModel extends BaseEntity {
     @Column(name = "model_identifier", nullable = false, length = 200)
     private String modelIdentifier;
 
+    /** LLM answers questions; EMBEDDING indexes documents (its dimensions size the vector store). */
+    @Column(nullable = false, length = 10)
+    private String kind = "LLM";
+
+    @Column(name = "embedding_dimensions")
+    private Integer embeddingDimensions;
+
     @Column(nullable = false)
     private boolean enabled = true;
+
+    @Column(name = "is_system_fallback", nullable = false)
+    private boolean isSystemFallback = false;
 
     @Column(name = "is_default", nullable = false)
     private boolean isDefault = false;
@@ -30,6 +40,12 @@ public class PlatformModel extends BaseEntity {
     public void setProvider(String provider) { this.provider = provider; }
     public String getModelIdentifier() { return modelIdentifier; }
     public void setModelIdentifier(String modelIdentifier) { this.modelIdentifier = modelIdentifier; }
+    public String getKind() { return kind; }
+    public void setKind(String kind) { this.kind = kind; }
+    public Integer getEmbeddingDimensions() { return embeddingDimensions; }
+    public void setEmbeddingDimensions(Integer embeddingDimensions) { this.embeddingDimensions = embeddingDimensions; }
+    public boolean isSystemFallback() { return isSystemFallback; }
+    public void setSystemFallback(boolean isSystemFallback) { this.isSystemFallback = isSystemFallback; }
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
     public boolean isDefault() { return isDefault; }

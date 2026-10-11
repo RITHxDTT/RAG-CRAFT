@@ -30,6 +30,17 @@ class RouteTableTest {
         assertThat(routes.resolve("/api/public/share/token/ask").orElseThrow().service()).isEqualTo("channel");
         assertThat(routes.resolve("/api/webhooks/telegram/token").orElseThrow().service()).isEqualTo("channel");
         assertThat(routes.resolve("/api/analytics").orElseThrow().service()).isEqualTo("analytics");
+        // V5 paths
+        assertThat(routes.resolve("/api/quota").orElseThrow().service()).isEqualTo("identity");
+        assertThat(routes.resolve("/api/admin/audit-logs/abc").orElseThrow().service()).isEqualTo("identity");
+        assertThat(routes.resolve("/api/auth/verify-email").orElseThrow().service()).isEqualTo("identity");
+        assertThat(routes.resolve("/api/embedding-models").orElseThrow().service()).isEqualTo("catalog");
+        assertThat(routes.resolve("/api/settings-limits").orElseThrow().service()).isEqualTo("catalog");
+        assertThat(routes.resolve("/api/admin/settings-limits/top_k").orElseThrow().service()).isEqualTo("catalog");
+        assertThat(routes.resolve("/api/chatbots/abc/publish").orElseThrow().service()).isEqualTo("chatbot");
+        assertThat(routes.resolve("/api/chatbots/abc/appeals").orElseThrow().service()).isEqualTo("chatbot");
+        assertThat(routes.resolve("/api/admin/appeals/abc/approve").orElseThrow().service()).isEqualTo("chatbot");
+        assertThat(routes.resolve("/api/admin/chatbots/abc/disable").orElseThrow().service()).isEqualTo("chatbot");
         assertThat(routes.resolve("/api/admin/analytics").orElseThrow().service()).isEqualTo("analytics");
     }
 

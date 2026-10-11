@@ -50,6 +50,16 @@ USER:
 
 These credentials are intentionally hard-coded for the demo only.
 
+### Data source modes
+
+The frontend runs in one of two modes (`NEXT_PUBLIC_DATA_SOURCE`, see `docs/database-mode.md`):
+
+- `local` (default): everything in the browser, as described in this file. The Vercel demo uses this.
+- `api`: accounts, chatbots, catalog, documents and channels come from the Spring microservices (`services/`) and PostgreSQL `craftrag_db`
+  (schemas in `database/craftrag_schema.sql`). This was explicitly requested; the "do not introduce PostgreSQL / backend" rules below apply to `local` mode.
+
+Both modes sit behind the same service interfaces (`src/services/*.service.ts` pick `api/*.api.ts` or the local implementation), so UI components do not know which is active.
+
 Users may also register accounts.
 
 Registered accounts:

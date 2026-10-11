@@ -43,6 +43,10 @@ public class InternalKnowledgeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteForChatbot(@PathVariable UUID chatbotId) { service.deleteForChatbot(chatbotId); }
 
+    /** identity-service: storage used by one owner, for the quota. */
+    @GetMapping("/owners/{ownerId}/storage")
+    public Map<String, Long> storage(@PathVariable UUID ownerId) { return Map.of("bytes_used", service.storageUsed(ownerId)); }
+
     /** analytics-service: knowledge counts, optionally for one owner. */
     @GetMapping("/stats")
     public StatsResponse stats(@RequestParam(required = false) UUID ownerId) { return service.stats(ownerId); }

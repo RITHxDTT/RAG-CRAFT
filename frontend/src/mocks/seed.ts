@@ -4,22 +4,24 @@ import { userRepository } from '@/repositories/auth.repository';
 import { chatbotRepository } from '@/repositories/chatbot.repository';
 import { knowledgeRepository } from '@/repositories/knowledge.repository';
 import { channelRepository } from '@/repositories/channel.repository';
-import type { BotSettings } from '@/types/chatbot';
-export const defaultSettings: BotSettings = {
-    model_id: 'llama', model_name: 'Llama 3.2 3B', system_instruction: 'Answer using the provided knowledge.',
-    tone: 'PROFESSIONAL', temperature: 0.2, top_k: 5, answer_length: 'MEDIUM',
-    welcome_message: 'Hello! How can I help you today?', fallback_message: 'I do not have that information in this demo knowledge base.', show_citations: true,
-};
+import { defaultSettings, newAccount } from './defaults';
+import { migrateFromV2 } from '@/storage/migrate-v2';
+import { apiMode } from '@/config/data-source';
+export { defaultSettings };
 export function seedDemo() {
+    // With the database as the source of truth the demo accounts and chatbot come from the server (SEED_DEMO_ACCOUNTS), not from the browser.
+    if (apiMode)
+        return;
+    migrateFromV2();
     const date = new Date().toISOString();
     for (const role of ['ADMIN', 'USER'] as const) {
         const key = role.toLowerCase();
         if (!userRepository.all().some(user => user.id === `demo_${key}`))
-            userRepository.put({
+            userRepository.put(newAccount({
                 id: `demo_${key}`, full_name: role === 'ADMIN' ? 'Demo Administrator' : 'Demo User', email: `${key}@gmail.com`,
-                password: '123', role, builtIn: true, is_active: true, organization_id: `workspace_${key}`,
+                password: '123', role, builtIn: true, organization_id: `workspace_${key}`,
                 organization_name: role === 'ADMIN' ? 'Demo Platform' : 'My Workspace', created_at: date, updated_at: date,
-            });
+            }));
     }
     if (storage.read(KEYS.seeded, false))
         return;

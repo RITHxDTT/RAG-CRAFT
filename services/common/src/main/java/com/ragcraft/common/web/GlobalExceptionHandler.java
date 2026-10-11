@@ -23,7 +23,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AppException.class)
     public ResponseEntity<Map<String, Object>> application(AppException ex) {
-        return ResponseEntity.status(ex.getStatus()).body(Map.of("detail", ex.getMessage()));
+        Map<String, Object> body = new java.util.LinkedHashMap<>();
+        body.put("detail", ex.getMessage());
+        if (ex.getCode() != null) body.put("code", ex.getCode());
+        return ResponseEntity.status(ex.getStatus()).body(body);
     }
 
     @ExceptionHandler(ServiceCallException.class)
@@ -48,6 +51,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<Map<String, Object>> tooLarge(MaxUploadSizeExceededException ex) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(Map.of("detail", "The uploaded file is too large."));
+    }
+
+    @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Map<String, Object>> methodNotAllowed(org.springframework.web.HttpRequestMethodNotSupportedException ex) {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(Map.of("detail", "This action is not allowed."));
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

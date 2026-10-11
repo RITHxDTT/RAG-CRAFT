@@ -29,7 +29,14 @@ public class RelatedServicesClient {
         this.client = client;
     }
 
+    /** Counts per chatbot. Chatbots with no documents are absent from the map. */
     public Map<UUID, DocumentCounts> documentCounts(List<UUID> chatbotIds) {
+        Map<UUID, DocumentCounts> counts = documentCountsOrNull(chatbotIds);
+        return counts == null ? Map.of() : counts;
+    }
+
+    /** Same as {@link #documentCounts} but null when knowledge-service cannot be reached, so callers never mistake an outage for "no documents". */
+    public Map<UUID, DocumentCounts> documentCountsOrNull(List<UUID> chatbotIds) {
         if (chatbotIds.isEmpty()) return Map.of();
         try {
             Map<UUID, DocumentCounts> counts = client.asInternal().post()
@@ -37,11 +44,17 @@ public class RelatedServicesClient {
             return counts == null ? Map.of() : counts;
         } catch (RuntimeException ex) {
             log.debug("knowledge-service unavailable: {}", ex.getMessage());
-            return Map.of();
+            return null;
         }
     }
 
     public Map<UUID, Long> channelCounts(List<UUID> chatbotIds) {
+        Map<UUID, Long> counts = channelCountsOrNull(chatbotIds);
+        return counts == null ? Map.of() : counts;
+    }
+
+    /** Null when channel-service cannot be reached. */
+    public Map<UUID, Long> channelCountsOrNull(List<UUID> chatbotIds) {
         if (chatbotIds.isEmpty()) return Map.of();
         try {
             Map<UUID, Long> counts = client.asInternal().post()
@@ -49,7 +62,7 @@ public class RelatedServicesClient {
             return counts == null ? Map.of() : counts;
         } catch (RuntimeException ex) {
             log.debug("channel-service unavailable: {}", ex.getMessage());
-            return Map.of();
+            return null;
         }
     }
 

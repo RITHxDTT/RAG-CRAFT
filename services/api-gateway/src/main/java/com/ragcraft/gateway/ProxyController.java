@@ -34,6 +34,21 @@ public class ProxyController {
     private static final Set<String> HOP_BY_HOP = Set.of("connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
             "te", "trailer", "transfer-encoding", "upgrade", "host", "content-length");
 
+    /**
+     * The gateway is the only place CORS is decided. Downstream services also run a CORS filter, so their Access-Control-* answers must not be
+     * copied through: a browser rejects a response that carries Access-Control-Allow-Origin twice and reports it as a network failure.
+     */
+    static boolean forwardResponseHeader(String name) {
+        String lower = name.toLowerCase(Locale.ROOT);
+        return !HOP_BY_HOP.contains(lower) && !lower.startsWith("access-control-");
+    }
+
+    /** Origin is not forwarded either, so a downstream service never rejects (or answers) a request the gateway already accepted. */
+    static boolean forwardRequestHeader(String name) {
+        String lower = name.toLowerCase(Locale.ROOT);
+        return !HOP_BY_HOP.contains(lower) && !lower.equals("origin") && !lower.startsWith("access-control-request-");
+    }
+
     private final RouteTable routes;
     private final RestClient client;
 
@@ -68,7 +83,7 @@ public class ProxyController {
                     .exchange((req, res) -> {
                         HttpHeaders out = new HttpHeaders();
                         res.getHeaders().forEach((name, values) -> {
-                            if (!HOP_BY_HOP.contains(name.toLowerCase(Locale.ROOT))) out.put(name, values);
+                            if (forwardResponseHeader(name)) out.put(name, values);
                         });
                         byte[] payload = StreamUtils.copyToByteArray(res.getBody());
                         return ResponseEntity.status(res.getStatusCode()).headers(out).body(payload);
@@ -81,7 +96,7 @@ public class ProxyController {
 
     private static void copyRequestHeaders(HttpServletRequest request, HttpHeaders headers) {
         for (String name : Collections.list(request.getHeaderNames())) {
-            if (HOP_BY_HOP.contains(name.toLowerCase(Locale.ROOT))) continue;
+            if (!forwardRequestHeader(name)) continue;
             headers.put(name, Collections.list(request.getHeaders(name)));
         }
         String forwardedFor = request.getHeader("X-Forwarded-For");

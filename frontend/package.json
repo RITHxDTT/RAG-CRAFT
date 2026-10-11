@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:demo": "node scripts/demo-smoke.cjs"
+    "test:demo": "node scripts/demo-smoke.cjs",
+    "test:v5": "node scripts/v5-smoke.cjs",
+    "test:api": "node scripts/api-smoke.cjs"
   },
   "dependencies": {
     "lucide-react": "^1.48.0",

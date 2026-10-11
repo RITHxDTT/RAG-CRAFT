@@ -4,7 +4,7 @@ import { adminService, type UserRecord, type MonitoredBot } from "@/services/adm
 import { errorMessage } from "@/services/api";
 import { Avatar } from "@/components/avatar";
 import { StatusBadge } from "@/components/status-badge";
-import { confirmDialog } from "@/components/confirm-dialog";
+import { confirmDialog, inputDialog } from "@/components/confirm-dialog";
 import { useLocale } from "@/i18n/context";
 import { Search, Trash2, Power, Shield, Bot, X } from "lucide-react";
 
@@ -45,12 +45,17 @@ export function UserManagement() {
   }
 
   async function toggle(user: UserRecord) {
-    const message = user.is_active ? t("users.disableConfirm", { email: user.email }) : t("users.enableConfirm", { email: user.email });
-    if (!(await confirmDialog({ message, confirmLabel: user.is_active ? t("common.disable") : t("common.enable"), danger: user.is_active }))) return;
+    const suspending = user.is_active;
+    const reason = await inputDialog({
+      message: suspending ? t("users.suspendConfirm", { email: user.email }) : t("users.reactivateConfirm", { email: user.email }),
+      inputLabel: t("users.reason"), multiline: true, maxLength: 300,
+      confirmLabel: suspending ? t("users.suspend") : t("users.reactivate"), danger: suspending,
+    });
+    if (reason === null) return;
     setBusy(true);
     setError("");
     try {
-      const updated = await adminService.status(user.id, !user.is_active);
+      const updated = suspending ? await adminService.suspend(user.id, reason) : await adminService.reactivate(user.id, reason);
       setUsers(users.map((u) => (u.id === user.id ? updated : u)));
       if (selected?.id === user.id) setSelected(updated);
       setNotice(t("users.updated"));

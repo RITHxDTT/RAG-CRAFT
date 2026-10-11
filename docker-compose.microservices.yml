@@ -12,6 +12,8 @@ x-service-env: &service-env
   CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
   FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
   PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:8080}
+  # Other services ask identity-service whether a token was revoked (suspension, logout); identity itself ignores this.
+  RAGCRAFT_REMOTE_TOKEN_VALIDATION: "true"
   DB_USER: ${DB_USER:-ragcraft}
   DB_PASSWORD: ${DB_PASSWORD}
   IDENTITY_SERVICE_URL: http://identity-service:8081

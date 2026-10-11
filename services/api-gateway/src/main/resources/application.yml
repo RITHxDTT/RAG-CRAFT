@@ -27,6 +27,16 @@ gateway:
       service: identity
     - pattern: ^/api/admin/users(/.*)?$
       service: identity
+    - pattern: ^/api/admin/audit-logs(/.*)?$
+      service: identity
+    - pattern: ^/api/quota(/.*)?$
+      service: identity
+    - pattern: ^/api/(embedding-models|settings-limits)(/.*)?$
+      service: catalog
+    - pattern: ^/api/admin/(embedding-models|settings-limits)(/.*)?$
+      service: catalog
+    - pattern: ^/api/admin/appeals(/.*)?$
+      service: chatbot
     - pattern: ^/api/(models|prompt-templates)(/.*)?$
       service: catalog
     - pattern: ^/api/admin/(models|prompt-templates)(/.*)?$

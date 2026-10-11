@@ -81,7 +81,8 @@ function statusColor(theme: ChartTheme, name: string, index: number) {
   const map: Record<string, string> = {
     READY: theme.series[0], ACTIVE: theme.series[0], LIVE: theme.series[0], CONNECTED: theme.series[0],
     FAILED: theme.rose, ERROR: theme.rose,
-    DRAFT: theme.series[2], REVIEW: theme.series[2],
+    DRAFT: theme.series[2], REVIEW: theme.series[2], PENDING: theme.series[2],
+    PAUSED: theme.series[5], DISABLED: theme.rose, SUSPENDED: theme.rose,
     PROCESSING: theme.series[1], QUEUED: theme.series[1], UPLOADING: theme.series[1], CHUNKING: theme.series[1], INDEXING: theme.series[1], CRAWLING: theme.series[1], EXTRACTING: theme.series[1],
     INACTIVE: theme.series[5], OFF: theme.series[5], DISCONNECTED: theme.series[5],
   };

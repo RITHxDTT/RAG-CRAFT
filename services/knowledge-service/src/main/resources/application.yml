@@ -29,6 +29,7 @@ ragcraft:
     secret: ${JWT_SECRET:development-only-secret-change-me-please-32chars}
   services:
     chatbot: ${CHATBOT_SERVICE_URL:http://localhost:8083}
+    identity: ${IDENTITY_SERVICE_URL:http://localhost:8081}
 
 knowledge:
   storage-dir: ${STORAGE_DIR:./storage/knowledge}
